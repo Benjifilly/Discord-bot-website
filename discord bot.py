@@ -56,7 +56,9 @@ async def help(ctx, *, command_name: str = None):
             if any(check.__name__ == 'predicate' for check in command.checks):
                 embed.add_field(name="Admin Only", value="This command requires admin privileges.", inline=False)
             embed.set_footer(text="Syntax: [required] (optional)")
-            await ctx.send(embed=embed)
+            view = discord.ui.View()
+            view.add_item(discord.ui.Button(label="Wesbite", style=discord.ButtonStyle.link, emoji="🌐", url="https://benjifilly.github.io/Sol-s-rng-bot/"))
+            await ctx.send(embed=embed, view=view)
         else:
             await ctx.send(f"Command `{command_name}` not found.")
         return
@@ -105,6 +107,8 @@ async def help(ctx, *, command_name: str = None):
 
     # Next page button
     view.add_item(discord.ui.Button(label="Next Page", style=discord.ButtonStyle.primary, emoji="➡️", custom_id="next"))
+
+    view.add_item(discord.ui.Button(label="Wesbite", style=discord.ButtonStyle.link, emoji="🌐", url="https://benjifilly.github.io/Sol-s-rng-bot/"))
 
     # Send the embed with the view
     message = await ctx.send(embed=embed, view=view)
