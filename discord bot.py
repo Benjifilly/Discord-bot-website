@@ -4,7 +4,8 @@ from discord.ext import commands
 import asyncio
 from discord.ext.commands import check, CheckFailure, MissingPermissions
 import datetime
-from discord.ui import View, Button
+from discord.ui import View, Button, Select
+from discord.utils import get
 import difflib
 
 
@@ -361,28 +362,74 @@ async def invite(ctx):
     # Send the embed with the button
     await ctx.send(embed=embed, view=view)
 
-@bot.command(name='webhook', help='create a channel and give the user a webhook')
-async def webhook(ctx, saloon_name = None):
+selected_category_id = None
+user_channels = {}  # Dictionary to keep track of user channels dynamically
+
+class CategoryDropdown(discord.ui.Select):
+    def __init__(self, categories):
+        options = [
+            discord.SelectOption(label=category.name, value=str(category.id))
+            for category in categories
+        ]
+        super().__init__(placeholder='Choose a category...', min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        global selected_category_id
+        selected_category_id = int(self.values[0])
+        await interaction.response.send_message(f"Category set to {interaction.guild.get_channel(selected_category_id).name}", ephemeral=True)
+
+@bot.command(name='setup_webhook', help='Set the category for user-created webhooks (Admin only)')
+@commands.has_permissions(administrator=True)
+async def setup_webhook(ctx):
+    categories = ctx.guild.categories
+    dropdown = CategoryDropdown(categories)
+    view = discord.ui.View()
+    view.add_item(dropdown)
+    embed = discord.Embed(title="🔒 Set Webhook Category 🔒", description="Select a category to set as the destination for user-created webhooks.", color=discord.Color.blue())
+    
+    await ctx.send(embed=embed, view=view)
+
+def get_user_saloons(guild, user):
+    channels = []
+    for channel in guild.text_channels:
+        if channel.category and channel.category.id == selected_category_id:
+            if channel.permissions_for(user).manage_channels:
+                channels.append(channel)
+    return channels
+
+@bot.command(name='webhook', help='Create a channel and get a webhook (Max 3 saloons per user)')
+async def webhook(ctx, saloon_name=None):
     if saloon_name is None:
         saloon_name = f"{ctx.author.name}'s channel"
-        
-    category = discord.utils.get(ctx.guild.categories, name="Gaming")
-    channel = await ctx.guild.create_text_channel(name=saloon_name, category=category)  # Pass the category object instead of its ID
 
-    # Set the permissions for the user who typed the command
+    if selected_category_id is None:
+        await ctx.send("The category for webhooks is not set. Please contact an admin.")
+        return
+    
+    user_saloons = get_user_saloons(ctx.guild, ctx.author)
+
+    # Check if user already has 3 channels
+    if len(user_saloons) >= 3:
+        await ctx.send("You have reached the maximum of 3 saloons.")
+        return
+    
+    category = get(ctx.guild.categories, id=selected_category_id)
+    channel = await ctx.guild.create_text_channel(name=saloon_name, category=category)
+
+    # Set permissions for the user and default role
     await channel.set_permissions(ctx.author, read_messages=True, send_messages=True, manage_channels=True)
-    await channel.set_permissions(ctx.guild.default_role, read_messages=False)  # Set default role to not have access
+    await channel.set_permissions(ctx.guild.default_role, read_messages=False)
 
-    # Send a message in the created saloon with the webhook
+    # Create webhook
     webhook = await channel.create_webhook(name="Saloon Webhook")
-    embed = discord.Embed(title="❗ Need Help? ❗", description="If you need help on how to use the webhook, please contact an administrator.", color=discord.Color.orange())
-    await webhook.send(embed=embed, content=f"Hey {ctx.author.mention}, welcome to the saloon!")
-    embed = discord.Embed(title="Saloon Webhook", description=f"Webhook URL: {webhook.url}", color=discord.Color.blue())
-    await webhook.send(embed=embed)
+    embed_help = discord.Embed(title="❗ Need Help? ❗", description="If you need help on how to use the webhook, please contact an administrator.", color=discord.Color.orange())
+    await webhook.send(embed=embed_help, content=f"Hey {ctx.author.mention}, welcome to the saloon!")
+    embed_webhook = discord.Embed(title="Saloon Webhook", description=f"Webhook URL: {webhook.url}", color=discord.Color.blue())
+    await webhook.send(embed=embed_webhook)
 
-    # Create and send a cool message embed with a button
-    embed = discord.Embed(title="✅ Channel Created ✅", description=f"Channel created as [#{channel.name}](https://discord.com/channels/{ctx.guild.id}/{channel.id})", color=discord.Color.green())
-    await ctx.send(embed=embed)
+    # Confirmation message
+    embed_confirmation = discord.Embed(title="✅ Channel Created ✅", description=f"Channel created as [#{channel.name}](https://discord.com/channels/{ctx.guild.id}/{channel.id})", color=discord.Color.green())
+    await ctx.send(embed=embed_confirmation)
 
 @bot.command(name='delete-channel', help='delete a channel with the specified name')
 @owner_admin()
