@@ -1,0 +1,127 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+header {
+    background-color: #2c2f33;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #7289da;
+}
+
+.bot-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.bot-pfp {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.invite-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.invite-button a {
+    background-color: #7289da;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.invite-button a:hover {
+    background-color: #4e5d94;
+}
+
+header h1 {
+    margin: 0;
+}
+
+
+.bot-details {
+    text-align: left;
+}
+
+main {
+    padding: 20px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#searchBar {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 2px solid #7289da;
+    border-radius: 20px;
+    background-color: #2c2f33;
+    color: #f0f0f0;
+    outline: none;
+}
+
+.command-list {
+    max-width: 800px;
+    margin: 0 auto;
+    flex: 1;
+}
+
+.command {
+    background-color: #2c2f33;
+    border: 1px solid #7289da;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    opacity: 0; /* Start hidden for animation */
+}
+
+.command h3 {
+    margin-top: 0;
+    color: #7289da;
+}
+
+footer {
+    background-color: #2c2f33;
+    color: white;
+    text-align: center;
+    padding: 10px; /* Increased padding for better spacing */
+    width: 100%;
+    bottom: 0;
+    left: 0; /* Ensure it spans the full width */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* Optional: Add a shadow for better separation */
+}
+
+footer a {
+    color: #7289da; /* Discord's brand color for links */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+
