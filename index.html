@@ -11,6 +11,13 @@
 </head>
 <body>
     <header>
+        <div class="burger-menu" onclick="toggleNav()">
+            <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+                <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
+                <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
+                <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
+            </svg>
+        </div>
         <h1>Discord Bot Commands</h1>
         <div class="bot-info">
             <img src="bot-pfp.jpg" alt="Bot Profile Picture" class="bot-pfp">
@@ -23,6 +30,13 @@
             <a href="https://discord.com/oauth2/authorize?client_id=1242422539087642696&scope=bot&permissions=8" target="_blank">Invite Bot</a>
         </div>
     </header>
+    
+    <nav id="navBar" class="nav-bar">
+        <a href="">Incoming</a>
+        <a href="index.html">Commands</a>
+        <a href="">Incoming</a>
+        <a href="">Incoming</a>
+    </nav>
     <main>
         <div class="search-container">
             <input type="text" id="searchBar" placeholder="Search commands..." onkeyup="searchCommands()">
@@ -78,6 +92,16 @@
                 <h3>?ping</h3>
                 <p><strong>Usage:</strong> ?ping</p>
                 <p><strong>Description:</strong> Check the bot's latency.</p>
+            </div>
+            <div class="command">
+                <h3>?remind</h3>
+                <p><strong>Usage:</strong> ?remind [time] [message]</p>
+                <p><strong>Description:</strong> Set a reminder for a certain time.</p>
+            </div>
+            <div class="command">
+                <h3>?roleinfo</h3>
+                <p><strong>Usage:</strong> ?roleinfo [role]</p>
+                <p><strong>Description:</strong> Display information about a role.</p>
             </div>
             <h2>Admin Commands <div class="command-count1"></div></h2>
             <div class="command">

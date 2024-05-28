@@ -31,4 +31,15 @@ function searchCommands() {
     }
 }
 
+function toggleNav() {
+    const navBar = document.getElementById("navBar");
+    const burgerMenu = document.querySelector(".burger-menu");
 
+    if (navBar.style.width === "250px") {
+        navBar.style.width = "0";
+        burgerMenu.classList.remove("open");
+    } else {
+        navBar.style.width = "250px";
+        burgerMenu.classList.add("open");
+    }
+}

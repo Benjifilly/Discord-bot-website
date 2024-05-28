@@ -2,6 +2,10 @@
 
 ## Commands
 
+### ?code
+**Usage:** `?code [text]`  
+**Description:** Send text in a code block
+
 ### ?help
 **Usage:** `?help (command)`  
 **Description:** Display all available commands.
@@ -18,9 +22,17 @@
 **Usage:** `?show-profile (user)`  
 **Description:** Display a user's profile.
 
+### ?uptime
+**Usage:** `?uptime`  
+**Description:** Check the bot's uptime.
+
 ### ?webhook
 **Usage:** `?webhook (saloon_name)`  
 **Description:** Create a channel and get a webhook (Max 3 saloons per user).
+
+### ?weather
+**Usage:** `?weather [city]`  
+**Description:** Get the current weather for a specific location.
 
 ### ?invite
 **Usage:** `?invite`  
