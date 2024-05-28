@@ -1,19 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.utils.toArray('.command').forEach(command => {
-        gsap.fromTo(command, { y: 50, opacity: 0 }, {
-            y: 0,
-            opacity: 1,
-            scrollTrigger: {
-                trigger: command,
-                start: 'top 80%',
-                end: 'bottom 60%',
-                scrub: true,
-                once: true
-            }
-        });
-    });
-});
+
 
 function searchCommands() {
     const input = document.getElementById('searchBar');
