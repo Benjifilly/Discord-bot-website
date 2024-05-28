@@ -183,7 +183,7 @@ main {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    opacity: 0; /* Start hidden for animation */
+    opacity: 1; /* Start hidden for animation */
 }
 
 .command h3 {
