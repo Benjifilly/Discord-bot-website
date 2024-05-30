@@ -8,6 +8,7 @@
     <link rel="icon" href="bot-pfp.jpg" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </head>
 <body>
     <header>
@@ -39,8 +40,15 @@
     </nav>
     <main>
         <div class="search-container">
+            <lord-icon
+                id="searchIcon"
+                src="https://cdn.lordicon.com/fkdzyfle.json"
+                trigger="click"
+                colors="primary:#7289da"
+                style="width:40px;height:40px;">
+            </lord-icon>
             <input type="text" id="searchBar" placeholder="Search commands..." onkeyup="searchCommands()">
-        </div>
+        </div>  
         <section class="command-list">
             <h2>Commands <div class="command-count"></div></h2>
             <div class="command">
@@ -199,7 +207,6 @@
                 <p><strong>Usage:</strong> ?setup_webhook</p>
                 <p><strong>Description:</strong> Set the category for user-created webhooks <div style="color: red;">(Admin only)</div></p>
             </div>
-            <br><br><br><br><br><br><br>
         </section>
     </main>
     <footer>
