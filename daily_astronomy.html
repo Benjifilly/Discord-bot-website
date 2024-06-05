@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My APOD Website</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+        background-color: #000;
+        color: #fff;
+    }
+
+    .container {
+        text-align: center;
+        max-width: 800px;
+        margin: 20px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #fff;
+        margin-top: 20px;
+    }
+
+    a {
+        color: #1e90ff;
+        text-decoration: none;
+        margin-top: 20px;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">Loading...</h1>
+        <img id="apod-image" src="" alt="Astronomy Picture of the Day" />
+        <p id="description">Loading...</p>
+        <a id="tomorrow-link" href="#" target="_blank">Tomorrow's picture</a>
+    </div>
+    <script>
+        async function fetchAPOD() {
+            try {
+                const response = await fetch('https://apod.nasa.gov/apod/astropix.html');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+
+                // Extract title, description, and image URL
+                const title = doc.querySelector('b').textContent.trim();
+                const description = doc.querySelector('p').textContent.trim();
+                const imageURL = doc.querySelector('img').src;
+                const tomorrowLink = doc.querySelector('a[href*="tomorrow"]').href;
+
+                // Update the DOM with fetched data
+                document.getElementById('title').textContent = title;
+                document.getElementById('description').textContent = description;
+                document.getElementById('apod-image').src = `https://apod.nasa.gov/apod/${imageURL}`;
+                document.getElementById('tomorrow-link').href = `https://apod.nasa.gov/apod/${tomorrowLink}`;
+            } catch (error) {
+                console.error('Failed to fetch APOD:', error);
+                document.getElementById('title').textContent = 'Failed to load content';
+                document.getElementById('description').textContent = '';
+                document.getElementById('apod-image').alt = 'Failed to load image';
+            }
+        }
+
+        fetchAPOD();
+
+    </script>
+</body>
+</html>
