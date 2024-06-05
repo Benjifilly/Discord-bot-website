@@ -56,13 +56,13 @@
                 const text = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
-
+        
                 // Extract title, description, and image URL
-                const title = doc.querySelector('b').textContent.trim();
-                const description = doc.querySelector('p').textContent.trim();
-                const imageURL = doc.querySelector('img').src;
-                const tomorrowLink = doc.querySelector('a[href*="tomorrow"]').href;
-
+                const title = doc.querySelector('center > h1').textContent.trim();
+                const description = doc.querySelector('center > p').textContent.trim();
+                const imageURL = doc.querySelector('center > a > img').src;
+                const tomorrowLink = doc.querySelector('center > p:nth-of-type(5) > a').href;
+        
                 // Update the DOM with fetched data
                 document.getElementById('title').textContent = title;
                 document.getElementById('description').textContent = description;
@@ -75,9 +75,8 @@
                 document.getElementById('apod-image').alt = 'Failed to load image';
             }
         }
-
+        
         fetchAPOD();
-
     </script>
 </body>
 </html>
