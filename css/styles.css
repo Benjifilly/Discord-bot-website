@@ -100,10 +100,38 @@ html, body {
     }
     .invite-button {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 35px;
+        right: 15px;
         z-index: 2;
+        font-size: 10px;
+        content: "Invite";
     }
+
+    .discord-button {
+        background: transparent;
+        position: relative;
+        padding: 5px 80px; /* Increased padding to make it wider */
+        display: flex;
+        align-items: center;
+        font-size: 17px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        border: 1px solid rgba(88, 101, 242, 1);
+        border-radius: 25px;
+        outline: none;
+        overflow: hidden;
+        color: rgba(88, 101, 242, 1);
+        transition: color 0.3s 0.1s ease-out;
+        text-align: center;
+    }
+}
+
+.invite-button {
+    position: absolute;
+    top: 35px;
+    right: 15px;
+    z-index: 2;
 }
 
 header {
@@ -190,7 +218,8 @@ main {
     border: 1px solid #7289da;
     border-radius: 8px;
     padding: 20px;
-    margin-bottom: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
     opacity: 1;
 }
 
@@ -236,6 +265,21 @@ footer a:hover {
     padding: 10px;
     margin-bottom: 10px;
     border-left: 4px solid #7289da;
+}
+
+.update .date{
+    color: #7289da;
+}
+
+.bad-update {
+    background: linear-gradient(135deg, #4a4b4d, #6e777d);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 4px solid #d10c0c;
+}
+
+.bad-update .date{
+    color: #7289da;
 }
 
 .discord-button {
@@ -339,4 +383,10 @@ footer a:hover {
 #sortOptions option {
     background-color: #1e1e1e;
     color: #fff;
+}
+
+.note {
+    font-size: 14px;
+    font-weight: italic;
+    color: rgba(220, 50, 50, 0.406);
 }

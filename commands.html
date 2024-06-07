@@ -69,10 +69,16 @@
                 <p><strong>Usage:</strong> ?code [text]</p>
                 <p><strong>Description:</strong>Send text in a code block</p>
             </div>
+            <div class="command normal-command other-command">
+                <h3>?cron</h3>
+                <p><strong>Usage:</strong> ?cron [Command to run]</p>
+                <p><strong>Description:</strong> Run a command at a specific time.</p>
+            </div>
             <div class="command astronomy-command normal-command">
-                <h3>?daily_astronomy (fix needed)</h3>
+                <h3>?daily_astronomy</h3>
                 <p><strong>Usage:</strong> ?daily_astronomy</p>
                 <p><strong>Description:</strong>Get the daily astronomy picture and Description</p>
+                <p class="note">Note: Need to be fixed</p>
             </div>
             <div class="command normal-command">
                 <h3>?forecast</h3>
@@ -88,11 +94,26 @@
                 <h3>?invite</h3>
                 <p><strong>Usage:</strong> ?invite</p>
                 <p><strong>Description:</strong> Get the bot's invite link.</p>
+            </div>  
+            <div class="command normal-command other-command">
+                <h3>?join</h3>
+                <p><strong>Usage:</strong> ?join</p>
+                <p><strong>Description:</strong> Join a voice channel.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?joke</h3>
                 <p><strong>Usage:</strong> ?joke</p>
                 <p><strong>Description:</strong> Get a random joke.</p>
+            </div>
+            <div class="command normal-command other-command">
+                <h3>?leave</h3>
+                <p><strong>Usage:</strong> ?leave</p>
+                <p><strong>Description:</strong> Leave the voice channel.</p>
+            </div>
+            <div class="command normal-command other-command">
+                <h3>?list_crons</h3>
+                <p><strong>Usage:</strong> ?list_crons</p>
+                <p><strong>Description:</strong> List all scheduled commands.</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?mars_rover</h3>
@@ -100,9 +121,10 @@
                 <p><strong>Description:</strong>Get a Mars Rover picture and Description</p>
             </div>
             <div class="command astronomy-command normal-command">
-                <h3>?moon (WIP)</h3>
+                <h3>?moon</h3>
                 <p><strong>Usage:</strong> ?moon [location]</p>
                 <p><strong>Description:</strong>Get the moon phase for a location</p>
+                <p class="note">Note: Not fully working</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?neo</h3>
@@ -118,6 +140,11 @@
                 <h3>?remind</h3>
                 <p><strong>Usage:</strong> ?remind [time] [message]</p>
                 <p><strong>Description:</strong> Set a reminder for a certain time.</p>
+            </div>
+            <div class="command normal-command other-command">
+                <h3>?remove_cron</h3>
+                <p><strong>Usage:</strong> ?remove_cron [ID]</p>
+                <p><strong>Description:</strong> Remove a scheduled command (get the id from the command list_crons)</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?roleinfo</h3>
@@ -164,86 +191,17 @@
                 <p><strong>Usage:</strong> ?webhook (saloon_name)</p>
                 <p><strong>Description:</strong> Create a channel and get a webhook (Max 3 saloons per user).</p>
             </div>
+            <div class="command normal-command">
+                <h3>?ytstats</h3>
+                <p><strong>Usage:</strong> ?ytstats [channel]</p>
+                <p><strong>Description:</strong> Get statistics for a YouTube channel.</p>
+                <p class="note">Note: Need to be fixed</p>
+            </div>
             <h2>Admin Commands </h2>
-            <div class="command admin-command">
-                <h3>?dm</h3>
-                <p><strong>Usage:</strong> ?dm [user] [message]</p>
-                <p><strong>Description:</strong> Send a direct message to a user <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?clear</h3>
-                <p><strong>Usage:</strong> ?clear (amount)</p>
-                <p><strong>Description:</strong> Clear a certain amount of messages <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?purge</h3>
-                <p><strong>Usage:</strong> ?purge</p>
-                <p><strong>Description:</strong> Clear all messages in a channel <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?create-role</h3>
-                <p><strong>Usage:</strong> ?create-role [role name]</p>
-                <p><strong>Description:</strong> Create a new role in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?delete-role</h3>
-                <p><strong>Usage:</strong> ?delete-role [role_name]</p>
-                <p><strong>Description:</strong> Delete a role in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?create-channel</h3>
-                <p><strong>Usage:</strong> ?create-channel [category] [channel name]</p>
-                <p><strong>Description:</strong> Create a new channel in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?delete-channel</h3>
-                <p><strong>Usage:</strong> ?delete-channel [channel_name]</p>
-                <p><strong>Description:</strong> Delete a channel in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?create-category</h3>
-                <p><strong>Usage:</strong> ?create-category [category name]</p>
-                <p><strong>Description:</strong> Create a new category in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?delete-category</h3>
-                <p><strong>Usage:</strong> ?delete-category [category]</p>
-                <p><strong>Description:</strong> Delete a category in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?setup_webhook</h3>
-                <p><strong>Usage:</strong> ?setup_webhook</p>
-                <p><strong>Description:</strong> Set the category for user-created webhooks <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?warn</h3>
-                <p><strong>Usage:</strong> ?warn [user] (reason)</p>
-                <p><strong>Description:</strong> Warn a user in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?mute</h3>
-                <p><strong>Usage:</strong> ?mute [user] [duration] (reason)</p>
-                <p><strong>Description:</strong> Mute a user in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?unmute</h3>
-                <p><strong>Usage:</strong> ?unmute [user] (reason)</p>
-                <p><strong>Description:</strong> Unmute a user in the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?kick</h3>
-                <p><strong>Usage:</strong> ?kick [user] (reason)</p>
-                <p><strong>Description:</strong> Kick a user from the server <div style="color: red;">(Admin only)</div></p>
-            </div>
             <div class="command admin-command">
                 <h3>?ban</h3>
                 <p><strong>Usage:</strong> ?ban [user] [duration] (reason)</p>
                 <p><strong>Description:</strong> Ban a user from the server <div style="color: red;">(Admin only)</div></p>
-            </div>
-            <div class="command admin-command">
-                <h3>?unban</h3>
-                <p><strong>Usage:</strong> ?unban [user_id] (reason)</p>
-                <p><strong>Description:</strong> Unban a user from the server <div style="color: red;">(Admin only)</div></p>
             </div>
             <div class="command admin-command">
                 <h3>?banned-users</h3>
@@ -251,9 +209,69 @@
                 <p><strong>Description:</strong> Display all banned users in the server or search for a specific user <div style="color: red;">(Admin only)</div></p>
             </div>
             <div class="command admin-command">
+                <h3>?clear</h3>
+                <p><strong>Usage:</strong> ?clear (amount)</p>
+                <p><strong>Description:</strong> Clear a certain amount of messages <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?create-category</h3>
+                <p><strong>Usage:</strong> ?create-category [category name]</p>
+                <p><strong>Description:</strong> Create a new category in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?create-channel</h3>
+                <p><strong>Usage:</strong> ?create-channel [category] [channel name]</p>
+                <p><strong>Description:</strong> Create a new channel in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?create-role</h3>
+                <p><strong>Usage:</strong> ?create-role [role name]</p>
+                <p><strong>Description:</strong> Create a new role in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?delete-category</h3>
+                <p><strong>Usage:</strong> ?delete-category [category]</p>
+                <p><strong>Description:</strong> Delete a category in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?delete-channel</h3>
+                <p><strong>Usage:</strong> ?delete-channel [channel_name]</p>
+                <p><strong>Description:</strong> Delete a channel in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?delete-role</h3>
+                <p><strong>Usage:</strong> ?delete-role [role_name]</p>
+                <p><strong>Description:</strong> Delete a role in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?disable_logs</h3>
+                <p><strong>Usage:</strong> ?disable_logs</p>
+                <p><strong>Description:</strong> Disable moderation logs in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?dm</h3>
+                <p><strong>Usage:</strong> ?dm [user] [message]</p>
+                <p><strong>Description:</strong> Send a direct message to a user <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?kick</h3>
+                <p><strong>Usage:</strong> ?kick [user] (reason)</p>
+                <p><strong>Description:</strong> Kick a user from the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?mute</h3>
+                <p><strong>Usage:</strong> ?mute [user] [duration] (reason)</p>
+                <p><strong>Description:</strong> Mute a user in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
                 <h3>?poll</h3>
                 <p><strong>Usage:</strong> ?poll</p>
                 <p><strong>Description:</strong> Create a poll in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?purge</h3>
+                <p><strong>Usage:</strong> ?purge</p>
+                <p><strong>Description:</strong> Clear all messages in a channel <div style="color: red;">(Admin only)</div></p>
             </div>
             <div class="command admin-command">
                 <h3>?setup-logs</h3>
@@ -265,10 +283,25 @@
                 <p><strong>Usage:</strong> ?setup_webhook</p>
                 <p><strong>Description:</strong> Set the category for user-created webhooks <div style="color: red;">(Admin only)</div></p>
             </div>
+            <div class="command admin-command">
+                <h3>?unban</h3>
+                <p><strong>Usage:</strong> ?unban [user_id] (reason)</p>
+                <p><strong>Description:</strong> Unban a user from the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?unmute</h3>
+                <p><strong>Usage:</strong> ?unmute [user] (reason)</p>
+                <p><strong>Description:</strong> Unmute a user in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command">
+                <h3>?warn</h3>
+                <p><strong>Usage:</strong> ?warn [user] (reason)</p>
+                <p><strong>Description:</strong> Warn a user in the server <div style="color: red;">(Admin only)</div></p>
+            </div>
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 Discord Bot Commands. All rights reserved.</p>
+        <p>&copy; 2024 Pulsar. All rights reserved.</p>
         <p>Contact me: <a href="http://discordapp.com/users/882920589269020672">Discord: Edzar#edzar1070</a></p>
     </footer>
     <script src="js/scripts.js"></script>
