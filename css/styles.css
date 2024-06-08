@@ -390,3 +390,13 @@ footer a:hover {
     font-weight: italic;
     color: rgba(220, 50, 50, 0.406);
 }
+
+.new-label {
+    display: inline-block;
+    background-color: #ff5733;
+    color: white;
+    padding: 2px 8px;
+    margin-left: 10px;
+    font-size: 12px;
+    border-radius: 5px;
+}   
