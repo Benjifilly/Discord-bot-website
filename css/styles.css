@@ -400,3 +400,13 @@ footer a:hover {
     font-size: 12px;
     border-radius: 5px;
 }   
+
+.update-label {
+    display: inline-block;
+    background-color: #52d95b;
+    color: white;
+    padding: 2px 8px;
+    margin-left: 10px;
+    font-size: 12px;
+    border-radius: 5px;
+}

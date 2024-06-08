@@ -1,4 +1,5 @@
-# Bot Commands (No longer updated, check the website for more)
+# Bot Commands
+
 ## Commands
 
 ### ?code
