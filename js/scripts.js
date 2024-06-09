@@ -2,18 +2,34 @@ function searchCommands() {
     const input = document.getElementById('searchBar');
     const filter = input.value.toLowerCase();
     const commands = document.getElementsByClassName('command');
+    let found = false; // Flag to track if any command is found
 
     for (let i = 0; i < commands.length; i++) {
         const command = commands[i];
         const commandText = command.textContent || command.innerText;
         if (commandText.toLowerCase().includes(filter)) {
             command.style.display = "";
+            found = true;
         } else {
             command.style.display = "none";
         }
-        updateCommandCount();
+    }
+
+    const noResult = document.getElementById('no-result');
+    const noResultQuery = document.getElementById('no-result-query');
+    const ellipsis = document.getElementById('ellipsis');
+
+    if (found) {
+        noResult.style.display = "none";
+    } else {
+        noResult.style.display = "block";
+        const maxLength = 20; // Set the maximum length of the displayed query
+        const truncatedValue = input.value.length > maxLength ? input.value.substring(0, maxLength) + '...' : input.value;
+        noResultQuery.textContent = truncatedValue;
+        ellipsis.style.display = input.value.length > maxLength ? "inline" : "none";
     }
 }
+
 
 function toggleNav() {
     const navBar = document.getElementById('navBar');
@@ -73,6 +89,10 @@ function sortCommands() {
     const commandSections = Array.from(commandsContainer.querySelectorAll('.command'));
 
     commandSections.forEach(command => command.style.display = '');
+    const searchInput = document.getElementById('searchBar');
+    searchInput.value = '';
+    const noResult = document.getElementById('no-result');
+    noResult.style.display = 'none';
 
     switch (sortType) {
         case 'alphabetic-order':
@@ -110,9 +130,23 @@ function sortCommands() {
                 }
             });
             break;
-        case 'others':
+        case 'new':
             commandSections.forEach(command => {
-                if (!command.classList.contains('other-command')) {
+                if (!command.classList.contains('new-command')) {
+                    command.style.display = 'none';
+                }
+            });
+            break;
+        case "updated":
+            commandSections.forEach(command => {
+                if (!command.classList.contains('updated-command')) {
+                    command.style.display = 'none';
+                }
+            });
+            break;
+        case "bug":
+            commandSections.forEach(command => {
+                if (!command.classList.contains('bug-command')) {
                     command.style.display = 'none';
                 }
             });

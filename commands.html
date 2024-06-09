@@ -59,15 +59,36 @@
                 <option value="admin">Admin Commands</option>
                 <option value="normal">Normal Commands</option>
                 <option value="astronomy">Astronomy Commands</option>
-                <option value="others">Other Commands</option>
+                <option value="new">New Commands</option>
+                <option value="updated">Updated Commands</option>
+                <option value="bug">Commands with Bugs</option>
             </select>
-        </div>   
+        </div>  
+        <div id="no-result" style="color: white; display: none; text-align: center;">
+            <h2>No command (◡︵◡)</h2>
+            <p>Command not found, <a href="">contact the owner </a><br> if you want "<span id="no-result-query"></span><span id="ellipsis" style="display: none;"><span>.</span><span>.</span><span>.</span></span>" to be added</p>
+        </div> 
         <section class="command-list">
             <h2>Commands</h2>
-            <div class="command normal-command">
+            <div class="command normal-command new-command">
                 <h3>?about <span class="new-label">New</span></h3>
                 <p><strong>Usage:</strong> ?about</p>
                 <p><strong>Description:</strong> Display information about the bot.</p>
+            </div>
+            <div class="command normal-command new-command">
+                <h3>?avatar <span class="new-label">New</span></h3>  
+                <p><strong>Usage:</strong> ?avatar (user)</p>
+                <p><strong>Description:</strong> Display a user's avatar</p>
+            </div>
+            <div class="command normal-command new-command">
+                <h3>?cat <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?cat</p>
+                <p><strong>Description:</strong> Get a random cat picture</p>
+            </div>
+            <div class="command normal-command new-command">
+                <h3>?catraid <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?catraid</p>
+                <p><strong>Description:</strong> Get 5 random cat picture</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?code</h3>
@@ -115,7 +136,7 @@
                 <p><strong>Description:</strong>Get a Mars Rover picture and Description</p>
             </div>
             <div class="command astronomy-command normal-command">
-                <h3>?moon <span class="new-label">New</span></h3>
+                <h3>?moon</h3>
                 <p><strong>Usage:</strong> ?moon [location]</p>
                 <p><strong>Description:</strong>Get the moon phase for a location</p>
             </div>
@@ -124,10 +145,25 @@
                 <p><strong>Usage:</strong> ?neo</p>
                 <p><strong>Description:</strong>Get a random Near Earth Object</p>
             </div>
+            <div class="command normal-command other-command new-command">
+                <h3>?newusers <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?newusers (amount)</p>
+                <p><strong>Description:</strong> Display the newest users in the server, to get all of them type ?newusers *</p>
+            </div>
+            <div class="command normal-command other-command new-command">
+                <h3>?oldusers <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?oldusers (amount)</p>
+                <p><strong>Description:</strong> Display the oldest users in the server, to get all of them type ?oldusers *</p>
+            </div>
             <div class="command normal-command other-command">
                 <h3>?ping</h3>
                 <p><strong>Usage:</strong> ?ping</p>
                 <p><strong>Description:</strong> Check the bot's latency.</p>
+            </div>
+            <div class="command normal-command other-command new-command">
+                <h3>?prefix <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?prefix</p>
+                <p><strong>Description:</strong> Display the bot's prefix.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?remind</h3>
@@ -139,7 +175,7 @@
                 <p><strong>Usage:</strong> ?roleinfo [role]</p>
                 <p><strong>Description:</strong> Display information about a role.</p>
             </div>
-            <div class="command normal-command other-command">
+            <div class="command normal-command other-command new-command">
                 <h3>?roll <span class="new-label">New</span></h3>
                 <p><strong>Usage:</strong> ?roll [lower] [upper]</p>
                 <p><strong>Description:</strong> Roll a number between a range.</p>
@@ -169,7 +205,7 @@
                 <p><strong>Usage:</strong> ?space_news</p>
                 <p><strong>Description:</strong> Get the latest space news.</p>
             </div>
-            <div class="command normal-command other-command">
+            <div class="command normal-command other-command updated-command">
                 <h3>?uptime <span class="update-label">Updated</span></h3>
                 <p><strong>Usage:</strong> ?uptime</p>
                 <p><strong>Description:</strong> Check the bot's uptime.</p>
@@ -184,7 +220,7 @@
                 <p><strong>Usage:</strong> ?webhook (saloon_name)</p>
                 <p><strong>Description:</strong> Create a channel and get a webhook (Max 3 saloons per user).</p>
             </div>
-            <div class="command normal-command">
+            <div class="command normal-command new-command">
                 <h3>?ytstats <span class="new-label">New</span></h3>
                 <p><strong>Usage:</strong> ?ytstats [channel]</p>
                 <p><strong>Description:</strong> Get statistics for a YouTube channel.</p>
@@ -195,8 +231,8 @@
                 <p><strong>Usage:</strong> ?ban [user] [duration] (reason)</p>
                 <p><strong>Description:</strong> Ban a user from the server <div style="color: red;">(Admin only)</div></p>
             </div>
-            <div class="command admin-command">
-                <h3>?banned-users</h3>
+            <div class="command admin-command updated-command bug-command">
+                <h3>?banned-users <span class="update-label">Updated</span> <span class="bug-label">Bug</span></h3>
                 <p><strong>Usage:</strong> ?banned-users (search_user)</p>
                 <p><strong>Description:</strong> Display all banned users in the server or search for a specific user <div style="color: red;">(Admin only)</div></p>
             </div>
@@ -245,6 +281,11 @@
                 <p><strong>Usage:</strong> ?dm [user] [message]</p>
                 <p><strong>Description:</strong> Send a direct message to a user <div style="color: red;">(Admin only)</div></p>
             </div>
+            <div class="command admin-command new-command">
+                <h3>?embed <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?embed</p>
+                <p><strong>Description:</strong> Create an embed message in a channel <div style="color: red;">(Admin only)</div></p>
+            </div>
             <div class="command admin-command">
                 <h3>?kick</h3>
                 <p><strong>Usage:</strong> ?kick [user] (reason)</p>
@@ -264,6 +305,11 @@
                 <h3>?purge</h3>
                 <p><strong>Usage:</strong> ?purge</p>
                 <p><strong>Description:</strong> Clear all messages in a channel <div style="color: red;">(Admin only)</div></p>
+            </div>
+            <div class="command admin-command new-command">
+                <h3>?rename <span class="new-label">New</span></h3>
+                <p><strong>Usage:</strong> ?rename [new_name]</p>
+                <p><strong>Description:</strong> Rename the bot in the server <div style="color: red;">(Admin only)</div></p>
             </div>
             <div class="command admin-command">
                 <h3>?setup-logs</h3>
