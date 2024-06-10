@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="bot-pfp.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/scripts.js"></script>
+    <title>Contact Me</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('starry-night.png');
+        }
+        
+
+        .contact-form {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .contact-form h2 {
+            margin-top: 0;
+            color: #2c2f33;
+        }
+
+        .contact-form input, .contact-form textarea, .contact-form select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .contact-form button {
+            background-color: #7289da;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #5a6fb0;
+        }
+
+        .contact-form select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+    </style>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init('iRZEUyns5_gal-B1Z');
+        })();
+
+        function sendEmail(event) {
+            event.preventDefault();
+
+            emailjs.sendForm('service_pdetble', 'template_8wuc7gr', event.target)
+                .then(function() {
+                    alert('Email sent successfully!');
+                }, function(error) {
+                    alert('Failed to send email. Error: ' + JSON.stringify(error));
+                });
+        }
+        
+    </script>
+</head>
+<body>
+    <div class="burger-menu" onclick="toggleNav()">
+        <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+            <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
+            <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
+            <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
+        </svg>
+    </div>
+    <nav id="navBar" class="nav-bar">
+        <a href="index.html">Home</a>
+        <a href="commands.html">Commands</a>
+        <a href="">Incoming</a>
+        <a href="contact-me.html" style="color: rgba(255, 255, 255, 0.514);">Contact-me</a>
+    </nav>
+    <div class="contact-form">
+        <h2>Contact Me</h2>
+        <form onsubmit="sendEmail(event)">
+            <input type="text" name="name" placeholder="Your Name" required><br>
+            <input type="email" name="email" placeholder="Your Email" required><br>
+            <select name="subject" required>
+                <option value="" disabled selected>Select Subject</option>
+                <option value="bug">Bug Report</option>
+                <option value="feature">New Feature</option>
+                <option value="general">General Inquiry</option>
+                <option value="other">Other</option>
+            </select><br>
+            <textarea name="message" placeholder="Your Message" rows="4" required></textarea><br>
+            <button type="submit">Send Email</button>
+        </form>
+    </div>
+</body>
+</html>

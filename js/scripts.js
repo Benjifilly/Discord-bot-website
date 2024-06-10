@@ -28,6 +28,7 @@ function searchCommands() {
         noResultQuery.textContent = truncatedValue;
         ellipsis.style.display = input.value.length > maxLength ? "inline" : "none";
     }
+    updateCommandCount();
 }
 
 
@@ -165,4 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
     sortCommands(); 
     updateCommandCount();
 });
+
+async function copyToClipboard(button) {
+    var codeElement = button.parentElement.innerText.trim();
+    try {
+        await navigator.clipboard.writeText(codeElement);
+        var icon = button.querySelector('i');
+        icon.classList.remove('fa-copy');
+        icon.classList.add('fa-check');
+        setTimeout(() => {
+            icon.classList.remove('fa-check');
+            icon.classList.add('fa-copy');
+        }, 1000);
+    } catch (err) {
+        console.error('Unable to copy', err);
+    }
+}
 
