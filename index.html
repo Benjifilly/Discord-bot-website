@@ -14,70 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
     <style>
-        .intro, .updates, .connect-discord {
-            background: linear-gradient(135deg, #2c2f33, #23272a);
-            margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-
-        .intro h2, .updates h2, .connect-discord h2 {
-            color: #7289da;
-        }
-
-        .update {
-            background: linear-gradient(135deg, #4a4b4d, #353b3f);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid #7289da;
-        }
-
-        .discord-connect {
-            display: flex;
-            align-items: center;
-            background: #7289da;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-
-        .discord-connect:hover {
-            background: #5a6cb2;
-        }
-
-        .discord-connect img {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-        }
-
-        .updates-container {
-            max-height: 300px;
-            overflow-y: auto;
-            scrollbar-width: thin; /* Firefox */
-            scrollbar-color: #7289da #4a4b4d; /* Firefox */
-        }
-
-        /* For WebKit-based browsers */
-        .updates-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .updates-container::-webkit-scrollbar-track {
-            background: #f4f4f4;
-            border-radius: 10px;
-        }
-
-        .updates-container::-webkit-scrollbar-thumb {
-            background-color: #7289da;
-            border-radius: 10px;
-            border: 2px solid #f4f4f4;
-        }
-
         header {
             position: relative;
             background: url('photos/starry-night.png') no-repeat center center;
@@ -154,11 +90,11 @@
                 width: 150px;
                 height: 150px;
             }
-            
         }
 
         .invite-button {
             margin-top: -20px;
+            z-index: 1;
         }
 
         .invite-button a {
@@ -174,17 +110,21 @@
         .invite-button a:hover {
             background: #5a6cb2;
         }
+
+        header .burger-menu {
+            z-index: 1000000000000000000;
+        }
     </style>
 </head>
 <body>
+    <div class="burger-menu" onclick="toggleNav()">
+        <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+            <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
+            <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
+            <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
+        </svg>
+    </div>
     <header>
-        <div class="burger-menu" onclick="toggleNav()">
-            <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
-                <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
-                <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
-                <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
-            </svg>
-        </div>
         <div class="bot-info">
             <img src="photos/bot-pfp.jpg" alt="Bot Profile Picture" class="bot-pfp">
             <div class="bot-details">
@@ -285,7 +225,7 @@
     <script src="js/scripts.js"></script>
     <script>
          function updateServerCount() {
-            fetch('http://172.20.0.44:5000/api/server_count')  // Replace with your actual server IP/Domain and port
+            fetch('http://172.18.0.15:5000/api/server_count')  // Replace with your actual server IP/Domain and port
                 .then(response => response.json())
                 .then(data => {
                     const serverCount = data.serverCount;
