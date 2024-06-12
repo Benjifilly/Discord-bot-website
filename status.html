@@ -6,6 +6,13 @@
     <title>Bot Status</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1c;
+            color: #eaeaea;
+            margin: 0;
+            padding: 20px;
+        }
         .status-container {
             margin: 0 auto;
             max-width: 800px;
@@ -13,31 +20,25 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #141414;
-            
         }
-
         .updates-container {
             max-height: 300px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #7289da #4a4b4d;
         }
-
         .updates-container::-webkit-scrollbar {
             width: 8px;
         }
-
         .updates-container::-webkit-scrollbar-track {
             background: #f4f4f4;
             border-radius: 10px;
         }
-
         .updates-container::-webkit-scrollbar-thumb {
             background-color: #7289da;
             border-radius: 10px;
             border: 2px solid #f4f4f4;
         }
-
         .intro, .updates, .connect-discord {
             background: linear-gradient(135deg, #2c2f33, #23272a);
             margin-bottom: 20px;
@@ -45,33 +46,93 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         .intro h2, .updates h2, .connect-discord h2 {
             color: #7289da;
         }
-
         .update {
             background: linear-gradient(135deg, #4a4b4d, #6e777d);
             padding: 10px;
             margin-bottom: 10px;
             border-left: 4px solid #7289da;
         }
-
-        .update .date{
+        .update .date {
             color: #7289da;
         }
-
         .bad-update {
             background: linear-gradient(135deg, #4a4b4d, #6e777d);
             padding: 10px;
             margin-bottom: 10px;
             border-left: 4px solid #d10c0c;
         }
-
-        .bad-update .date{
+        .bad-update .date {
             color: #7289da;
         }
-
+        .burger-menu {
+            display: none;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #23272a;
+            border-bottom: 2px solid #7289da;
+        }
+        .bot-info {
+            display: flex;
+            align-items: center;
+        }
+        .bot-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .bot-details h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .bot-details p {
+            margin: 5px 0;
+        }
+        .invite-button a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #7289da;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .invite-button a:hover {
+            background-color: #5b6eae;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status-online {
+            background-color: green;
+        }
+        .status-offline {
+            background-color: red;
+        }
+        .status-problem {
+            background-color: orange;
+        }
+        .info {
+            list-style: none;
+            padding: 0;
+        }
+        .info li {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -101,12 +162,11 @@
             <div id="status-indicator" class="status-indicator"></div>
             <span id="status-text">Loading...</span>
         </div>
-        <ul class="info"></ul>
+        <ul class="info">
             <li>Uptime: <span id="uptime">Loading...</span></li>
             <li>Total Channels: <span id="total-channels">Loading...</span></li>
             <li>Text Channels: <span id="text-channels">Loading...</span></li>
             <li>Voice Channels: <span id="voice-channels">Loading...</span></li>
-            <li>Bot Status: <span id="bot-status">Loading...</span></li>
             <li>Latency: <span id="latency">Loading...</span></li>
         </ul>
     </div>
@@ -123,7 +183,7 @@
             </div>
             <div class="update">
                 <h3>A lot of fixes - <span class="date">10/06/2024 à 23h52</span></h3>
-                <p>We've fixed a lot of bugs,updated some commands and added some new features to the bot</p>
+                <p>We've fixed a lot of bugs, updated some commands and added some new features to the bot</p>
             </div>
             <div class="update">
                 <h3>A lot of new commands - <span class="date">09/06/2024 à 17:29</span></h3>
@@ -159,7 +219,7 @@
             </div>
             <div class="update">
                 <h3>It's out! - <span class="date">No date</span></h3>
-                <p>The bot is now available for public use. Invite it to your server and start managing it better, If you have any suggestions or feedback, feel free to contact us.</p>
+                <p>The bot is now available for public use. Invite it to your server and start managing it better. If you have any suggestions or feedback, feel free to contact us.</p>
             </div>
         </div>
     </section>
@@ -178,7 +238,6 @@
                     document.getElementById('total-channels').innerText = data.totalChannels;
                     document.getElementById('text-channels').innerText = data.textChannels;
                     document.getElementById('voice-channels').innerText = data.voiceChannels;
-                    document.getElementById('average-members-per-server').innerText = data.averageMembersPerServer.toFixed(2);
                     document.getElementById('latency').innerText = (data.latency * 1000).toFixed(2) + " ms";
 
                     // Parse and store the initial uptime
