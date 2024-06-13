@@ -229,7 +229,7 @@
         let startTime;
 
         function updateServerInfo() {
-            fetch('http://45.140.188.39:6688/api/server_info')
+            fetch('https://45.140.188.39:6688/api/server_info')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('server-number').innerText = data.serverCount;
