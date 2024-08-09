@@ -69,28 +69,31 @@
             <h2>No command (◡︵◡)</h2>
             <p>Command not found, <a href="">contact the owner </a><br> if you want "<span id="no-result-query"></span><span id="ellipsis" style="display: none;"><span>.</span><span>.</span><span>.</span></span>" to be added</p>
         </div> 
+        <div id="no-result2" style="color: white; display: none; text-align: center;">
+            <h2>No command (◡︵◡)</h2>
+        </div> 
         <section class="command-list">
             <h2>Commands</h2>
-            <div class="command normal-command new-command">
-                <h3>?about <span class="new-label">New</span></h3>
+            <div class="command normal-command">
+                <h3>?about</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?about<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Display information about the bot.</p>
             </div>
-            <div class="command normal-command new-command">
-                <h3>?avatar <span class="new-label">New</span></h3>  
+            <div class="command normal-command">
+                <h3>?avatar</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?avatar (user)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Display a user's avatar</p>
             </div>
-            <div class="command normal-command new-command">
-                <h3>?cat <span class="new-label">New</span></h3>
+            <div class="command normal-command">
+                <h3>?cat</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?cat<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Get a random cat picture</p>
             </div>
-            <div class="command normal-command new-command">
-                <h3>?catraid <span class="new-label">New</span></h3>
+            <div class="command normal-command">
+                <h3>?catraid</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?catraid<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Get 5 random cat picture</p>
@@ -107,13 +110,13 @@
         </span></p>
                 <p><strong>Description:</strong>Get the daily astronomy picture and Description</p>
             </div>
-            <div class="command normal-command">
-                <h3>?forecast</h3>
+            <div class="command normal-command updated-command">
+                <h3>?forecast <span class="update-label">Updated</span></h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?forecast [city]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong>Get the weather forecast for a location</p>
             </div>
-            <div class="command normal-command updated-command">
+            <div class="command normal-command">
                 <h3>?help <span class="update-label">Updated</span></h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?help (command)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
@@ -161,14 +164,14 @@
         </span></p>
                 <p><strong>Description:</strong>Get a random Near Earth Object</p>
             </div>
-            <div class="command normal-command other-command new-command">
-                <h3>?newusers <span class="new-label">New</span></h3>
+            <div class="command normal-command other-command">
+                <h3>?newusers</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?newusers (amount)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Display the newest users in the server, to get all of them type <span class="code">?newusers *<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button></span></p>
             </div>
-            <div class="command normal-command other-command new-command">
-                <h3>?oldusers <span class="new-label">New</span></h3>
+            <div class="command normal-command other-command">
+                <h3>?oldusers</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?oldusers (amount)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Display the oldest users in the server, to get all of them type <span class="code">?oldusers *<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button></span></p>
@@ -179,8 +182,8 @@
         </span></p>
                 <p><strong>Description:</strong> Check the bot's latency.</p>
             </div>
-            <div class="command normal-command other-command new-command">
-                <h3>?prefix <span class="new-label">New</span></h3>
+            <div class="command normal-command other-command">
+                <h3>?prefix</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?prefix<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Display the bot's prefix.</p>
@@ -197,8 +200,8 @@
         </span></p>
                 <p><strong>Description:</strong> Display information about a role.</p>
             </div>
-            <div class="command normal-command other-command new-command">
-                <h3>?roll <span class="new-label">New</span></h3>
+            <div class="command normal-command other-command">
+                <h3>?roll</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?roll [lower] [upper]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Roll a number between a range.</p>
@@ -233,7 +236,7 @@
         </span></p>
                 <p><strong>Description:</strong> Get the latest space news.</p>
             </div>
-            <div class="command normal-command other-command updated-command">
+            <div class="command normal-command other-command">
                 <h3>?uptime <span class="update-label">Updated</span></h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?uptime<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
@@ -251,8 +254,8 @@
         </span></p>
                 <p><strong>Description:</strong> Create a channel and get a webhook (Max 3 saloons per user).</p>
             </div>
-            <div class="command normal-command new-command">
-                <h3>?ytstats <span class="new-label">New</span></h3>
+            <div class="command normal-command">
+                <h3>?ytstats</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?ytstats [channel]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Get statistics for a YouTube channel.</p>
@@ -324,8 +327,8 @@
         </span></p>
                 <p><strong>Description:</strong> Send a direct message to a user <div style="color: red;">(Admin only)</div></p>
             </div>
-            <div class="command admin-command new-command updated-command">
-                <h3>?embed <span class="new-label">New</span> <span class="update-label">Updated</span></h3>
+            <div class="command admin-command updated-command">
+                <h3>?embed > <span class="update-label">Updated</span></h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?embed<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Create an embed message in a channel <div style="color: red;">(Admin only)</div></p>
@@ -354,8 +357,8 @@
         </span></p>
                 <p><strong>Description:</strong> Clear all messages in a channel <div style="color: red;">(Admin only)</div></p>
             </div>
-            <div class="command admin-command new-command">
-                <h3>?rename <span class="new-label">New</span></h3>
+            <div class="command admin-command">
+                <h3>?rename</h3>
                 <p><strong>Usage:</strong> <span class="code" id="command-code">?rename [new_name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
         </span></p>
                 <p><strong>Description:</strong> Rename the bot in the server <div style="color: red;">(Admin only)</div></p>

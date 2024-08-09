@@ -114,6 +114,28 @@
         header .burger-menu {
             z-index: 1000000000000000000;
         }
+
+        .update:nth-child(n+4) {
+            display: none;
+        }
+
+        .see-more {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #7289da;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: "Changa", sans-serif;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .see-more:hover {
+            background: #5a6cb2;
+        }
     </style>
 </head>
 <body>
@@ -129,8 +151,6 @@
             <img src="photos/bot-pfp.jpg" alt="Bot Profile Picture" class="bot-pfp">
             <div class="bot-details">
                 <h1><span id="bot-name">Pulsar</span> bot</h1>
-                <p>Present in <span id="server-number">Loading...</span> servers</p>
-                <p>Along with <span id="total-users">Loading...</span> users</p>
             </div>
         </div>
         <div class="invite-button">
@@ -145,6 +165,10 @@
         <section class="updates">
             <h2>Latest Updates</h2>
             <div class="updates-container">
+                <div class="update">
+                    <h3>Commands improvment - <span class="date">09/08/2024 à 20h24</span></h3>
+                    <p>We've updated some command and added the / command to some, also server back to normal, go check it out !</p>
+                </div>
                 <div class="update">
                     <h3>Some command fixed - <span class="date">11/06/2024 à 18h13</span></h3>
                     <p>We've fixed some commands that were not working properly, still on backup server</p>
@@ -193,6 +217,7 @@
                     <h3>It's out! - <span class="date">No date</span></h3>
                     <p>The bot is now available for public use. Invite it to your server and start managing it better, If you have any suggestions or feedback, feel free to contact us.</p>
                 </div>
+                <button id="see-more" class="see-more">See More</button>
             </div>
         </section>
 
@@ -229,7 +254,7 @@
         let startTime;
 
         function updateServerInfo() {
-            fetch('https://45.140.188.39:6688/api/server_info')
+            fetch('http://45.90.12.29:6688/api/server_info')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('server-number').innerText = data.serverCount;
@@ -287,6 +312,24 @@
             setInterval(updateUptimeDisplay, 1000);  // Update uptime every second
         });
 
+        document.addEventListener('DOMContentLoaded', () => {
+        const seeMoreButton = document.getElementById('see-more');
+        const hiddenUpdates = document.querySelectorAll('.update:nth-child(n+4)');
+        
+        seeMoreButton.addEventListener('click', () => {
+            // Use GSAP to animate the appearance of hidden updates
+            gsap.to(hiddenUpdates, {
+                duration: 1,
+                display: 'block',
+                opacity: 1,
+                stagger: 0.2,
+                ease: "power2.out"
+            });
+            
+            // Hide the button after clicking
+            seeMoreButton.style.display = 'none';
+        });
+    });
 
     </script>
 </body>

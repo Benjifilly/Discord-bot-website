@@ -1,4 +1,11 @@
 function searchCommands() {
+    const noResult2 = document.getElementById('no-result2');
+    if (noResult2.style.display === "block") {
+        noResult2.style.display = "none";
+    }
+    // Reset to the default sort option
+    document.getElementById('sortOptions').value = 'default';
+    
     const input = document.getElementById('searchBar');
     const filter = input.value.toLowerCase();
     const commands = document.getElementsByClassName('command');
@@ -30,6 +37,7 @@ function searchCommands() {
     }
     updateCommandCount();
 }
+
 
 
 function toggleNav() {
@@ -92,8 +100,14 @@ function sortCommands() {
     commandSections.forEach(command => command.style.display = '');
     const searchInput = document.getElementById('searchBar');
     searchInput.value = '';
+
+    // Hide both no-result divs initially
     const noResult = document.getElementById('no-result');
+    const noResult2 = document.getElementById('no-result2');
     noResult.style.display = 'none';
+    noResult2.style.display = 'none';
+
+    let hasVisibleCommand = false;
 
     switch (sortType) {
         case 'alphabetic-order':
@@ -102,6 +116,7 @@ function sortCommands() {
                 const nameB = b.querySelector('h3').textContent.toLowerCase();
                 return nameA.localeCompare(nameB);
             });
+            hasVisibleCommand = true;
             break;
         case 'alphabetic-disorder':
             commandSections.sort((a, b) => {
@@ -109,11 +124,14 @@ function sortCommands() {
                 const nameB = b.querySelector('h3').textContent.toLowerCase();
                 return nameB.localeCompare(nameA);
             });
+            hasVisibleCommand = true;
             break;
         case 'admin':
             commandSections.forEach(command => {
                 if (!command.classList.contains('admin-command')) {
                     command.style.display = 'none';
+                } else {
+                    hasVisibleCommand = true;
                 }
             });
             break;
@@ -121,6 +139,8 @@ function sortCommands() {
             commandSections.forEach(command => {
                 if (!command.classList.contains('normal-command')) {
                     command.style.display = 'none';
+                } else {
+                    hasVisibleCommand = true;
                 }
             });
             break;
@@ -128,6 +148,8 @@ function sortCommands() {
             commandSections.forEach(command => {
                 if (!command.classList.contains('astronomy-command')) {
                     command.style.display = 'none';
+                } else {
+                    hasVisibleCommand = true;
                 }
             });
             break;
@@ -135,6 +157,8 @@ function sortCommands() {
             commandSections.forEach(command => {
                 if (!command.classList.contains('new-command')) {
                     command.style.display = 'none';
+                } else {
+                    hasVisibleCommand = true;
                 }
             });
             break;
@@ -142,6 +166,8 @@ function sortCommands() {
             commandSections.forEach(command => {
                 if (!command.classList.contains('updated-command')) {
                     command.style.display = 'none';
+                } else {
+                    hasVisibleCommand = true;
                 }
             });
             break;
@@ -149,12 +175,25 @@ function sortCommands() {
             commandSections.forEach(command => {
                 if (!command.classList.contains('bug-command')) {
                     command.style.display = 'none';
+                } else {
+                    hasVisibleCommand = true;
                 }
             });
             break;
         case 'default':
         default:
+            hasVisibleCommand = true; // Assume that the default shows all commands
             break;
+    }
+
+    // Show no-result2 only if no commands are visible after filtering
+    if (!hasVisibleCommand) {
+        noResult2.style.display = 'block';
+    }
+
+    // Ensure that no-result is not displayed at the same time as no-result2
+    if (noResult2.style.display === 'block') {
+        noResult.style.display = 'none';
     }
 
     commandsContainer.innerHTML = '';

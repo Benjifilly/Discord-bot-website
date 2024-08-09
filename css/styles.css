@@ -506,7 +506,7 @@ footer a:hover {
     opacity: 1;
 }
 
-#no-result {
+#no-result, #no-result2 {
     border: solid 1px #7289da;
     border-style: dashed;
     max-width: 500px;
