@@ -269,6 +269,41 @@ function startUptimeCounter(initialSeconds) {
     }, 1000);
 }
 
+// Custom Notification System
+function showNotification(message, type = 'info') {
+    const container = document.getElementById('notification-container');
+    if (!container) return;
+
+    // Create Toast Element
+    const toast = document.createElement('div');
+    toast.className = `notification-toast ${type}`;
+
+    // Icon based on type
+    let icon = 'info-circle';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'error') icon = 'exclamation-circle';
+    if (type === 'warning') icon = 'exclamation-triangle';
+
+    toast.innerHTML = `
+        <div class="notification-icon"><i class="fas fa-${icon}"></i></div>
+        <div class="notification-content">${message}</div>
+        <div class="notification-close" onclick="this.parentElement.remove()">&times;</div>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Auto dismiss
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
 // Contact Form Submission Logic
 document.addEventListener('DOMContentLoaded', () => {
     const contactForm = document.getElementById('contactForm');
@@ -289,12 +324,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
-                message: document.getElementById('message').value
+                message: document.getElementById('message').value,
+                type: document.getElementById('type').value
             };
 
-            // Construct API URL (derive from base or hardcode)
-            // API_BASE_URL is defined above as ".../api/server_info"
-            // We need ".../api/contact"
+            // Construct API URL
             const contactUrl = API_BASE_URL.replace('/server_info', '/contact');
 
             try {
@@ -309,15 +343,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert('Message sent successfully! 📬');
+                    showNotification('Message sent successfully! 📬', 'success');
                     contactForm.reset();
                 } else {
-                    alert('Error sending message: ' + (result.error || 'Unknown error'));
+                    showNotification('Error sending message: ' + (result.error || 'Unknown error'), 'error');
                 }
 
             } catch (error) {
                 console.error('Contact form error:', error);
-                alert('Failed to connect to the server. Please try again later.');
+                showNotification('Failed to connect to the server. Please check your connection.', 'error');
             } finally {
                 // Reset Button
                 submitBtn.innerText = originalBtnText;
@@ -327,9 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
-
 
 
 const customGroups = {
@@ -478,4 +509,3 @@ async function copyToClipboard(button) {
         console.error('Unable to copy', err);
     }
 }
-

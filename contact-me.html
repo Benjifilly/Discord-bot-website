@@ -14,6 +14,9 @@
 </head>
 
 <body>
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
     <!-- Mobile Burger Menu -->
     <div class="burger-menu" onclick="toggleNav()">
         <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
@@ -57,6 +60,17 @@
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Request Type</label>
+                    <select id="type" name="type" required>
+                        <option value="support">General Support</option>
+                        <option value="bug">Report a Bug 🐞</option>
+                        <option value="feature">Feature Request 💡</option>
+                        <option value="partnership">Partnership 🤝</option>
+                        <option value="other">Other</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
