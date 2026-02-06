@@ -66,32 +66,51 @@ document.addEventListener('click', function (event) {
 document.addEventListener("DOMContentLoaded", function () {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Animate Header elements on load
-    gsap.from("header > *:not(.burger-menu):not(.invite-button)", {
+    // Master Timeline for Initial Load Animations
+    const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+    // 1. Animate Fixed Elements (Fade In)
+    tl.from(".burger-menu, .invite-button", {
         opacity: 0,
-        y: -30,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out"
-    });
+        duration: 1.5
+    })
+        // 2. Animate Header Content (Slide Down + Fade)
+        // Runs concurrently with fixed elements or slightly delayed
+        .from("headerCanvas, header > .bot-info, header > .title, header > h1, #star-canvas", {
+            opacity: 0,
+            y: -50,
+            duration: 1.2,
+            stagger: 0.2
+        }, "-=1.0") // Overlap by 1s
+        // 3. Animate Intro & Server Stats (Slide Down + Fade) - The "Content Wrapper" parts
+        // Ensuring these animate ON LOAD as requested
+        .fromTo(".intro, .server-stats", {
+            autoAlpha: 0,
+            y: -50
+        }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.2
+        }, "-=0.5"); // Overlap by 0.5s
 
-    // Animate sections as they scroll into view
-    const sections = gsap.utils.toArray(".content-wrapper, .features, .updates, .connect-discord, footer");
+    // 4. Animate remaining sections on Scroll (Features, Updates, etc.)
+    // Exclude Intro/Stats as they are handled by the timeline above
+    const scrollSections = gsap.utils.toArray(".features, .updates, .connect-discord, footer");
 
-    sections.forEach((section, index) => {
+    scrollSections.forEach((section) => {
         gsap.fromTo(section,
-            { opacity: 0, y: 40 },
+            { autoAlpha: 0, y: -20 }, // autoAlpha handles opacity + visibility
             {
-                opacity: 1,
+                autoAlpha: 1,
                 y: 0,
-                duration: 0.8,
-                ease: "power2.out",
+                duration: 2,
+                ease: "power4.out",
                 scrollTrigger: {
                     trigger: section,
-                    start: "top 100%", // Trigger as soon as element enters viewport (bottom of screen)
+                    start: "top 95%",
                     end: "top 60%",
                     toggleActions: "play none none none",
-                    // Mobile optimization
                     invalidateOnRefresh: true
                 }
             }
@@ -107,9 +126,9 @@ document.addEventListener("DOMContentLoaded", function () {
             ease: "power2.inOut",
             scrollTrigger: {
                 trigger: ".line-divider",
-                start: "top 90%",
-                end: "top 50%",
-                scrub: 1, // Smooth animation tied to scroll position
+                start: "top 95%", // Start triggering as soon as it enters view
+                end: "bottom 40%", // Finish drawing before it leaves
+                scrub: 1,
                 invalidateOnRefresh: true
             }
         });
