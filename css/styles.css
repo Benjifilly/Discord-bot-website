@@ -9,7 +9,8 @@ body {
     user-select: auto;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     overflow-x: hidden;
@@ -60,44 +61,103 @@ html, body {
     top: 0;
     left: 0;
     height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    width: 280px;
+    background: #23272a;
+    /* Darker background */
     display: flex;
     z-index: 99;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
+    justify-content: flex-start;
+    /* Align items to the top */
+    align-items: flex-start;
+    padding-top: 0;
+    /* Space for the top area */
     visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+    border-right: 1px solid #2c2f33;
+    box-sizing: border-box;
+}
+
+.sidebar-header {
+    width: 100%;
+    padding: 25px 20px 25px 100px;
+    background: #2c2f33;
+    /* Slightly lighter header background */
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #1e2124;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.sidebar-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid #7289da;
+}
+
+.sidebar-header h3 {
+    color: #fff;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .nav-bar.open {
-    opacity: 1;
     visibility: visible;
+    transform: translateX(0);
 }
 
 .nav-bar a {
-    padding: 15px 30px;
+    width: 100%;
+    padding: 18px 30px;
+    box-sizing: border-box;
     text-decoration: none;
-    font-size: 22px;
-    color: #f0f0f0;
-    display: block;
-    transition: background-color 0.3s, padding-left 0.3s, box-shadow 0.3s;
-    margin: 10px 0;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #4e5d94, #7289da);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    font-size: 18px;
+    color: #b9bbbe;
+    /* Muted text color */
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    margin: 0;
+    /* Remove margins */
+    border-radius: 0;
+    /* Remove rounded corners */
+    background: transparent;
+    /* Remove gradient */
+    box-shadow: none;
+    /* Remove shadow */
+    border-left: 4px solid transparent;
 }
 
 .nav-bar a:hover {
-    background: linear-gradient(135deg, #7289da, #4e5d94);
+    background: rgba(114, 137, 218, 0.1);
+    /* Subtle hover background */
+    color: #fff;
+    border-left-color: #7289da;
+    /* Accent color on the left */
+    padding-left: 35px;
+    /* Slight shift effect */
+}
+
+.nav-bar a i {
+    min-width: 30px;
+    /* Fixed space for icons */
+    font-size: 20px;
+    margin-right: 15px;
+    text-align: center;
 }
 
 @media screen and (max-width: 768px) {
     .burger-menu {
         display: flex;
     }
+
     .invite-button {
         position: absolute;
         top: 35px;
@@ -110,7 +170,8 @@ html, body {
     .discord-button {
         background: transparent;
         position: relative;
-        padding: 5px 60px; /* Increased padding to make it wider */
+        padding: 5px 60px;
+        /* Increased padding to make it wider */
         display: flex;
         align-items: center;
         font-size: 17px;
@@ -133,12 +194,13 @@ html, body {
         border: #2c2f33;
         font-style: italic;
         color: #f0f0f0;
-        padding: 5px 5px 5px 5px; /* Adjusted padding to accommodate the button */
+        padding: 5px 5px 5px 5px;
+        /* Adjusted padding to accommodate the button */
         border-radius: 5px;
         margin-bottom: -10px;
         overflow-x: auto;
     }
-    
+
     .copy-button {
         position: absolute;
         top: 30%;
@@ -166,8 +228,14 @@ header {
     color: #fff;
     padding: 20px;
     text-align: center;
-    border-bottom: 1px solid #7289da;
     position: relative;
+    background-attachment: fixed;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 150px;
+    /* Prevent content jump on reload */
+    overflow: hidden;
 }
 
 .bot-info {
@@ -184,6 +252,15 @@ header {
     margin-right: 20px;
 }
 
+
+.invite-button {
+    position: fixed;
+    top: 40px;
+    /* Lowered position */
+    right: 30px;
+    z-index: 100;
+}
+
 .invite-button a {
     background-color: #7289da;
     color: #ffffff;
@@ -191,10 +268,12 @@ header {
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .invite-button a:hover {
     background-color: #4e5d94;
+    transform: translateY(-2px);
 }
 
 header h1 {
@@ -231,7 +310,7 @@ main {
 .search-container lord-icon {
     margin-right: -48px;
     pointer-events: none;
-    transform: scale(0.8); 
+    transform: scale(0.8);
 }
 
 .command-list {
@@ -264,82 +343,208 @@ footer {
     position: relative;
     bottom: 0;
     left: 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
     font-family: 'Arial', sans-serif;
+    background: rgba(35, 39, 42, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(114, 137, 218, 0.3);
+}
+
+.footer-content {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-creator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-creator img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #7289da;
+    object-fit: cover;
+    /* Prevent squishing */
+}
+
+.footer-creator span {
+    color: #b9bbbe;
+    font-size: 14px;
+}
+
+.footer-creator strong {
+    color: #fff;
+}
+
+.footer-links {
+    display: flex;
+    gap: 30px;
+}
+
+.footer-links a {
+    color: #b9bbbe;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-links a:hover {
+    color: #7289da;
+    transform: translateY(-2px);
+}
+
+.footer-links a i {
+    font-size: 18px;
+}
+
+.footer-bottom {
+    width: 100%;
+    text-align: center;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    color: #72767d;
+    margin: 0;
+    font-size: 13px;
 }
 
 footer a {
     color: #7289da;
     text-decoration: none;
-    margin: 0 10px;
-    font-size: 1.2em;
     transition: color 0.3s ease;
 }
 
 footer a:hover {
-    color: #99aab5;
-}
-
-.social-icons {
-    text-align:center;
-    border-top: 1px solid #7289da;
-    width: 100%;
-    padding-top: 10px;
-}
-
-.social-icons a {
-    margin: 0 15px;
-    font-size: 1.5em;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.social-icons a:hover {
-    transform: scale(1.2);
-    color: #99aab5;
+    color: #5865f2;
 }
 
 .footer-text {
     margin: 10px 0;
 }
 
-.intro, .updates, .connect-discord {
-    background: linear-gradient(135deg, #2c2f33, #23272a);
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Glassmorphism for Updates and Connect Discord */
+.updates,
+.connect-discord {
+    background: rgba(44, 47, 51, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 40px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+    max-width: 1320px;
+    /* Same as content-wrapper (1400 - 2*40 padding) */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.intro h2, .updates h2, .connect-discord h2 {
-    color: #7289da;
+.updates:hover,
+.connect-discord:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(114, 137, 218, 0.3);
 }
 
+.updates h2,
+.connect-discord h2 {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    margin-top: 0;
+}
+
+/* Update Cards */
 .update {
-    background: linear-gradient(135deg, #4a4b4d, #6e777d);
-    padding: 10px;
-    margin-bottom: 10px;
+    background: rgba(32, 34, 37, 0.6);
+    padding: 20px;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    /* Space between card and scrollbar on PC */
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-left: 4px solid #7289da;
+    border-radius: 8px;
+    /* Fully rounded on all corners */
+    transition: background 0.2s ease;
 }
 
-.update .date{
+.update:hover {
+    background: rgba(44, 47, 51, 0.8);
+}
+
+.update .date {
     color: #7289da;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.update h3 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 18px;
+}
+
+.update p {
+    color: #dcddde;
+    margin-bottom: 0;
 }
 
 .bad-update {
-    background: linear-gradient(135deg, #4a4b4d, #6e777d);
-    padding: 10px;
-    margin-bottom: 10px;
-    border-left: 4px solid #d10c0c;
+    background: rgba(32, 34, 37, 0.6);
+    padding: 20px;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    /* Space between card and scrollbar on PC */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 4px solid #f04747;
+    border-radius: 8px;
+    /* Fully rounded on all corners */
+    transition: background 0.2s ease;
 }
 
-.bad-update .date{
-    color: #7289da;
+.bad-update:hover {
+    background: rgba(44, 47, 51, 0.8);
+}
+
+.bad-update .date {
+    color: #f04747;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.bad-update h3 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 18px;
+}
+
+.bad-update p {
+    color: #dcddde;
+    margin-bottom: 0;
 }
 
 .discord-button {
     background: transparent;
     position: relative;
-    padding: 5px 50px; /* Increased padding to make it wider */
+    padding: 5px 50px;
+    /* Increased padding to make it wider */
     display: flex;
     align-items: center;
     font-size: 17px;
@@ -385,9 +590,12 @@ footer a:hover {
 .discord-button:hover::before {
     box-shadow: inset 0 0 0 10em rgba(88, 101, 242, 1);
 }
+
 .updates-container {
     max-height: 300px;
     overflow-y: auto;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll */
     scrollbar-width: thin;
     scrollbar-color: #7289da #4a4b4d;
 }
@@ -453,7 +661,7 @@ footer a:hover {
     margin-left: 10px;
     font-size: 12px;
     border-radius: 5px;
-}   
+}
 
 .update-label {
     display: inline-block;
@@ -482,7 +690,8 @@ footer a:hover {
     border: #2c2f33;
     font-style: italic;
     color: #f0f0f0;
-    padding: 5px 23px 5px 5px; /* Adjusted padding to accommodate the button */
+    padding: 5px 23px 5px 5px;
+    /* Adjusted padding to accommodate the button */
     border-radius: 5px;
     margin-bottom: -10px;
     overflow-x: auto;
@@ -506,7 +715,8 @@ footer a:hover {
     opacity: 1;
 }
 
-#no-result, #no-result2 {
+#no-result,
+#no-result2 {
     border: solid 1px #7289da;
     border-style: dashed;
     max-width: 500px;
@@ -527,12 +737,313 @@ footer a:hover {
         transform: scale(1);
         opacity: 1;
     }
+
     50% {
         transform: scale(1.05);
         opacity: 0.8;
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+/* Features Section */
+.features {
+    max-width: 1320px;
+    margin: 60px auto;
+    padding: 0 40px;
+    text-align: center;
+}
+
+.features h2 {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 50px;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.feature-card {
+    background: rgba(44, 47, 51, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+    border-color: rgba(114, 137, 218, 0.4);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #7289da, #5865f2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(114, 137, 218, 0.3);
+}
+
+.feature-icon i {
+    font-size: 32px;
+    color: #fff;
+}
+
+.feature-card h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #b9bbbe;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Animated Line Divider */
+.line-divider {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 40px;
+}
+
+.line-divider svg {
+    width: 100%;
+    height: 4px;
+    overflow: visible;
+}
+
+.animated-line {
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    /* Start hidden - will animate to 0 */
+    opacity: 0.6;
+}
+
+/* Responsive Features */
+@media screen and (max-width: 1200px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features h2 {
+        font-size: 28px;
+    }
+}
+
+/* Server Statistics Section */
+/* Wrapper for Intro and Stats - Glassmorphism Layout */
+.content-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 40px auto;
+    align-items: stretch;
+    /* Stretch to same height */
+    padding: 0 40px;
+    /* More breathing room */
+}
+
+/* Card base style for Intro and Stats sections */
+.intro,
+.server-stats {
+    background: rgba(44, 47, 51, 0.4);
+    /* More transparent for glass effect */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Subtle border */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1;
+    /* Default equal flex */
+    margin-bottom: 0px;
+    /* Reset override */
+}
+
+.intro:hover,
+.server-stats:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(114, 137, 218, 0.3);
+}
+
+.intro {
+    flex: 1;
+    /* intro takes less space visual weight, but here we balance it */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.server-stats {
+    flex: 1.5;
+    /* Stats area slightly wider if needed, or keeping balanced */
+    text-align: center;
+}
+
+
+/* Titles inside the glass cards */
+.intro h2,
+.server-stats h2 {
+    font-size: 32px;
+    margin-bottom: 25px;
+    color: #fff;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 0;
+}
+
+.intro p {
+    font-size: 18px;
+    color: #dcddde;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+.intro h2 {
+    color: #7289da;
+    /* Brand color for welcome title */
+}
+
+/* Stats Grid Polish */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Force 3 columns = 2 rows of 3 */
+    gap: 25px;
+    /* More spacing between cards */
+}
+
+.stat-card {
+    background: rgba(32, 34, 37, 0.6);
+    /* Darker inner cards */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(114, 137, 218, 0.5);
+    background: rgba(44, 47, 51, 0.8);
+}
+
+.stat-card i {
+    font-size: 28px;
+    color: #7289da;
+    margin-bottom: 15px;
+    /* Removed drop-shadow for cleaner look */
+}
+
+.stat-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8e9297;
+    font-weight: 600;
+}
+
+.stat-card span {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    font-family: "Changa", sans-serif;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Mobile / Responsive Adaptation */
+@media screen and (max-width: 1000px) {
+    .content-wrapper {
+        flex-direction: column;
+        padding: 0 20px;
+        gap: 30px;
+        margin: 20px auto;
+    }
+
+    .intro,
+    .server-stats {
+        width: 100%;
+        margin-bottom: 0;
+        padding: 30px;
+        /* Reduce padding on mobile */
+        height: auto;
+        box-sizing: border-box;
+        /* Ensure padding doesn't overflow width */
+    }
+
+    .intro {
+        text-align: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Force 2 columns on mobile/tablet */
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Keep 2 cols even on small phones for density, or 1 if preferred. 2 is usually better for stats */
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card span {
+        font-size: 20px;
+    }
+
+    .stat-card i {
+        font-size: 24px;
     }
 }

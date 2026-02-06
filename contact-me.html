@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="bot-pfp.jpg" type="image/x-icon">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/scripts.js"></script>
-    <title>Contact Me</title>
+    <title>Pulsar - Contact Me</title>
     <style>
         body {
             margin: 0;
@@ -16,15 +17,23 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            background: linear-gradient(45deg, #000000, #2c3242 , #7289da);
+            background: linear-gradient(45deg, #000000, #2c3242, #7289da);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
         }
 
         @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .contact-form {
@@ -52,7 +61,9 @@
             color: #ffffff;
         }
 
-        .contact-form input, .contact-form textarea, .contact-form select {
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 10px;
@@ -65,7 +76,9 @@
             background-color: #f9f9f9;
         }
 
-        .contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus {
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus {
             border-color: #7289da;
             box-shadow: 0 0 8px rgba(114, 137, 218, 0.6);
             outline: none;
@@ -119,9 +132,12 @@
 
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-10px);
             }
@@ -133,18 +149,20 @@
         }
 
         @keyframes blink {
-            from, to {
+
+            from,
+            to {
                 opacity: 1;
             }
+
             50% {
                 opacity: 0;
             }
         }
-
     </style>
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        (function() {
+        (function () {
             emailjs.init('iRZEUyns5_gal-B1Z');
         })();
 
@@ -152,9 +170,9 @@
             event.preventDefault();
 
             emailjs.sendForm('service_pdetble', 'template_8wuc7gr', event.target)
-                .then(function() {
+                .then(function () {
                     alert('Email sent successfully!');
-                }, function(error) {
+                }, function (error) {
                     alert('Failed to send email. Error: ' + JSON.stringify(error));
                 });
         }
@@ -210,13 +228,14 @@
             typeWriter();
         }
 
-        window.onload = function() {
+        window.onload = function () {
             writeAnimation();
         };
 
 
     </script>
 </head>
+
 <body>
     <div class="burger-menu" onclick="toggleNav()">
         <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
@@ -226,10 +245,14 @@
         </svg>
     </div>
     <nav id="navBar" class="nav-bar">
-        <a href="index.html">Home</a>
-        <a href="commands.html">Commands</a>
-        <a href="#">Incoming</a>
-        <a href="contact-me.html" style="color: rgba(255, 255, 255, 0.514);">Contact-me</a>
+        <div class="sidebar-header">
+            <img src="photos/bot-pfp.jpg" alt="Pulsar Logo">
+            <h3>Pulsar</h3>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="commands.html"><i class="fas fa-terminal"></i> Commands</a>
+        <a href="#"><i class="fas fa-clock"></i> Incoming</a>
+        <a href="contact-me.html" style="color: #fff;"><i class="fas fa-envelope"></i> Contact-me</a>
     </nav>
     <div class="contact-form">
         <h2 id="contact-me"></h2>
@@ -248,4 +271,5 @@
         </form>
     </div>
 </body>
+
 </html>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Bot Commands</title>
+    <title>Pulsar - Commands</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="bot-pfp.jpg" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
@@ -11,42 +12,44 @@
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
+    <div class="burger-menu" onclick="toggleNav()">
+        <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+            <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
+            <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
+            <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
+        </svg>
+    </div>
     <header>
-        <div class="burger-menu" onclick="toggleNav()">
-            <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
-                <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
-                <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
-                <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
-            </svg>
-        </div>
         <h1 class="title">Discord Bot Commands</h1>
         <div class="bot-info">
             <img src="photos/bot-pfp.jpg" alt="Bot Profile Picture" class="bot-pfp">
             <div class="bot-details">
-                <p><strong>Bot Name:</strong> Sol's Helper#4928</p>
+                <p><strong>Bot Name:</strong> Pulsar</p>
                 <p><strong>Description:</strong> A versatile Discord bot to help manage your server.</p>
             </div>
         </div>
         <div class="invite-button">
-            <a href="https://discord.com/oauth2/authorize?client_id=1242422539087642696&scope=bot&permissions=8" target="_blank">Invite Bot</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1242422539087642696&scope=bot&permissions=8"
+                target="_blank">Invite</a>
         </div>
     </header>
-    
+
     <nav id="navBar" class="nav-bar">
-        <a href="index.html">Home</a>
-        <a href="commands.html" style="color: rgba(255, 255, 255, 0.514);">Commands</a>
-        <a href="">Incoming</a>
-        <a href="contact-me.html">Contact-me</a>
+        <div class="sidebar-header">
+            <img src="photos/bot-pfp.jpg" alt="Pulsar Logo">
+            <h3>Pulsar</h3>
+        </div>
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="commands.html" style="color: #fff;"><i class="fas fa-terminal"></i> Commands</a>
+        <a href="#"><i class="fas fa-clock"></i> Incoming</a>
+        <a href="contact-me.html"><i class="fas fa-envelope"></i> Contact-me</a>
     </nav>
     <main>
         <div class="search-container">
-            <lord-icon
-                id="searchIcon"
-                src="https://cdn.lordicon.com/fkdzyfle.json"
-                trigger="click"
-                colors="primary:#7289da"
-                style="width:40px;height:40px;">
+            <lord-icon id="searchIcon" src="https://cdn.lordicon.com/fkdzyfle.json" trigger="click"
+                colors="primary:#7289da" style="width:40px;height:40px;">
             </lord-icon>
             <input type="text" id="searchBar" placeholder="Search commands..." onkeyup="searchCommands()">
         </div>
@@ -64,341 +67,483 @@
                 <option value="updated">Updated Commands</option>
                 <option value="bug">Commands with Bugs</option>
             </select>
-        </div>  
+        </div>
         <div id="no-result" style="color: white; display: none; text-align: center;">
             <h2>No command (◡︵◡)</h2>
-            <p>Command not found, <a href="">contact the owner </a><br> if you want "<span id="no-result-query"></span><span id="ellipsis" style="display: none;"><span>.</span><span>.</span><span>.</span></span>" to be added</p>
-        </div> 
+            <p>Command not found, <a href="">contact the owner </a><br> if you want "<span
+                    id="no-result-query"></span><span id="ellipsis"
+                    style="display: none;"><span>.</span><span>.</span><span>.</span></span>" to be added</p>
+        </div>
         <div id="no-result2" style="color: white; display: none; text-align: center;">
             <h2>No command (◡︵◡)</h2>
-        </div> 
+        </div>
         <section class="command-list">
             <h2>Commands</h2>
             <div class="command normal-command">
+                <h3>?active_polls</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?active_polls<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> List all active polls.</p>
+            </div>
+            <div class="command normal-command">
                 <h3>?about</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?about<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?about<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display information about the bot.</p>
             </div>
             <div class="command normal-command">
                 <h3>?avatar</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?avatar (user)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?avatar (user)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display a user's avatar</p>
             </div>
             <div class="command normal-command">
                 <h3>?cat</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?cat<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?cat<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get a random cat picture</p>
             </div>
             <div class="command normal-command">
                 <h3>?catraid</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?catraid<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?catraid<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get 5 random cat picture</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?code</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?code [text]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?code [text]<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong>Send text in a code block</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?daily_astronomy</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?daily_astronomy<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?daily_astronomy<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong>Get the daily astronomy picture and Description</p>
             </div>
             <div class="command normal-command updated-command">
                 <h3>?forecast <span class="update-label">Updated</span></h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?forecast [city]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?forecast [city]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong>Get the weather forecast for a location</p>
             </div>
             <div class="command normal-command">
                 <h3>?help <span class="update-label">Updated</span></h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?help (command)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?help (command)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display all available commands.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?invite</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?invite<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?invite<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get the bot's invite link.</p>
-            </div>  
+            </div>
             <div class="command normal-command other-command">
                 <h3>?join</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?join<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?join<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Join a voice channel.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?joke</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?joke<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?joke<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get a random joke.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?leave</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?leave<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?leave<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Leave the voice channel.</p>
+            </div>
+            <div class="command normal-command">
+                <h3>?meme</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?meme<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Get a random meme.</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?mars_rover</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?mars_rover<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?mars_rover<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong>Get a Mars Rover picture and Description</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?moon</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?moon [location]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?moon [location]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong>Get the moon phase for a location</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?neo</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?neo<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?neo<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong>Get a random Near Earth Object</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?newusers</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?newusers (amount)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Display the newest users in the server, to get all of them type <span class="code">?newusers *<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button></span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?newusers (amount)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Display the newest users in the server, to get all of them type <span
+                        class="code">?newusers *<button class="copy-button" onclick="copyToClipboard(this)"><i
+                                class="fas fa-copy"></i></button></span></p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?oldusers</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?oldusers (amount)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Display the oldest users in the server, to get all of them type <span class="code">?oldusers *<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button></span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?oldusers (amount)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Display the oldest users in the server, to get all of them type <span
+                        class="code">?oldusers *<button class="copy-button" onclick="copyToClipboard(this)"><i
+                                class="fas fa-copy"></i></button></span></p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?ping</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?ping<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?ping<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Check the bot's latency.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?prefix</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?prefix<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?prefix<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display the bot's prefix.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?remind</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?remind [time] [message]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?remind [time] [message]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Set a reminder for a certain time.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?roleinfo</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?roleinfo [role]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?roleinfo [role]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display information about a role.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?roll</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?roll [lower] [upper]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?roll [lower] [upper]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Roll a number between a range.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?say</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?say (channel) [message]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?say (channel) [message]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Make the bot say a message.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?server</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?server<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?server<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display server information.</p>
             </div>
             <div class="command normal-command other-command">
-                <h3>?show-profile</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?show-profile (user)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <h3>?ship</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?ship [user1] [user2]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Calculate the ship percentage between two users.</p>
+            </div>
+            <div class="command normal-command other-command">
+                <h3>?show_profile</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?show_profile (user)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Display a user's profile.</p>
             </div>
             <div class="command astronomy-command normal-command">
                 <h3>?space_fact</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?space_fact<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?space_fact<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get a random space fact.</p>
             </div>
             <div class="command normal-command other-command">
                 <h3>?uptime <span class="update-label">Updated</span></h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?uptime<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?uptime<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Check the bot's uptime.</p>
             </div>
             <div class="command normal-command">
                 <h3>?weather</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?weather [city]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?weather [city]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get the weather for a location.</p>
             </div>
             <div class="command normal-command">
                 <h3>?webhook</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?webhook (saloon_name)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?webhook (saloon_name)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Create a channel and get a webhook (Max 3 saloons per user).</p>
             </div>
             <div class="command normal-command">
                 <h3>?ytstats</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?ytstats [channel]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?ytstats [channel]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
                 <p><strong>Description:</strong> Get statistics for a YouTube channel.</p>
             </div>
             <h2>Admin Commands </h2>
             <div class="command admin-command">
                 <h3>?ban</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?ban [user] [duration] (reason)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Ban a user from the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?ban [user] [duration] (reason)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Ban a user from the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command updated-command">
-                <h3>?banned-users <span class="update-label">Updated</span></h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?banned-users (search_user)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Display all banned users in the server or search for a specific user <div style="color: red;">(Admin only)</div></p>
+                <h3>?banned_users <span class="update-label">Updated</span></h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?banned_users (search_user)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Display all banned users in the server or search for a specific user
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?clear</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?clear (amount)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Clear a certain amount of messages <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?clear (amount)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Clear a certain amount of messages
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?create-category</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?create-category [category name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Create a new category in the server <div style="color: red;">(Admin only)</div></p>
+                <h3>?create_category</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?create_category [category name]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Create a new category in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?create-channel</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?create-channel [category] [channel name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Create a new channel in the server <div style="color: red;">(Admin only)</div></p>
+                <h3>?create_channel</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?create_channel [category] [channel
+                        name]<button class="copy-button" onclick="copyToClipboard(this)"><i
+                                class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Create a new channel in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?create-role</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?create-role [role name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Create a new role in the server <div style="color: red;">(Admin only)</div></p>
+                <h3>?create_role</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?create_role [role name]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Create a new role in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?delete-category</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete-category [category]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Delete a category in the server <div style="color: red;">(Admin only)</div></p>
+                <h3>?delete_category</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete_category [category]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Delete a category in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?delete-channel</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete-channel [channel_name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Delete a channel in the server <div style="color: red;">(Admin only)</div></p>
+                <h3>?delete_channel</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete_channel [channel_name]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Delete a channel in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?delete-role</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete-role [role_name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Delete a role in the server <div style="color: red;">(Admin only)</div></p>
+                <h3>?delete_poll</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete_poll [poll_id]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Delete a poll by its ID
+                <div style="color: red;">(Admin only)</div>
+                </p>
+            </div>
+            <div class="command admin-command">
+                <h3>?delete_role</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?delete_role [role_name]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Delete a role in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?disable_logs</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?disable_logs<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Disable moderation logs in the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?disable_logs<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Disable moderation logs in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?dm</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?dm [user] [message]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Send a direct message to a user <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?dm [user] [message]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Send a direct message to a user
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command updated-command">
                 <h3>?embed > <span class="update-label">Updated</span></h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?embed<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Create an embed message in a channel <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?embed<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Create an embed message in a channel
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?kick</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?kick [user] (reason)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Kick a user from the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?kick [user] (reason)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Kick a user from the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?mute</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?mute [user] [duration] (reason)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Mute a user in the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?mute [user] [duration] (reason)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Mute a user in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?poll</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?poll<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Create a poll in the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?poll<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Create a poll in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?purge</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?purge<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Clear all messages in a channel <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?purge<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Clear all messages in a channel
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?rename</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?rename [new_name]<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Rename the bot in the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?rename [new_name]<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Rename the bot in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
-                <h3>?setup-logs</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?setup-logs<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Set the channel for moderation logs <div style="color: red;">(Admin only)</div></p>
+                <h3>?setup_logs</h3>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?setup_logs<button class="copy-button"
+                            onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Set the channel for moderation logs
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?setup_webhook</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?setup_webhook<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Set the category for user-created webhooks <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?setup_webhook<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Set the category for user-created webhooks
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?unban</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?unban [user_id] (reason)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Unban a user from the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?unban [user_id] (reason)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Unban a user from the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?unmute</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?unmute [user] (reason)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Unmute a user in the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?unmute [user] (reason)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Unmute a user in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
             <div class="command admin-command">
                 <h3>?warn</h3>
-                <p><strong>Usage:</strong> <span class="code" id="command-code">?warn [user] (reason)<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-        </span></p>
-                <p><strong>Description:</strong> Warn a user in the server <div style="color: red;">(Admin only)</div></p>
+                <p><strong>Usage:</strong> <span class="code" id="command-code">?warn [user] (reason)<button
+                            class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+                    </span></p>
+                <p><strong>Description:</strong> Warn a user in the server
+                <div style="color: red;">(Admin only)</div>
+                </p>
             </div>
         </section>
     </main>
     <footer>
-        <div class="footer-text">&copy; 2024 Pulsar. All rights reserved.</div>
-        <div class="footer-text">Contact me: <a href="http://discordapp.com/users/882920589269020672">Discord: Edzar#edzar1070</a></div>
-        <div class="social-icons">
-            <a href="https://twitter.com/" target="_blank" class="fab fa-twitter"></a>
-            <a href="https://facebook.com/" target="_blank" class="fab fa-facebook-f"></a>
-            <a href="https://instagram.com/" target="_blank" class="fab fa-instagram"></a>
-            <a href="https://linkedin.com/" target="_blank" class="fab fa-linkedin-in"></a>
+        <div class="footer-content">
+            <div class="footer-creator">
+                <img src="photos/discord_pfp.png" alt="Edzar">
+                <span>Made by <strong>Edzar</strong></span>
+            </div>
+            <div class="footer-links">
+                <a href="commands.html"><i class="fas fa-terminal"></i> Commands</a>
+                <a href="http://discordapp.com/users/882920589269020672" target="_blank"><i class="fab fa-discord"></i>
+                    Contact</a>
+                <a href="https://discord.gg/ckWxxg5G3x" target="_blank"><i class="fas fa-server"></i> Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Pulsar &nbsp;|&nbsp; <a href="terms.html">Terms</a> &nbsp;|&nbsp; <a
+                    href="privacy.html">Privacy</a></p>
         </div>
     </footer>
     <script src="js/scripts.js"></script>
 </body>
+
 </html>

@@ -5,7 +5,7 @@ function searchCommands() {
     }
     // Reset to the default sort option
     document.getElementById('sortOptions').value = 'default';
-    
+
     const input = document.getElementById('searchBar');
     const filter = input.value.toLowerCase();
     const commands = document.getElementsByClassName('command');
@@ -47,39 +47,82 @@ function toggleNav() {
     burgerMenu.classList.toggle('open');
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    gsap.from("header > *:not(.burger-menu)", {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.out"
-    });
+// Close sidebar when clicking outside
+document.addEventListener('click', function (event) {
+    const navBar = document.getElementById('navBar');
+    const burgerMenu = document.querySelector('.burger-menu');
 
-    gsap.from("main > *", {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        stagger: 0.3,
-        ease: "power2.out"
-    });
+    // Check if the sidebar is open and the click is NOT inside the sidebar or the burger menu
+    if (navBar.classList.contains('open') &&
+        !navBar.contains(event.target) &&
+        !burgerMenu.contains(event.target)) {
 
-    gsap.from("footer > *", {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.out"
-    });
-
-    gsap.from("#navBar a", {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        stagger: 0.3,
-        ease: "power2.out"
-    });
+        navBar.classList.remove('open');
+        burgerMenu.classList.remove('open');
+    }
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Animate Header elements on load
+    gsap.from("header > *:not(.burger-menu):not(.invite-button)", {
+        opacity: 0,
+        y: -30,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out"
+    });
+
+    // Animate sections as they scroll into view
+    const sections = gsap.utils.toArray(".content-wrapper, .features, .updates, .connect-discord, footer");
+
+    sections.forEach((section, index) => {
+        gsap.fromTo(section,
+            { opacity: 0, y: 40 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 100%", // Trigger as soon as element enters viewport (bottom of screen)
+                    end: "top 60%",
+                    toggleActions: "play none none none",
+                    // Mobile optimization
+                    invalidateOnRefresh: true
+                }
+            }
+        );
+    });
+
+    // Animated line divider - draws on scroll
+    const animatedLine = document.querySelector('.animated-line');
+    if (animatedLine) {
+        gsap.to(animatedLine, {
+            strokeDashoffset: 0,
+            duration: 1.5,
+            ease: "power2.inOut",
+            scrollTrigger: {
+                trigger: ".line-divider",
+                start: "top 90%",
+                end: "top 50%",
+                scrub: 1, // Smooth animation tied to scroll position
+                invalidateOnRefresh: true
+            }
+        });
+    }
+
+    // Refresh ScrollTrigger on load to fix positioning issues
+    ScrollTrigger.refresh();
+
+});
+
+
+
+
 
 const customGroups = {
     Astronomy: ['?daily_astronomy', '?mars_rover', '?moon', '?neo', '?space_fact', '?space_news'],
@@ -88,12 +131,18 @@ const customGroups = {
 };
 
 function updateCommandCount() {
+    const commandCountEl = document.getElementById('commandCount');
+    if (!commandCountEl) return; // Exit if element doesn't exist (e.g., on index.html)
+
     const commands = document.querySelectorAll('.command:not([style*="display: none"])');
-    document.getElementById('commandCount').textContent = commands.length;
+    commandCountEl.textContent = commands.length;
 }
 
 function sortCommands() {
-    const sortType = document.getElementById('sortOptions').value;
+    const sortOptions = document.getElementById('sortOptions');
+    if (!sortOptions) return; // Exit if element doesn't exist
+
+    const sortType = sortOptions.value;
     const commandsContainer = document.querySelector('.command-list');
     const commandSections = Array.from(commandsContainer.querySelectorAll('.command'));
 
@@ -202,7 +251,7 @@ function sortCommands() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    sortCommands(); 
+    sortCommands();
     updateCommandCount();
 });
 
