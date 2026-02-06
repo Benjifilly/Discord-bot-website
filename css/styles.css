@@ -1266,12 +1266,7 @@ footer,
     }
 
     /* Index/Commands Header Mobile Optimization */
-    header {
-        padding-top: 80px;
-        /* More space for burger menu */
-        padding-bottom: 20px;
-        min-height: auto;
-    }
+
 
     .bot-info {
         flex-direction: column;
