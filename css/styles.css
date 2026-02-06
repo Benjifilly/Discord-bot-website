@@ -1247,6 +1247,20 @@ footer,
     opacity: 0.8;
 }
 
+/* Commands Header PC/Global Tweaks */
+.commands-header .bot-info {
+    display: display;
+    /* Mistake in thought process, wait. Default is flex. If I set none here, I must override in mobile. */
+    /* User said: "enlève bot info dans commandes" (PC) */
+    display: none;
+}
+
+.commands-header {
+    min-height: 25vh;
+    /* Reduced height on PC */
+    padding-bottom: 5vw;
+}
+
 @media screen and (max-width: 768px) {
 
     /* Legal Header Mobile Optimization */
@@ -1266,8 +1280,6 @@ footer,
     }
 
     /* Index/Commands Header Mobile Optimization */
-
-
     .bot-info {
         flex-direction: column;
         gap: 10px;
@@ -1299,13 +1311,21 @@ footer,
     /* Specific Commands Page Header Tweaks */
     .commands-header .bot-pfp {
         display: none;
-        /* remove icon */
+        /* icon remains hidden on mobile */
+    }
+
+    .commands-header .bot-info {
+        display: flex;
+        /* Restore visibility on mobile */
+        margin-top: -15px;
+        /* Move slightly higher */
     }
 
     .commands-header {
         min-height: 20vh;
-        /* slightly lower height */
         padding-bottom: 10px;
+        padding-top: 60px;
+        /* Reduced from default/80px to move content up */
     }
 }
 
