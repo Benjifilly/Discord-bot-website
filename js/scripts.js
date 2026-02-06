@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    showNotification('Message sent successfully! 📬', 'success');
+                    showNotification('Message sent successfully!', 'success');
                     contactForm.reset();
                 } else {
                     showNotification('Error sending message: ' + (result.error || 'Unknown error'), 'error');
