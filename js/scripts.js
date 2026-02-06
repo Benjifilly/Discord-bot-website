@@ -175,7 +175,98 @@ document.addEventListener("DOMContentLoaded", function () {
     // Refresh ScrollTrigger on load to fix positioning issues
     ScrollTrigger.refresh();
 
+    // Start fetching bot stats
+    fetchBotStats();
+    // Refresh stats every 30 seconds
+    setInterval(fetchBotStats, 30000);
 });
+
+// Configure your Railway URL here (e.g., https://pulsar-bot.up.railway.app)
+const API_BASE_URL = "https://discord-bot-production-2057.up.railway.app/api/server_info";
+
+async function fetchBotStats() {
+    const serverCountEl = document.getElementById('server-number');
+    const userCountEl = document.getElementById('total-users'); // Check ID match
+    const channelCountEl = document.getElementById('total-channels');
+    const uptimeEl = document.getElementById('uptime');
+    const latencyEl = document.getElementById('latency');
+    const statusEl = document.getElementById('bot-status');
+
+    // Only run if we are on the page with stats
+    if (!serverCountEl) return;
+
+    try {
+        // Fetch data from the bot's API
+        // Ensure your bot code (keep_alive.py) has CORS allowed!
+        const response = await fetch(`${API_BASE_URL}`);
+
+        if (!response.ok) throw new Error('Bot offline or API error');
+
+        const data = await response.json();
+
+        // Update DOM
+        serverCountEl.innerText = data.serverCount || "---";
+        userCountEl.innerText = data.totalUsers || "---";
+        channelCountEl.innerText = data.totalChannels || "---";
+
+        // Format latency (seconds -> ms)
+        const latencyMs = Math.round((data.latency || 0) * 1000);
+        latencyEl.innerText = latencyMs + "ms";
+
+        if (statusEl) {
+            statusEl.innerText = data.botStatus || "Online";
+            statusEl.style.color = "#43b581"; // Discord Online Green
+        }
+
+        // Handle Uptime Logic
+        if (data.uptime) {
+            const currentSeconds = parseUptime(data.uptime);
+            startUptimeCounter(currentSeconds);
+        }
+
+    } catch (error) {
+        console.error("Error fetching stats:", error);
+        if (statusEl) {
+            statusEl.innerText = "Offline";
+            statusEl.style.color = "#f04747";
+        }
+    }
+}
+
+// Global variables for uptime counter
+let uptimeInterval;
+let totalUptimeSeconds = 0;
+
+function parseUptime(uptimeStr) {
+    // Expected format: "H:M:S" (e.g. "0:0:0" or "5:30:12")
+    const parts = uptimeStr.split(':').map(Number);
+    if (parts.length !== 3) return 0;
+    return (parts[0] * 3600) + (parts[1] * 60) + parts[2]; // Total seconds
+}
+
+function formatUptime(totalSeconds) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+    return `${hours}h ${minutes}m ${seconds}s`; // Clean format
+}
+
+function startUptimeCounter(initialSeconds) {
+    // Clear existing interval to avoid duplicates
+    if (uptimeInterval) clearInterval(uptimeInterval);
+
+    totalUptimeSeconds = initialSeconds;
+    const uptimeEl = document.getElementById('uptime');
+
+    // Update immediately
+    if (uptimeEl) uptimeEl.innerText = formatUptime(totalUptimeSeconds);
+
+    // Start ticking every second
+    uptimeInterval = setInterval(() => {
+        totalUptimeSeconds++;
+        if (uptimeEl) uptimeEl.innerText = formatUptime(totalUptimeSeconds);
+    }, 1000);
+}
 
 
 

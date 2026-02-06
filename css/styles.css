@@ -1204,3 +1204,51 @@ footer,
     opacity: 0;
     visibility: hidden;
 }
+
+/* Legal Pages Header */
+.legal-header {
+    height: 120px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    min-height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2c2f33 100%);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid #7289da;
+}
+
+.legal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(114, 137, 218, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.legal-header h1 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 5px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.legal-header p {
+    color: #dcddde;
+    font-size: 0.9rem;
+    z-index: 1;
+    opacity: 0.8;
+}
+
+@media screen and (max-width: 768px) {
+    .legal-header h1 {
+        font-size: 2.5rem;
+    }
+}

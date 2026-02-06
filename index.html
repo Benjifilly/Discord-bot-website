@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pulsar - Discord Bot</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" href="bot-pfp.png" type="image/x-icon">
+    <link rel="icon" href="photos/bot-pfp.png" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js"></script>
@@ -251,88 +251,9 @@
     </footer>
     <script src="js/scripts.js"></script>
     <script src="js/star-animation.js"></script>
+
+
     <script>
-        let initialUptime = 0;
-        let startTime;
-
-        function updateServerInfo() {
-            fetch('http://127.0.0.1:5000/api/server_info')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById('server-number').innerText = data.serverCount;
-                    document.getElementById('total-users').innerText = data.totalUsers;
-                    document.getElementById('bot-name').innerText = data.botName;
-                    document.getElementById('total-channels').innerText = data.totalChannels;
-                    document.getElementById('text-channels').innerText = data.textChannels;
-                    document.getElementById('voice-channels').innerText = data.voiceChannels;
-                    document.getElementById('average-members-per-server').innerText = data.averageMembersPerServer.toFixed(2);
-
-                    const statusElem = document.getElementById('bot-status');
-                    statusElem.innerText = data.botStatus;
-                    statusElem.style.color = '#43b581'; // Green for online
-
-                    document.getElementById('latency').innerText = (data.latency * 1000).toFixed(2) + " ms";
-
-                    // Parse and store the initial uptime
-                    initialUptime = parseUptime(data.uptime);
-                    startTime = Date.now();
-                    updateUptimeDisplay();  // Update immediately after fetching data
-                })
-                .catch(error => {
-                    console.error('Error fetching server info:', error);
-                    const statusElem = document.getElementById('bot-status');
-                    if (statusElem) {
-                        statusElem.innerText = "Offline";
-                        statusElem.style.color = '#f04747'; // Red for offline
-                    }
-                });
-        }
-
-        function parseUptime(uptimeStr) {
-            const timeParts = uptimeStr.split(':');
-            const hours = parseInt(timeParts[0], 10);
-            const minutes = parseInt(timeParts[1], 10);
-            const seconds = parseFloat(timeParts[2]);
-
-            return hours * 3600 + minutes * 60 + seconds;
-        }
-
-        function formatUptime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = (seconds % 60).toFixed(0);
-
-            let formattedUptime = '';
-            if (hours > 0) {
-                formattedUptime += `${hours}h `;
-            }
-            if (minutes > 0 || hours > 0) {
-                formattedUptime += `${minutes}m `;
-            }
-            formattedUptime += `${secs}s`;
-            return formattedUptime;
-        }
-
-        function updateUptimeDisplay() {
-            const uptimeElement = document.getElementById('uptime');
-            if (!uptimeElement) return;
-
-            const elapsedSeconds = (Date.now() - startTime) / 1000;
-            const totalUptime = initialUptime + elapsedSeconds;
-            uptimeElement.innerText = formatUptime(totalUptime);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateServerInfo();
-            setInterval(updateServerInfo, 60000);  // Fetch new data every 60 seconds
-            setInterval(updateUptimeDisplay, 1000);  // Update uptime every second
-        });
-
         document.addEventListener('DOMContentLoaded', () => {
             const seeMoreButton = document.getElementById('see-more');
             const hiddenUpdates = document.querySelectorAll('.update:nth-child(n+4)');
