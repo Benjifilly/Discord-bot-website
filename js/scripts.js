@@ -100,27 +100,55 @@ document.addEventListener("DOMContentLoaded", function () {
         // 4. Animate remaining sections on Scroll
         const scrollSections = gsap.utils.toArray(".features, .updates, .connect-discord, footer");
 
-        // Mobile check for animation tuning
+        // Mobile check - use IntersectionObserver for iOS Safari compatibility
         const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-        scrollSections.forEach((section) => {
-            gsap.fromTo(section,
-                { autoAlpha: 0, y: isMobile ? -10 : -20 },
-                {
-                    autoAlpha: 1,
-                    y: 0,
-                    duration: isMobile ? 1.0 : 2.0, // Faster on mobile
-                    ease: isMobile ? "power2.out" : "power4.out", // Simpler ease
-                    scrollTrigger: {
-                        trigger: section,
-                        start: isMobile ? "top bottom" : "top 95%", // Mobile: Trigger AS SOON as it enters viewport
-                        end: "top 60%",
-                        toggleActions: "play none none none",
-                        invalidateOnRefresh: true
+        if (isMobile) {
+            // MOBILE: Use IntersectionObserver (native, works perfectly with iOS touch scroll)
+            const observerOptions = {
+                threshold: 0.1, // Trigger when 10% visible
+                rootMargin: "0px 0px -10% 0px" // Slight delay
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        gsap.to(entry.target, {
+                            autoAlpha: 1,
+                            y: 0,
+                            duration: 1.0,
+                            ease: "power2.out"
+                        });
+                        observer.unobserve(entry.target); // Animate once
                     }
-                }
-            );
-        });
+                });
+            }, observerOptions);
+
+            scrollSections.forEach(section => {
+                gsap.set(section, { autoAlpha: 0, y: -10 }); // Initial state
+                observer.observe(section);
+            });
+        } else {
+            // DESKTOP: Use GSAP ScrollTrigger for smooth animations
+            scrollSections.forEach((section) => {
+                gsap.fromTo(section,
+                    { autoAlpha: 0, y: -20 },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 2,
+                        ease: "power4.out",
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 95%",
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            invalidateOnRefresh: true
+                        }
+                    }
+                );
+            });
+        }
     } else {
         // Not on index page: Ensure everything hidden by CSS is visible immediately
         // This effectively disables the animations on other pages

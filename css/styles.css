@@ -552,7 +552,6 @@ footer a:hover {
     background: transparent;
     position: relative;
     padding: 5px 50px;
-    /* Increased padding to make it wider */
     display: flex;
     align-items: center;
     font-size: 17px;
@@ -1006,6 +1005,36 @@ footer a:hover {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
+/* Connect Discord Section Alignment (Global/PC) */
+.connect-discord {
+    display: grid;
+    grid-template-areas:
+        "title button"
+        "text button";
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 10px 40px;
+    /* Row gap 10px, Col gap 40px */
+    text-align: left;
+    padding-right: 40px;
+}
+
+.connect-discord h2 {
+    grid-area: title;
+    margin: 0;
+}
+
+.connect-discord p {
+    grid-area: text;
+    margin: 0;
+    max-width: 600px;
+}
+
+.discord-button {
+    grid-area: button;
+    margin: 0;
+}
+
 /* Mobile / Responsive Adaptation */
 @media screen and (max-width: 1000px) {
     .content-wrapper {
@@ -1067,40 +1096,24 @@ footer a:hover {
         gap: 20px;
     }
 
-    /* Connect Discord Section Alignment */
-    .connect-discord {
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        padding-right: 40px;
-        /* Add some padding from edge */
-    }
 
-    .connect-discord p {
-        max-width: 600px;
-        margin-left: auto;
-        /* Push text to right */
-        margin-right: 0;
-    }
-
-    .discord-button {
-        margin-left: auto;
-        /* Push button to right */
-        margin-right: 0;
-    }
 }
 
 /* Mobile / Responsive Adaptation */
 @media screen and (max-width: 1000px) {
+
+    /* Connect Discord Section Alignment (Mobile Override) */
     .connect-discord {
+        display: flex;
+        /* Switch back to flex for column layout */
+        flex-direction: column;
         text-align: center;
         align-items: center;
         padding-right: 20px;
+        gap: 20px;
     }
 
     .connect-discord p {
-        margin-left: 0;
         max-width: 100%;
     }
 
