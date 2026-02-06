@@ -1248,7 +1248,110 @@ footer,
 }
 
 @media screen and (max-width: 768px) {
-    .legal-header h1 {
-        font-size: 2.5rem;
+
+    /* Legal Header Mobile Optimization */
+    .legal-header {
+        height: auto;
+        padding: 20px 10px;
+        min-height: 100px;
     }
+
+    .legal-header h1 {
+        font-size: 1.5rem;
+        /* Smaller title on mobile */
+    }
+
+    .legal-header p {
+        font-size: 0.8rem;
+    }
+
+    /* Index/Commands Header Mobile Optimization */
+    header {
+        padding-top: 80px;
+        /* More space for burger menu */
+        padding-bottom: 20px;
+        min-height: auto;
+    }
+
+    .bot-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .bot-pfp {
+        width: 100px;
+        /* Smaller image */
+        height: 100px;
+        border-width: 3px;
+    }
+
+    .bot-details h1 {
+        font-size: 2rem;
+        /* Smaller bot name */
+    }
+
+    .bot-details p {
+        font-size: 0.9rem;
+    }
+
+    header .title {
+        font-size: 2rem;
+        /* Smaller 'Discord Bot Commands' title */
+        margin-bottom: 15px;
+    }
+}
+
+/* Legal Content Styling */
+.legal-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #23272a;
+    /* Darker card background */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.legal-container h2 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #7289da;
+    /* Pulsar Blue accent */
+    margin-top: 30px;
+}
+
+.legal-container h2:first-child {
+    margin-top: 0;
+}
+
+.legal-container p,
+.legal-container ul {
+    color: #dcddde;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.legal-container ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.legal-container strong {
+    color: #fff;
+}
+
+.legal-container a {
+    color: #7289da;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.legal-container a:hover {
+    color: #5b6eae;
+    text-decoration: underline;
 }
