@@ -100,17 +100,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // 4. Animate remaining sections on Scroll
         const scrollSections = gsap.utils.toArray(".features, .updates, .connect-discord, footer");
 
+        // Mobile check for animation tuning
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
         scrollSections.forEach((section) => {
             gsap.fromTo(section,
-                { autoAlpha: 0, y: -20 },
+                { autoAlpha: 0, y: isMobile ? -10 : -20 },
                 {
                     autoAlpha: 1,
                     y: 0,
-                    duration: 2,
-                    ease: "power4.out",
+                    duration: isMobile ? 1.0 : 2.0, // Faster on mobile
+                    ease: isMobile ? "power2.out" : "power4.out", // Simpler ease
                     scrollTrigger: {
                         trigger: section,
-                        start: "top 95%",
+                        start: isMobile ? "top bottom" : "top 95%", // Mobile: Trigger AS SOON as it enters viewport
                         end: "top 60%",
                         toggleActions: "play none none none",
                         invalidateOnRefresh: true
