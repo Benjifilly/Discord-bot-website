@@ -251,6 +251,7 @@ function formatUptime(totalSeconds) {
     return `${hours}h ${minutes}m ${seconds}s`; // Clean format
 }
 
+
 function startUptimeCounter(initialSeconds) {
     // Clear existing interval to avoid duplicates
     if (uptimeInterval) clearInterval(uptimeInterval);
@@ -267,6 +268,65 @@ function startUptimeCounter(initialSeconds) {
         if (uptimeEl) uptimeEl.innerText = formatUptime(totalUptimeSeconds);
     }, 1000);
 }
+
+// Contact Form Submission Logic
+document.addEventListener('DOMContentLoaded', () => {
+    const contactForm = document.getElementById('contactForm');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerText;
+
+            // UI Loading State
+            submitBtn.innerText = 'Sending...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            // Gather data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            };
+
+            // Construct API URL (derive from base or hardcode)
+            // API_BASE_URL is defined above as ".../api/server_info"
+            // We need ".../api/contact"
+            const contactUrl = API_BASE_URL.replace('/server_info', '/contact');
+
+            try {
+                const response = await fetch(contactUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Message sent successfully! 📬');
+                    contactForm.reset();
+                } else {
+                    alert('Error sending message: ' + (result.error || 'Unknown error'));
+                }
+
+            } catch (error) {
+                console.error('Contact form error:', error);
+                alert('Failed to connect to the server. Please try again later.');
+            } finally {
+                // Reset Button
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
+        });
+    }
+});
 
 
 
