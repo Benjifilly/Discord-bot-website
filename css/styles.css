@@ -1295,6 +1295,18 @@ footer,
         /* Smaller 'Discord Bot Commands' title */
         margin-bottom: 15px;
     }
+
+    /* Specific Commands Page Header Tweaks */
+    .commands-header .bot-pfp {
+        display: none;
+        /* remove icon */
+    }
+
+    .commands-header {
+        min-height: 20vh;
+        /* slightly lower height */
+        padding-bottom: 10px;
+    }
 }
 
 /* Legal Content Styling */
