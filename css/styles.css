@@ -1180,5 +1180,14 @@ header {
     background: transparent;
     /* Let canvas show through */
 }
+
 /* Initial state for animated elements to prevent FOUC */
-.features, .updates, .connect-discord, footer, .intro, .server-stats { opacity: 0; visibility: hidden; }
+.features,
+.updates,
+.connect-discord,
+footer,
+.intro,
+.server-stats {
+    opacity: 0;
+    visibility: hidden;
+}

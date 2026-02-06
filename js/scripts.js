@@ -66,56 +66,63 @@ document.addEventListener('click', function (event) {
 document.addEventListener("DOMContentLoaded", function () {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Master Timeline for Initial Load Animations
-    const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+    // Check if we are on the index page (using a unique element like .intro)
+    // The user requested animations ONLY on the index page.
+    const isIndexPage = document.querySelector('.intro') !== null;
 
-    // 1. Animate Fixed Elements (Fade In)
-    tl.from(".burger-menu, .invite-button", {
-        opacity: 0,
-        duration: 1.5
-    })
-        // 2. Animate Header Content (Slide Down + Fade)
-        // Runs concurrently with fixed elements or slightly delayed
-        .from("headerCanvas, header > .bot-info, header > .title, header > h1, #star-canvas", {
+    if (isIndexPage) {
+        // Master Timeline for Initial Load Animations (Index Only)
+        const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+        // 1. Animate Fixed Elements (Fade In)
+        tl.from(".burger-menu, .invite-button", {
             opacity: 0,
-            y: -50,
-            duration: 1.2,
-            stagger: 0.2
-        }, "-=1.0") // Overlap by 1s
-        // 3. Animate Intro & Server Stats (Slide Down + Fade) - The "Content Wrapper" parts
-        // Ensuring these animate ON LOAD as requested
-        .fromTo(".intro, .server-stats", {
-            autoAlpha: 0,
-            y: -50
-        }, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 1,
-            stagger: 0.2
-        }, "-=0.5"); // Overlap by 0.5s
-
-    // 4. Animate remaining sections on Scroll (Features, Updates, etc.)
-    // Exclude Intro/Stats as they are handled by the timeline above
-    const scrollSections = gsap.utils.toArray(".features, .updates, .connect-discord, footer");
-
-    scrollSections.forEach((section) => {
-        gsap.fromTo(section,
-            { autoAlpha: 0, y: -20 }, // autoAlpha handles opacity + visibility
-            {
+            duration: 1.5
+        })
+            // 2. Animate Header Content (Slide Down + Fade)
+            .from("headerCanvas, header > .bot-info, header > .title, header > h1, #star-canvas", {
+                opacity: 0,
+                y: -50,
+                duration: 1.2,
+                stagger: 0.2
+            }, "-=1.0")
+            // 3. Animate Intro & Server Stats (Slide Down + Fade)
+            .fromTo(".intro, .server-stats", {
+                autoAlpha: 0,
+                y: -50
+            }, {
                 autoAlpha: 1,
                 y: 0,
-                duration: 2,
-                ease: "power4.out",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 95%",
-                    end: "top 60%",
-                    toggleActions: "play none none none",
-                    invalidateOnRefresh: true
+                duration: 1,
+                stagger: 0.2
+            }, "-=0.5");
+
+        // 4. Animate remaining sections on Scroll
+        const scrollSections = gsap.utils.toArray(".features, .updates, .connect-discord, footer");
+
+        scrollSections.forEach((section) => {
+            gsap.fromTo(section,
+                { autoAlpha: 0, y: -20 },
+                {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 2,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 95%",
+                        end: "top 60%",
+                        toggleActions: "play none none none",
+                        invalidateOnRefresh: true
+                    }
                 }
-            }
-        );
-    });
+            );
+        });
+    } else {
+        // Not on index page: Ensure everything hidden by CSS is visible immediately
+        // This effectively disables the animations on other pages
+        gsap.set(".features, .updates, .connect-discord, footer, .burger-menu, .invite-button, .intro, .server-stats", { autoAlpha: 1 });
+    }
 
     // Animated line divider - draws on scroll
     const animatedLine = document.querySelector('.animated-line');
