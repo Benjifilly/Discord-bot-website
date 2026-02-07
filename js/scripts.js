@@ -1,40 +1,50 @@
 function searchCommands() {
-    const noResult2 = document.getElementById('no-result2');
-    if (noResult2.style.display === "block") {
-        noResult2.style.display = "none";
-    }
-    // Reset to the default sort option
-    document.getElementById('sortOptions').value = 'default';
-
     const input = document.getElementById('searchBar');
     const filter = input.value.toLowerCase();
-    const commands = document.getElementsByClassName('command');
-    let found = false; // Flag to track if any command is found
+    const categories = document.querySelectorAll('.category-block');
+    let totalFound = false;
 
-    for (let i = 0; i < commands.length; i++) {
-        const command = commands[i];
-        const commandText = command.textContent || command.innerText;
-        if (commandText.toLowerCase().includes(filter)) {
-            command.style.display = "";
-            found = true;
+    categories.forEach(category => {
+        const commands = category.querySelectorAll('.command');
+        let categoryHasMatch = false;
+
+        commands.forEach(command => {
+            const commandText = command.textContent || command.innerText;
+            if (commandText.toLowerCase().includes(filter)) {
+                command.style.display = "";
+                categoryHasMatch = true;
+                totalFound = true;
+            } else {
+                command.style.display = "none";
+            }
+        });
+
+        if (categoryHasMatch) {
+            category.style.display = "";
         } else {
-            command.style.display = "none";
+            category.style.display = "none";
         }
-    }
+    });
 
+    // Toggle no-result message
     const noResult = document.getElementById('no-result');
     const noResultQuery = document.getElementById('no-result-query');
     const ellipsis = document.getElementById('ellipsis');
 
-    if (found) {
-        noResult.style.display = "none";
+    if (totalFound) {
+        if (noResult) noResult.style.display = 'none';
     } else {
-        noResult.style.display = "block";
-        const maxLength = 20; // Set the maximum length of the displayed query
+        if (noResult) noResult.style.display = 'block';
+        const maxLength = 20;
         const truncatedValue = input.value.length > maxLength ? input.value.substring(0, maxLength) + '...' : input.value;
-        noResultQuery.textContent = truncatedValue;
-        ellipsis.style.display = input.value.length > maxLength ? "inline" : "none";
+        if (noResultQuery) noResultQuery.textContent = truncatedValue;
+        if (ellipsis) ellipsis.style.display = input.value.length > maxLength ? "inline" : "none";
     }
+
+    // Hide no-result2 if it exists (from old code cleanup)
+    const noResult2 = document.getElementById('no-result2');
+    if (noResult2) noResult2.style.display = 'none';
+
     updateCommandCount();
 }
 
@@ -379,113 +389,35 @@ function updateCommandCount() {
 
 function sortCommands() {
     const sortOptions = document.getElementById('sortOptions');
-    if (!sortOptions) return; // Exit if element doesn't exist
+    if (!sortOptions) return;
 
     const sortType = sortOptions.value;
-    const commandsContainer = document.querySelector('.command-list');
-    const commandSections = Array.from(commandsContainer.querySelectorAll('.command'));
+    const categories = document.querySelectorAll('.category-block');
 
-    commandSections.forEach(command => command.style.display = '');
-    const searchInput = document.getElementById('searchBar');
-    searchInput.value = '';
+    categories.forEach(category => {
+        // Get all commands in this category
+        const commands = Array.from(category.querySelectorAll('.command'));
 
-    // Hide both no-result divs initially
-    const noResult = document.getElementById('no-result');
-    const noResult2 = document.getElementById('no-result2');
-    noResult.style.display = 'none';
-    noResult2.style.display = 'none';
-
-    let hasVisibleCommand = false;
-
-    switch (sortType) {
-        case 'alphabetic-order':
-            commandSections.sort((a, b) => {
+        // Sort
+        if (sortType === 'alphabetic-order') {
+            commands.sort((a, b) => {
                 const nameA = a.querySelector('h3').textContent.toLowerCase();
                 const nameB = b.querySelector('h3').textContent.toLowerCase();
                 return nameA.localeCompare(nameB);
             });
-            hasVisibleCommand = true;
-            break;
-        case 'alphabetic-disorder':
-            commandSections.sort((a, b) => {
+        } else if (sortType === 'alphabetic-disorder') {
+            commands.sort((a, b) => {
                 const nameA = a.querySelector('h3').textContent.toLowerCase();
                 const nameB = b.querySelector('h3').textContent.toLowerCase();
                 return nameB.localeCompare(nameA);
             });
-            hasVisibleCommand = true;
-            break;
-        case 'admin':
-            commandSections.forEach(command => {
-                if (!command.classList.contains('admin-command')) {
-                    command.style.display = 'none';
-                } else {
-                    hasVisibleCommand = true;
-                }
-            });
-            break;
-        case 'normal':
-            commandSections.forEach(command => {
-                if (!command.classList.contains('normal-command')) {
-                    command.style.display = 'none';
-                } else {
-                    hasVisibleCommand = true;
-                }
-            });
-            break;
-        case 'astronomy':
-            commandSections.forEach(command => {
-                if (!command.classList.contains('astronomy-command')) {
-                    command.style.display = 'none';
-                } else {
-                    hasVisibleCommand = true;
-                }
-            });
-            break;
-        case 'new':
-            commandSections.forEach(command => {
-                if (!command.classList.contains('new-command')) {
-                    command.style.display = 'none';
-                } else {
-                    hasVisibleCommand = true;
-                }
-            });
-            break;
-        case "updated":
-            commandSections.forEach(command => {
-                if (!command.classList.contains('updated-command')) {
-                    command.style.display = 'none';
-                } else {
-                    hasVisibleCommand = true;
-                }
-            });
-            break;
-        case "bug":
-            commandSections.forEach(command => {
-                if (!command.classList.contains('bug-command')) {
-                    command.style.display = 'none';
-                } else {
-                    hasVisibleCommand = true;
-                }
-            });
-            break;
-        case 'default':
-        default:
-            hasVisibleCommand = true; // Assume that the default shows all commands
-            break;
-    }
+        }
+        // If default, do nothing (preserve original order within category)
 
-    // Show no-result2 only if no commands are visible after filtering
-    if (!hasVisibleCommand) {
-        noResult2.style.display = 'block';
-    }
+        // Re-append to category to update DOM order
+        commands.forEach(cmd => category.appendChild(cmd));
+    });
 
-    // Ensure that no-result is not displayed at the same time as no-result2
-    if (noResult2.style.display === 'block') {
-        noResult.style.display = 'none';
-    }
-
-    commandsContainer.innerHTML = '';
-    commandSections.forEach(command => commandsContainer.appendChild(command));
     updateCommandCount();
 }
 
@@ -509,3 +441,21 @@ async function copyToClipboard(button) {
         console.error('Unable to copy', err);
     }
 }
+
+// Dropdown Interaction
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownContainer = document.querySelector('.nav-item-dropdown');
+
+    if (dropdownToggle && dropdownContainer) {
+        dropdownToggle.addEventListener('click', (e) => {
+            // Check if the click target is the arrow or inside the arrow element
+            if (e.target.classList.contains('arrow') || e.target.closest('.arrow')) {
+                e.preventDefault();
+                dropdownContainer.classList.toggle('active');
+            } else {
+                // If clicking the text/link part, let it navigate (do nothing here)
+            }
+        });
+    }
+});

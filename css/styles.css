@@ -115,23 +115,19 @@ body {
 
 .nav-bar a {
     width: 100%;
-    padding: 18px 30px;
+    padding: 15px 30px;
+    /* Adjusted padding to match */
     box-sizing: border-box;
     text-decoration: none;
     font-size: 18px;
     color: #b9bbbe;
-    /* Muted text color */
     display: flex;
     align-items: center;
     transition: all 0.2s ease;
     margin: 0;
-    /* Remove margins */
     border-radius: 0;
-    /* Remove rounded corners */
     background: transparent;
-    /* Remove gradient */
     box-shadow: none;
-    /* Remove shadow */
     border-left: 4px solid transparent;
 }
 
@@ -1696,4 +1692,254 @@ body.contact-page main {
 
 .notification-close:hover {
     opacity: 1;
+}
+
+/* Sidebar Dropdown */
+.nav-item-dropdown {
+    width: 100%;
+    padding: 0;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.dropdown-toggle .arrow {
+    transition: transform 0.3s ease;
+    font-size: 14px;
+    margin-right: 0;
+}
+
+.nav-item-dropdown.active .dropdown-toggle .arrow {
+    transform: rotate(180deg);
+}
+
+/* Smooth Dropdown Animation */
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.4s ease-out;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item-dropdown.active .dropdown-content {
+    max-height: 500px;
+    /* Arbitrary large height to allow content */
+    opacity: 1;
+    transition: max-height 0.4s ease-in, opacity 0.4s ease-in;
+}
+
+.dropdown-content a {
+    padding-left: 60px;
+    font-size: 16px;
+    display: block;
+    /* Ensure full width click */
+}
+
+/* Category Headers */
+.category-block {
+    margin-bottom: 40px;
+    scroll-margin-top: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 2 columns */
+    gap: 20px;
+    /* Gap between cards */
+}
+
+/* Header spans full width */
+.category-header {
+    grid-column: 1 / -1;
+    background-color: transparent;
+    /* No background */
+    padding: 10px 0;
+    /* Less padding */
+    border-radius: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #7289da;
+    /* Separation bar */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.category-header i {
+    font-size: 28px;
+}
+
+/* Specific Colors - Header Border & Text */
+#general .category-header {
+    border-color: #7289da;
+    color: #7289da;
+}
+
+#moderation .category-header {
+    border-color: #f04747;
+    color: #f04747;
+}
+
+#admin .category-header {
+    border-color: #9b59b6;
+    color: #9b59b6;
+}
+
+#utility .category-header {
+    border-color: #43b581;
+    color: #43b581;
+}
+
+#fun .category-header {
+    border-color: #faa61a;
+    color: #faa61a;
+}
+
+/* Command Styling */
+.category-block .command {
+    margin-bottom: 0;
+    /* Reset margin since we use grid gap */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(44, 47, 51, 0.3);
+    /* Subtle background */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    /* Equal height */
+    box-sizing: border-box;
+}
+
+.category-block .command:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Specific Colors - Command Borders */
+#general .command {
+    border-color: rgba(114, 137, 218, 0.5);
+}
+
+#general .command:hover {
+    border-color: #7289da;
+    box-shadow: 0 5px 15px rgba(114, 137, 218, 0.2);
+}
+
+#moderation .command {
+    border-color: rgba(240, 71, 71, 0.5);
+}
+
+#moderation .command:hover {
+    border-color: #f04747;
+    box-shadow: 0 5px 15px rgba(240, 71, 71, 0.2);
+}
+
+#admin .command {
+    border-color: rgba(155, 89, 182, 0.5);
+}
+
+#admin .command:hover {
+    border-color: #9b59b6;
+    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.2);
+}
+
+#utility .command {
+    border-color: rgba(67, 181, 129, 0.5);
+}
+
+#utility .command:hover {
+    border-color: #43b581;
+    box-shadow: 0 5px 15px rgba(67, 181, 129, 0.2);
+}
+
+#fun .command {
+    border-color: rgba(250, 166, 26, 0.5);
+}
+
+#fun .command:hover {
+    border-color: #faa61a;
+    box-shadow: 0 5px 15px rgba(250, 166, 26, 0.2);
+}
+
+/* Hide category via class for search */
+.category-block.hidden {
+    display: none;
+}
+
+/* Responsive adjustment for mobile: back to 1 column */
+@media screen and (max-width: 768px) {
+    .category-block {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Controls Container Layout */
+.controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    /* Reduced gap for tighter PC look */
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.controls-container .search-container,
+.controls-container .sort-container {
+    margin-bottom: 0;
+}
+
+/* Sidebar Styling Fix */
+/* Sidebar Styling Fix */
+.nav-item-dropdown .dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    /* Removed min-height to allow natural sizing matching others */
+}
+
+/* The span containing icon and text */
+.dropdown-toggle span {
+    display: flex;
+    align-items: center;
+}
+
+/* Ensure the icon inside the span aligns correctly */
+.dropdown-toggle span i {
+    min-width: 30px;
+    margin-right: 15px;
+    text-align: center;
+}
+
+/* The arrow itself */
+.dropdown-toggle .arrow {
+    margin-left: auto;
+    font-size: 14px;
+    padding: 0;
+    /* Remove padding to fix height mismatch */
+    margin-right: 0;
+}
+
+
+@media screen and (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .sort-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    #sortOptions {
+        flex-grow: 1;
+        margin-left: 10px;
+    }
 }
