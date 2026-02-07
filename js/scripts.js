@@ -406,7 +406,7 @@ async function fetchCommands() {
 
     try {
         // Replace with your bot's actual API URL. 
-        const response = await fetch('http://discord-bot-production-2057.up.railway.app/api/commands');
+        const response = await fetch('https://discord-bot-production-2057.up.railway.app/api/commands');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
