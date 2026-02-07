@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulsar - Contact Me</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="icon" href="../photos/bot-pfp.png" type="image/x-icon">
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="contact-page">
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Mobile Burger Menu -->
+    <div class="burger-menu" onclick="toggleNav()">
+        <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+            <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
+            <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
+            <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
+        </svg>
+    </div>
+
+    <!-- Header (Same compact style as legal pages) -->
+    <header class="legal-header">
+        <h1>Contact Us</h1>
+        <p>Get in touch for support or inquiries</p>
+    </header>
+
+    <div class="invite-button">
+        <a href="https://discord.com/oauth2/authorize?client_id=1242422539087642696&scope=bot&permissions=8"
+            target="_blank">Invite</a>
+    </div>
+
+    <!-- Navigation Sidebar -->
+    <nav id="navBar" class="nav-bar">
+        <div class="sidebar-header">
+            <img src="../photos/bot-pfp.png" alt="Pulsar Logo">
+            <h3>Pulsar</h3>
+        </div>
+        <a href="../index.html"><i class="fas fa-home"></i> Home</a>
+
+        <div class="nav-item-dropdown">
+            <a href="../commands/" class="dropdown-toggle">
+                <span><i class="fas fa-terminal"></i> Commands</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="../commands/#general"><i class="fas fa-circle" style="font-size: 8px; color: #7289da;"></i>
+                    General</a>
+                <a href="../commands/#moderation"><i class="fas fa-circle" style="font-size: 8px; color: #f04747;"></i>
+                    Moderation</a>
+                <a href="../commands/#admin"><i class="fas fa-circle" style="font-size: 8px; color: #9b59b6;"></i>
+                    Admin</a>
+                <a href="../commands/#utility"><i class="fas fa-circle" style="font-size: 8px; color: #43b581;"></i>
+                    Utility</a>
+                <a href="../commands/#fun"><i class="fas fa-circle" style="font-size: 8px; color: #faa61a;"></i>
+                    Fun</a>
+            </div>
+        </div>
+
+        <a href="#"><i class="fas fa-clock"></i> Incoming</a>
+        <a href="../contact-me/" style="color: #fff;"><i class="fas fa-envelope"></i> Contact-us</a>
+    </nav>
+
+    <main>
+        <section class="contact-container">
+            <h2>Send a Message</h2>
+            <form id="contactForm" class="contact-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name / Discord</label>
+                        <input type="text" id="name" name="name" placeholder="User#1234" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Request Type</label>
+                    <select id="type" name="type" required>
+                        <option value="support">General Support</option>
+                        <option value="bug">Report a Bug</option>
+                        <option value="feature">Feature Request</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-creator">
+                <img src="../photos/discord_pfp.png" alt="Edzar">
+                <span>Made by <strong>Edzar</strong></span>
+            </div>
+            <div class="footer-links">
+                <a href="http://discordapp.com/users/882920589269020672" target="_blank"><i class="fab fa-discord"></i>
+                    Contact</a>
+                <a href="https://discord.gg/ckWxxg5G3x" target="_blank"><i class="fas fa-server"></i> Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Pulsar &nbsp;|&nbsp; <a href="../terms/">Terms</a> &nbsp;|&nbsp; <a
+                    href="../privacy/">Privacy</a></p>
+        </div>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+    <script src="../js/star-animation.js"></script>
+</body>
+
+</html>

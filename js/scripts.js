@@ -387,6 +387,69 @@ function updateCommandCount() {
     commandCountEl.textContent = commands.length;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    fetchCommands();
+});
+
+async function fetchCommands() {
+    const commandList = document.querySelector('.command-list');
+    if (!commandList) return;
+
+    // Create and insert loader
+    const loader = document.createElement('div');
+    loader.className = 'loader';
+    commandList.parentNode.insertBefore(loader, commandList);
+
+    // Hide static content initially to avoid "flash of old content"
+    const originalDisplay = commandList.style.display;
+    commandList.style.display = 'none';
+
+    try {
+        // Replace with your bot's actual API URL. 
+        const response = await fetch('http://discord-bot-production-2057.up.railway.app/api/commands');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const commands = await response.json();
+
+        // Success: Remove loader, show list (empty it first in renderCommands), render new commands
+        loader.remove();
+        commandList.style.display = originalDisplay;
+        renderCommands(commands);
+
+        // Re-scroll to hash if present (fix for anchor links being lost during load)
+        if (window.location.hash) {
+            const hash = window.location.hash;
+            setTimeout(() => {
+                const element = document.querySelector(hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100); // Small delay to ensure render complete
+        }
+
+    } catch (error) {
+        console.error('Failed to fetch commands:', error);
+        // Fallback: Remove loader, Show static HTML again
+        loader.remove();
+        commandList.style.display = originalDisplay;
+
+        sortCommands();
+        updateCommandCount();
+
+        // Re-scroll to hash in fallback case too
+        if (window.location.hash) {
+            const hash = window.location.hash;
+            setTimeout(() => {
+                const element = document.querySelector(hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+    }
+}
+
 function sortCommands() {
     const sortOptions = document.getElementById('sortOptions');
     if (!sortOptions) return;
@@ -394,11 +457,26 @@ function sortCommands() {
     const sortType = sortOptions.value;
     const categories = document.querySelectorAll('.category-block');
 
-    categories.forEach(category => {
-        // Get all commands in this category
-        const commands = Array.from(category.querySelectorAll('.command'));
+    let hasVisibleCommand = false; // Track if any command is visible across all categories
 
-        // Sort
+    categories.forEach(category => {
+        let grid = category.querySelector('.command-grid');
+        let commands;
+
+        if (grid) {
+            commands = Array.from(grid.querySelectorAll('.command'));
+        } else {
+            // Fallback for static HTML which doesn't have .command-grid
+            commands = Array.from(category.querySelectorAll('.command'));
+            grid = category; // Use category as the container
+        }
+
+        let categoryHasVisible = false;
+
+        // Reset display before sorting/filtering
+        commands.forEach(cmd => cmd.style.display = '');
+
+        // 1. Sorting (Reordering within grid)
         if (sortType === 'alphabetic-order') {
             commands.sort((a, b) => {
                 const nameA = a.querySelector('h3').textContent.toLowerCase();
@@ -412,19 +490,152 @@ function sortCommands() {
                 return nameB.localeCompare(nameA);
             });
         }
-        // If default, do nothing (preserve original order within category)
 
-        // Re-append to category to update DOM order
-        commands.forEach(cmd => category.appendChild(cmd));
+        // Apply new order
+        if (sortType.includes('alphabetic')) {
+            // If using grid (dynamic), we can clear it safely.
+            // If using category (static), we must be careful not to remove the header <h2>
+
+            if (grid.classList.contains('command-grid')) {
+                grid.innerHTML = '';
+                commands.forEach(cmd => grid.appendChild(cmd));
+            } else {
+                // For static HTML, appendChild moves the element to the end.
+                // Since we have an <h2> at the top, appending moves commands after it, which is fine and preserves order.
+                commands.forEach(cmd => grid.appendChild(cmd));
+            }
+        }
+
+        // 2. Filtering (Hiding elements)
+        commands.forEach(command => {
+            let visible = true;
+
+            if (sortType === 'admin' && !command.classList.contains('admin-command')) visible = false;
+            if (sortType === 'normal' && !command.classList.contains('normal-command')) visible = false;
+            if (sortType === 'astronomy' && !command.classList.contains('astronomy-command')) visible = false;
+            if (sortType === 'new' && !command.classList.contains('new-command')) visible = false;
+            if (sortType === 'updated' && !command.classList.contains('updated-command')) visible = false;
+            if (sortType === 'bug' && !command.classList.contains('bug-command')) visible = false;
+
+            if (visible) {
+                command.style.display = '';
+                categoryHasVisible = true;
+                hasVisibleCommand = true;
+            } else {
+                command.style.display = 'none';
+            }
+        });
+
+        // Hide entire category if empty after filtering
+        if (categoryHasVisible) {
+            category.style.display = '';
+        } else {
+            category.style.display = 'none';
+        }
     });
+
+    const noResult2 = document.getElementById('noResult2'); // Assuming this element exists for no results message
+    if (noResult2) {
+        noResult2.style.display = hasVisibleCommand ? 'none' : 'block';
+    }
 
     updateCommandCount();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function renderCommands(commands) {
+    const commandList = document.querySelector('.command-list');
+    if (!commandList) return;
+
+    // Clear existing content
+    commandList.innerHTML = '';
+
+    // Metadata for styling
+    const categoryMeta = {
+        'General': { id: 'general', icon: 'fa-info-circle', headerClass: 'general-header' },
+        'Moderation': { id: 'moderation', icon: 'fa-shield-alt', headerClass: 'moderation-header' },
+        'Admin': { id: 'admin', icon: 'fa-cogs', headerClass: 'admin-header' },
+        'Utility': { id: 'utility', icon: 'fa-tools', headerClass: 'utility-header' },
+        'Fun': { id: 'fun', icon: 'fa-smile', headerClass: 'fun-header' }
+    };
+
+    let currentCategory = null;
+    let block = null;
+
+    commands.forEach(cmd => {
+        // Since API returns sorted commands, we can check if category changed
+        if (cmd.category !== currentCategory) {
+            currentCategory = cmd.category;
+
+            // Create new block for this category
+            const meta = categoryMeta[currentCategory] || { id: currentCategory.toLowerCase(), icon: 'fa-question-circle', headerClass: '' };
+
+            block = document.createElement('div');
+            block.className = 'category-block';
+            block.id = meta.id;
+
+            const header = document.createElement('h2');
+            header.className = `category-header ${meta.headerClass}`;
+            header.innerHTML = `<i class="fas ${meta.icon}"></i> ${currentCategory}`;
+            block.appendChild(header);
+
+            commandList.appendChild(block);
+        }
+
+        const cmdDiv = document.createElement('div');
+        // Determine permissions/classes
+        let classes = ['command'];
+
+        // Keep CSS classes for styling (colors etc) but NOT for permission logic logic
+        if (currentCategory === 'Admin' || currentCategory === 'Moderation') {
+            classes.push('admin-command');
+        } else {
+            classes.push('normal-command');
+        }
+
+        cmdDiv.className = classes.join(' ');
+
+        const name = document.createElement('h3');
+        name.textContent = `?${cmd.name}`;
+        cmdDiv.appendChild(name);
+
+        // Escape HTML in usage to prevent XSS and rendering issues with <param>
+        const usageText = cmd.usage || '?' + cmd.name;
+        const escapedUsage = usageText.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+        const usageP = document.createElement('p');
+        usageP.innerHTML = `<strong>Usage:</strong> <span class="code" id="command-code">${escapedUsage}<button class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button></span>`;
+        cmdDiv.appendChild(usageP);
+
+        const descP = document.createElement('p');
+        descP.innerHTML = `<strong>Description:</strong> ${cmd.description}`;
+
+        // Display permissions if they exist. 
+        // User requested: "quand il y a besoin de perms mais pas forcément admin mets juste la perm requise"
+        // And requested to remove the heuristic.
+
+        if (cmd.permissions && cmd.permissions.length > 0) {
+            const permsDiv = document.createElement('div');
+            permsDiv.style.color = '#f04747';
+            permsDiv.style.fontSize = '0.9em';
+            permsDiv.innerHTML = `<strong>Requires:</strong> ${cmd.permissions.join(', ')}`;
+            cmdDiv.appendChild(descP);
+            cmdDiv.appendChild(permsDiv);
+        } else {
+            // No permission fallback.
+            cmdDiv.appendChild(descP);
+        }
+
+        block.appendChild(cmdDiv);
+    });
+
+    // Re-initialize any JS that depends on the DOM
     sortCommands();
     updateCommandCount();
-});
+}
 
 async function copyToClipboard(button) {
     var codeElement = button.parentElement.innerText.trim();
