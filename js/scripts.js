@@ -255,10 +255,15 @@ function parseUptime(uptimeStr) {
 }
 
 function formatUptime(totalSeconds) {
-    const hours = Math.floor(totalSeconds / 3600);
+    const days = Math.floor(totalSeconds / 86400); // 86400 seconds in a day
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = Math.floor(totalSeconds % 60);
-    return `${hours}h ${minutes}m ${seconds}s`; // Clean format
+
+    if (days > 0) {
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+    return `${hours}h ${minutes}m ${seconds}s`;
 }
 
 
