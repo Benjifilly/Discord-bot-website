@@ -3,8 +3,8 @@ from colorama import Fore, Style, init
 
 init(autoreset=True)
 
-bot_id = '1242422539087642696'
-bot_token = 'MTI0MjQyMjUzOTA4NzY0MjY5Ng.GC9dVc.mY-WCfnjg6WQD5L9iH22ZaD4gp6Owzmbv0b8w8'
+bot_id = 'BOT_ID'
+bot_token = 'BOT_TOKEN'
 
 headers = {
     'Authorization': f'Bot {bot_token}'
@@ -74,3 +74,4 @@ if __name__ == "__main__":
     main()
 
 print(Style.RESET_ALL)
+
