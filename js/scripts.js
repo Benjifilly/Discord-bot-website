@@ -684,11 +684,16 @@ document.addEventListener('DOMContentLoaded', () => {
 const DISCORD_CLIENT_ID = '1242422539087642696';
 
 function getRedirectUri() {
-    // Dynamic Redirect URI: uses the current URL without the hash
-    // This works for both localhost (any port/path) and production
-    // Make sure to add this EXACT URL to the Discord Developer Portal
-    let uri = window.location.protocol + '//' + window.location.host + window.location.pathname;
-    return uri;
+    // Always redirect to the main page after Discord OAuth
+    // This ensures the URI matches what's configured in Discord Developer Portal
+    // regardless of which page the user clicked login from
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+
+    // Return base URL with index.html
+    // For production: https://yourdomain.com/index.html
+    // For localhost: http://localhost:port/index.html
+    return `${protocol}//${host}/index.html`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
