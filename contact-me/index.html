@@ -43,6 +43,20 @@
             <img src="../photos/bot-pfp.png" alt="Pulsar Logo">
             <h3>Pulsar</h3>
         </div>
+        <div id="server-selector-container" class="server-selector-container" style="display: none;">
+            <div class="selected-server" onclick="toggleServerDropdown()">
+                <div class="server-info">
+                    <img src="../photos/bot-pfp.png" alt="Server Icon" class="server-icon-small"
+                        id="current-server-icon">
+                    <span id="current-server-name">Select Server</span>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="server-dropdown-content" id="server-dropdown-content">
+                <!-- Servers injected here -->
+            </div>
+        </div>
+
         <a href="../"><i class="fas fa-home"></i> Home</a>
 
         <div class="nav-item-dropdown">
@@ -66,6 +80,10 @@
 
         <a href="#"><i class="fas fa-clock"></i> Incoming</a>
         <a href="../contact-me/" style="color: #fff;"><i class="fas fa-envelope"></i> Contact-us</a>
+
+        <div id="discord-auth-container" class="discord-auth-container">
+            <!-- Injected by JS -->
+        </div>
     </nav>
 
     <main>

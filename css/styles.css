@@ -2197,3 +2197,320 @@ body.contact-page main {
 .discord-logout-btn:hover {
     color: #d03535;
 }
+
+/* Server Selector Styles */
+.server-selector-container {
+    padding: 10px 20px;
+    margin-bottom: 5px;
+    /* Reduced from 20px */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.selected-server {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.selected-server:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.server-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.server-icon-small {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.server-dropdown-content {
+    background: #2f3136;
+    margin-top: 5px;
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+    border: none;
+    /* Hidden by default */
+}
+
+.server-selector-container.open .server-dropdown-content {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Show when open */
+}
+
+.server-selector-container.open .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.server-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #b9bbbe;
+}
+
+.server-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.server-option img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+
+/* Header Auth Button (Now inside header) */
+.header-auth-container {
+    margin-top: 10px;
+    /* Space below h1 */
+}
+
+.header-login-btn {
+    background-color: #7289da;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header-login-btn:hover {
+    background-color: #5b6eae;
+    transform: translateY(-2px);
+}
+
+.header-login-btn i {
+    font-size: 16px;
+}
+
+/* Notification Container */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.notification-toast {
+    background: rgba(35, 39, 42, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 340px;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    pointer-events: auto;
+    animation: slideInBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.notification-toast::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #7289da 0%, #5865f2 100%);
+    box-shadow: 0 0 10px rgba(114, 137, 218, 0.5);
+}
+
+.notification-toast.success::before {
+    background: linear-gradient(180deg, #43b581 0%, #3ca374 100%);
+    box-shadow: 0 0 10px rgba(67, 181, 129, 0.5);
+}
+
+.notification-toast.error::before {
+    background: linear-gradient(180deg, #f04747 0%, #d84040 100%);
+    box-shadow: 0 0 10px rgba(240, 71, 71, 0.5);
+}
+
+.notification-toast.warning::before {
+    background: linear-gradient(180deg, #faa61a 0%, #f59e0b 100%);
+    box-shadow: 0 0 10px rgba(250, 166, 26, 0.5);
+}
+
+.notification-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.notification-icon::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(114, 137, 218, 0.3), rgba(88, 101, 242, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+}
+
+.notification-toast.success .notification-icon {
+    color: #43b581;
+}
+
+.notification-toast.success .notification-icon::after {
+    background: linear-gradient(135deg, rgba(67, 181, 129, 0.3), rgba(60, 163, 116, 0.1));
+}
+
+.notification-toast.error .notification-icon {
+    color: #f04747;
+}
+
+.notification-toast.error .notification-icon::after {
+    background: linear-gradient(135deg, rgba(240, 71, 71, 0.3), rgba(216, 64, 64, 0.1));
+}
+
+.notification-toast.warning .notification-icon {
+    color: #faa61a;
+}
+
+.notification-toast.warning .notification-icon::after {
+    background: linear-gradient(135deg, rgba(250, 166, 26, 0.3), rgba(245, 158, 11, 0.1));
+}
+
+.notification-content {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+}
+
+.notification-close {
+    font-size: 22px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.notification-close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+@keyframes slideInBounce {
+    0% {
+        transform: translateX(500px) scale(0.9);
+        opacity: 0;
+    }
+
+    70% {
+        transform: translateX(-10px) scale(1.02);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    to {
+        transform: translateX(500px) scale(0.8);
+        opacity: 0;
+    }
+}
+
+.notification-toast.removing {
+    animation: slideOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* Adjust for mobile */
+@media (max-width: 768px) {
+    .header-auth-container {
+        margin-top: 8px;
+    }
+
+    .header-login-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+
+    .notification-toast {
+        min-width: auto;
+        width: 100%;
+        padding: 14px 16px;
+    }
+
+    .notification-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+
+    .notification-content {
+        font-size: 14px;
+    }
+}
