@@ -137,6 +137,28 @@ document.addEventListener("DOMContentLoaded", function () {
             gsap.set(section, { autoAlpha: 0, y: 30 }); // Initial state (slightly lower for better effect)
             observer.observe(section);
         });
+
+        // 5. Line Divider Animation (Specific - Draw SVG stroke)
+        const lineDivider = document.querySelector(".line-divider");
+        if (lineDivider) {
+            const lineObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        gsap.to(entry.target.querySelector(".animated-line"), {
+                            strokeDashoffset: 0,
+                            duration: 1.5,
+                            ease: "power2.out",
+                            overwrite: true
+                        });
+                        lineObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            // Set initial state
+            gsap.set(lineDivider.querySelector(".animated-line"), { strokeDashoffset: 1200 });
+            lineObserver.observe(lineDivider);
+        }
     } else {
         // Not on index page: Ensure everything hidden by CSS is visible immediately
         // This effectively disables the animations on other pages

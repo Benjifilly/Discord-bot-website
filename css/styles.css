@@ -1639,7 +1639,7 @@ body.contact-page main {
         /* Horizontally center cross-axis */
         justify-content: center;
         /* Vertically center main-axis */
-        padding: 15px;
+        padding: 10px 15px;
         /* Use padding for side gutters */
         width: 100%;
         box-sizing: border-box;
@@ -1651,8 +1651,8 @@ body.contact-page main {
         /* Fill the available space within main padding */
         max-width: 450px;
         /* Cap width for larger mobile/tablets */
-        padding: 25px 20px;
-        /* Internal padding */
+        padding: 20px 15px;
+        /* Reduced Internal padding */
         margin: 0;
         /* Remove auto margin, let flex center it */
         /* Glassmorphism */
@@ -1664,23 +1664,45 @@ body.contact-page main {
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
+    .contact-container h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        /* Tighter title */
+    }
+
     .contact-page .legal-header h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        /* Slightly smaller header title */
+    }
+
+    .contact-form {
+        gap: 12px;
+        /* Tighter form gap */
     }
 
     .form-row {
         flex-direction: column;
-        /* Stack name/email */
-        gap: 15px;
+        gap: 12px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+        padding: 10px 12px;
+        /* Smaller inputs */
+        font-size: 13px;
     }
 
     .contact-form textarea {
-        min-height: 80px;
+        min-height: 60px;
         /* Smaller text area to fit screen */
     }
 
     #submitBtn {
         padding: 12px;
+        margin-top: 5px;
+        /* Tighter button margin */
+        font-size: 14px;
     }
 }
 
@@ -1841,7 +1863,8 @@ body.contact-page main {
 .dropdown-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-out, opacity 0.4s ease-out;
+    /* Use cubic-bezier for a natural snappy feel */
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.2);
     padding-left: 0;
@@ -1851,9 +1874,10 @@ body.contact-page main {
 
 .nav-item-dropdown.active .dropdown-content {
     max-height: 500px;
-    /* Arbitrary large height to allow content */
+    /* Still needs to be enough to cover content */
     opacity: 1;
-    transition: max-height 0.4s ease-in, opacity 0.4s ease-in;
+    /* Keep same timing for consistency */
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
 }
 
 .dropdown-content a {
