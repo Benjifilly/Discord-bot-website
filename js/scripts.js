@@ -675,3 +675,114 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+/* 
+   --------------------------------------------------------------
+   Discord Authentication Logic (Implicit Flow)
+   --------------------------------------------------------------
+*/
+const DISCORD_CLIENT_ID = '1242422539087642696';
+
+function getRedirectUri() {
+    // Dynamic Redirect URI: uses the current URL without the hash
+    // This works for both localhost (any port/path) and production
+    // Make sure to add this EXACT URL to the Discord Developer Portal
+    let uri = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    return uri;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+});
+
+function checkAuth() {
+    // 1. Check for Hash Params (Callback from Discord)
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const accessToken = fragment.get('access_token');
+    const tokenType = fragment.get('token_type');
+
+    if (accessToken) {
+        // Save to localStorage
+        localStorage.setItem('discord_access_token', accessToken);
+        localStorage.setItem('discord_token_type', tokenType);
+
+        // Clear Hash from URL 
+        window.history.replaceState(null, null, ' ');
+
+        // Fetch User Info
+        fetchUserInfo(accessToken, tokenType);
+    } else {
+        // 2. Check LocalStorage (Already Logged In)
+        const storedToken = localStorage.getItem('discord_access_token');
+        const storedTokenType = localStorage.getItem('discord_token_type');
+
+        if (storedToken) {
+            fetchUserInfo(storedToken, storedTokenType);
+        } else {
+            renderAuthUI(null); // Render Login Button
+        }
+    }
+}
+
+async function fetchUserInfo(token, type) {
+    try {
+        const response = await fetch('https://discord.com/api/users/@me', {
+            headers: {
+                authorization: `${type} ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Token invalid or expired');
+        }
+
+        const user = await response.json();
+        renderAuthUI(user);
+
+    } catch (error) {
+        console.error('Auth Error:', error);
+        logout(); // Clear invalid token
+    }
+}
+
+function login() {
+    const redirectUri = getRedirectUri();
+    const scope = 'identify';
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+    window.location.href = authUrl;
+}
+
+function logout() {
+    localStorage.removeItem('discord_access_token');
+    localStorage.removeItem('discord_token_type');
+    renderAuthUI(null);
+}
+
+function renderAuthUI(user) {
+    const container = document.getElementById('discord-auth-container');
+    if (!container) return;
+
+    if (user) {
+        // User Logged In
+        const avatarUrl = user.avatar
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png'; // Default avatar
+
+        container.innerHTML = `
+            <div class="discord-user-profile">
+                <img src="${avatarUrl}" alt="${user.username}" class="discord-avatar">
+                <span class="discord-username">${user.username}</span>
+                <button class="discord-logout-btn" onclick="logout()" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        `;
+    } else {
+        // User Logged Out
+        container.innerHTML = `
+            <button class="discord-login-btn" onclick="login()">
+                <i class="fab fa-discord"></i> Connect via Discord
+            </button>
+        `;
+    }
+}

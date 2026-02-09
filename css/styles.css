@@ -2124,3 +2124,76 @@ body.contact-page main {
         transform: rotate(360deg);
     }
 }
+
+/* Discord Auth Sidebar Styles */
+.discord-auth-container {
+    margin-top: auto;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.discord-login-btn {
+    background-color: #5865F2;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+    width: 100%;
+    justify-content: center;
+}
+
+.discord-login-btn:hover {
+    background-color: #4752C4;
+}
+
+.discord-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.discord-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.discord-username {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+
+.discord-logout-btn {
+    background: none;
+    border: none;
+    color: #f04747;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.discord-logout-btn:hover {
+    color: #d03535;
+}
