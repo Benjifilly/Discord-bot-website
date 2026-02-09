@@ -684,16 +684,19 @@ document.addEventListener('DOMContentLoaded', () => {
 const DISCORD_CLIENT_ID = '1242422539087642696';
 
 function getRedirectUri() {
-    // Always redirect to the main page after Discord OAuth
-    // This ensures the URI matches what's configured in Discord Developer Portal
-    // regardless of which page the user clicked login from
+    // Always redirect to the base /Pulsar-website/ path
+    // This ensures consistency regardless of which page initiated the login
     const protocol = window.location.protocol;
     const host = window.location.host;
 
-    // Return base URL with index.html
-    // For production: https://yourdomain.com/index.html
-    // For localhost: http://localhost:port/index.html
-    return `${protocol}//${host}/index.html`;
+    // Normalize to base path with trailing slash
+    if (host.includes('github.io')) {
+        // Production: https://benjifilly.github.io/Pulsar-website/
+        return `${protocol}//${host}/Pulsar-website/`;
+    } else {
+        // Local: http://127.0.0.1:5500/Pulsar-website/
+        return `${protocol}//${host}/Pulsar-website/`;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
