@@ -302,21 +302,27 @@ function showNotification(message, type = 'info') {
     toast.innerHTML = `
         <div class="notification-icon"><i class="fas fa-${icon}"></i></div>
         <div class="notification-content">${message}</div>
-        <div class="notification-close" onclick="this.parentElement.remove()">&times;</div>
+        <div class="notification-close" onclick="dismissNotification(this.parentElement)">&times;</div>
     `;
 
     container.appendChild(toast);
 
-    // Trigger animation
+    // Trigger slide-down animation
     requestAnimationFrame(() => {
-        toast.classList.add('show');
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
     });
 
-    // Auto dismiss
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 5000);
+    // Auto dismiss after 4s
+    setTimeout(() => dismissNotification(toast), 4000);
+}
+
+function dismissNotification(toast) {
+    if (!toast || !toast.parentElement) return;
+    toast.classList.remove('show');
+    toast.classList.add('hiding');
+    setTimeout(() => toast.remove(), 300);
 }
 
 // Contact Form Submission Logic
@@ -768,7 +774,6 @@ function logout(notify = true) {
     localStorage.removeItem('discord_access_token');
     localStorage.removeItem('discord_token_type');
     renderAuthUI(null);
-    renderServerSelector(null); // Hide selector
 
     if (notify) {
         showNotification('Logged out successfully.', 'success');
@@ -821,113 +826,13 @@ function renderAuthUI(user) {
             `;
         }
     }
-
-    // 3. Fetch Mutual Guilds if Logged In
-    if (user) {
-        const token = localStorage.getItem('discord_access_token');
-        const tokenType = localStorage.getItem('discord_token_type');
-        if (token && tokenType) {
-            fetchMutualGuilds(token, tokenType);
-        }
-    } else {
-        renderServerSelector(null); // Hide selector
-    }
-}
-
-/* Server Selector Logic */
-async function fetchMutualGuilds(token, type) {
-    try {
-        // 1. Fetch User Guilds
-        const userGuildsResponse = await fetch('https://discord.com/api/users/@me/guilds', {
-            headers: { authorization: `${type} ${token}` }
-        });
-        if (!userGuildsResponse.ok) throw new Error('Failed to fetch user guilds');
-        const userGuilds = await userGuildsResponse.json();
-
-        // 2. Fetch Bot Guild IDs
-        const botGuildsResponse = await fetch('https://discord-bot-production-2057.up.railway.app/api/guilds');
-        if (!botGuildsResponse.ok) throw new Error('Failed to fetch bot guilds');
-        const botGuildIds = await botGuildsResponse.json();
-
-        // 3. Filter Mutual Guilds
-        const mutualGuilds = userGuilds.filter(guild => botGuildIds.includes(guild.id));
-
-        // 4. Render
-        renderServerSelector(mutualGuilds);
-
-    } catch (error) {
-        console.error("Error fetching mutual guilds:", error);
-    }
-}
-
-function renderServerSelector(guilds) {
-    const container = document.getElementById('server-selector-container');
-    const dropdownContent = document.getElementById('server-dropdown-content');
-
-    if (!container || !dropdownContent) return;
-
-    if (!guilds || guilds.length === 0) {
-        container.style.display = 'none';
-        return;
-    }
-
-    container.style.display = 'block';
-    dropdownContent.innerHTML = '';
-
-    // Calculate base path only once
-    const basePath = getBasePath();
-
-    guilds.forEach(guild => {
-        const iconUrl = guild.icon
-            ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
-            : `${basePath}photos/bot-pfp.png`; // Fallback icon
-
-        const option = document.createElement('div');
-        option.className = 'server-option';
-        option.innerHTML = `
-            <img src="${iconUrl}" alt="${guild.name}">
-            <span>${guild.name}</span>
-        `;
-        option.onclick = () => selectServer(guild.id, guild.name, iconUrl);
-        dropdownContent.appendChild(option);
-    });
 }
 
 function getBasePath() {
     // Determine base path for assets based on current location
     const path = window.location.pathname;
-    if (path.includes('/commands/') || path.includes('/contact-me/') || path.includes('/privacy/') || path.includes('/terms/')) {
+    if (path.includes('/commands/') || path.includes('/contact-me/') || path.includes('/privacy/') || path.includes('/terms/') || path.includes('/dashboard/')) {
         return '../';
     }
     return './';
 }
-
-function toggleServerDropdown() {
-    const container = document.getElementById('server-selector-container');
-    if (container) {
-        container.classList.toggle('open');
-    }
-}
-
-function selectServer(guildId, guildName, iconUrl) {
-    // Update UI
-    const currentName = document.getElementById('current-server-name');
-    const currentIcon = document.getElementById('current-server-icon');
-
-    if (currentName) currentName.textContent = guildName;
-    if (currentIcon) currentIcon.src = iconUrl;
-
-    // Close dropdown
-    toggleServerDropdown();
-
-    // TODO: Perform action when server is selected
-    console.log("Selected server:", guildId);
-}
-
-// Close server dropdown when clicking outside
-document.addEventListener('click', function (event) {
-    const container = document.getElementById('server-selector-container');
-    if (container && container.classList.contains('open') && !container.contains(event.target)) {
-        container.classList.remove('open');
-    }
-});

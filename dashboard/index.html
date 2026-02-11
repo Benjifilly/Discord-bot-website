@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulsar - Dashboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="icon" href="../photos/bot-pfp.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-page">
+
+    <div class="burger-menu" onclick="toggleNav()">
+        <svg class="burger-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+            <path class="line line1" d="M 0 7.5 L 50 7.5"></path>
+            <path class="line line2" d="M 0 22.5 L 50 22.5"></path>
+            <path class="line line3" d="M 0 37.5 L 50 37.5"></path>
+        </svg>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <header class="legal-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        <p>Configure Pulsar for your servers</p>
+    </header>
+
+    <main class="dashboard-main">
+        <!-- Auth Gate: Shown when NOT logged in -->
+        <div id="dashboard-auth-gate" class="dashboard-auth-gate">
+            <div class="auth-gate-card">
+                <div class="auth-gate-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Authentication Required</h2>
+                <p>You need to connect with Discord to access the dashboard.</p>
+                <button class="discord-login-btn-large" onclick="login()">
+                    <i class="fab fa-discord"></i> Connect with Discord
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content: Shown when logged in -->
+        <div id="dashboard-content" class="dashboard-content" style="display: none;">
+            <!-- Server Picker -->
+            <div class="dashboard-server-picker">
+                <h2>Select a Server</h2>
+                <div class="dashboard-server-grid" id="dashboard-server-grid">
+                    <!-- Servers injected here -->
+                    <div class="loader" id="server-loader"></div>
+                </div>
+            </div>
+
+            <!-- Server Config Panel (hidden until server selected) -->
+            <div id="server-config-panel" class="server-config-panel" style="display: none;">
+                <!-- Server Header -->
+                <div class="config-server-header">
+                    <button class="back-btn" onclick="goBackToServerList()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <img id="config-server-icon" src="../photos/bot-pfp.png" alt="Server Icon"
+                        class="config-server-img">
+                    <div class="config-server-info">
+                        <h2 id="config-server-name">Server Name</h2>
+                        <span id="config-server-id" class="config-server-id">ID: ---</span>
+                    </div>
+                </div>
+
+                <!-- Config Tabs -->
+                <div class="config-tabs">
+                    <button class="config-tab active" data-tab="general" onclick="switchTab('general')">
+                        <i class="fas fa-cog"></i> General
+                    </button>
+                    <button class="config-tab" data-tab="moderation" onclick="switchTab('moderation')">
+                        <i class="fas fa-shield-alt"></i> Moderation
+                    </button>
+                    <button class="config-tab" data-tab="logging" onclick="switchTab('logging')">
+                        <i class="fas fa-clipboard-list"></i> Logging
+                    </button>
+                    <button class="config-tab" data-tab="welcome" onclick="switchTab('welcome')">
+                        <i class="fas fa-door-open"></i> Welcome
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="config-tab-content active" id="tab-general">
+                    <div class="config-section">
+                        <h3><i class="fas fa-terminal"></i> Bot Prefix</h3>
+                        <p class="config-description">Change the prefix used to invoke bot commands on this server.</p>
+                        <div class="config-input-group">
+                            <input type="text" id="config-prefix" class="config-input" placeholder="?" maxlength="5">
+                            <button class="config-save-btn" onclick="saveSetting('prefix')">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-info-circle"></i> Server Overview</h3>
+                        <div class="server-overview-grid">
+                            <div class="overview-item">
+                                <i class="fas fa-users"></i>
+                                <span class="overview-label">Members</span>
+                                <span class="overview-value" id="overview-members">---</span>
+                            </div>
+                            <div class="overview-item">
+                                <i class="fas fa-hashtag"></i>
+                                <span class="overview-label">Channels</span>
+                                <span class="overview-value" id="overview-channels">---</span>
+                            </div>
+                            <div class="overview-item">
+                                <i class="fas fa-user-shield"></i>
+                                <span class="overview-label">Roles</span>
+                                <span class="overview-value" id="overview-roles">---</span>
+                            </div>
+                            <div class="overview-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="overview-label">Bot joined</span>
+                                <span class="overview-value" id="overview-joined">---</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-tab-content" id="tab-moderation">
+                    <div class="config-section">
+                        <h3><i class="fas fa-ban"></i> Auto-Moderation</h3>
+                        <p class="config-description">Automatically moderate messages containing banned words or spam.</p>
+                        <div class="config-toggle-group">
+                            <label class="config-toggle">
+                                <input type="checkbox" id="config-automod" onchange="saveSetting('automod')">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Enable Auto-Moderation</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-link"></i> Anti-Link</h3>
+                        <p class="config-description">Automatically delete messages containing links (except from users with Manage Messages permission).</p>
+                        <div class="config-toggle-group">
+                            <label class="config-toggle">
+                                <input type="checkbox" id="config-antilink" onchange="saveSetting('antilink')">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Enable Anti-Link</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Anti-Spam</h3>
+                        <p class="config-description">Prevent users from sending too many messages in a short time.</p>
+                        <div class="config-toggle-group">
+                            <label class="config-toggle">
+                                <input type="checkbox" id="config-antispam" onchange="saveSetting('antispam')">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Enable Anti-Spam</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-tab-content" id="tab-logging">
+                    <div class="config-section">
+                        <h3><i class="fas fa-clipboard-list"></i> Event Logging</h3>
+                        <p class="config-description">Log server events to a specific channel.</p>
+                        <div class="config-toggle-group">
+                            <label class="config-toggle">
+                                <input type="checkbox" id="config-logging-enabled"
+                                    onchange="saveSetting('logging_enabled')">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Enable Logging</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-hashtag"></i> Log Channel</h3>
+                        <p class="config-description">Select the channel where logs will be sent.</p>
+                        <div class="config-input-group">
+                            <select id="config-log-channel" class="config-select"
+                                onchange="saveSetting('log_channel')">
+                                <option value="">-- Select Channel --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-list-check"></i> Log Events</h3>
+                        <p class="config-description">Choose which events to log.</p>
+                        <div class="config-checkbox-grid">
+                            <label class="config-checkbox">
+                                <input type="checkbox" value="message_edit" onchange="saveSetting('log_types')">
+                                <span class="checkbox-custom"></span>
+                                <span>Message Edit</span>
+                            </label>
+                            <label class="config-checkbox">
+                                <input type="checkbox" value="message_delete" onchange="saveSetting('log_types')">
+                                <span class="checkbox-custom"></span>
+                                <span>Message Delete</span>
+                            </label>
+                            <label class="config-checkbox">
+                                <input type="checkbox" value="member_join" onchange="saveSetting('log_types')">
+                                <span class="checkbox-custom"></span>
+                                <span>Member Join</span>
+                            </label>
+                            <label class="config-checkbox">
+                                <input type="checkbox" value="member_leave" onchange="saveSetting('log_types')">
+                                <span class="checkbox-custom"></span>
+                                <span>Member Leave</span>
+                            </label>
+                            <label class="config-checkbox">
+                                <input type="checkbox" value="member_ban" onchange="saveSetting('log_types')">
+                                <span class="checkbox-custom"></span>
+                                <span>Member Ban</span>
+                            </label>
+                            <label class="config-checkbox">
+                                <input type="checkbox" value="member_kick" onchange="saveSetting('log_types')">
+                                <span class="checkbox-custom"></span>
+                                <span>Member Kick</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-tab-content" id="tab-welcome">
+                    <div class="config-section">
+                        <h3><i class="fas fa-door-open"></i> Welcome Message</h3>
+                        <p class="config-description">Send a message when a new member joins the server.</p>
+                        <div class="config-toggle-group">
+                            <label class="config-toggle">
+                                <input type="checkbox" id="config-welcome-enabled"
+                                    onchange="saveSetting('welcome_enabled')">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Enable Welcome Messages</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-hashtag"></i> Welcome Channel</h3>
+                        <p class="config-description">Select the channel for welcome messages.</p>
+                        <div class="config-input-group">
+                            <select id="config-welcome-channel" class="config-select"
+                                onchange="saveSetting('welcome_channel')">
+                                <option value="">-- Select Channel --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-pen"></i> Welcome Message Template</h3>
+                        <p class="config-description">Use <code>{user}</code> for the username and <code>{server}</code> for
+                            the server name.</p>
+                        <div class="config-input-group">
+                            <textarea id="config-welcome-message" class="config-textarea"
+                                placeholder="Welcome {user} to {server}! 🎉" rows="3"></textarea>
+                            <button class="config-save-btn" onclick="saveSetting('welcome_message')">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-user-tag"></i> Auto-Role</h3>
+                        <p class="config-description">Automatically assign a role to new members when they join.</p>
+                        <div class="config-toggle-group">
+                            <label class="config-toggle">
+                                <input type="checkbox" id="config-autorole-enabled"
+                                    onchange="saveSetting('autorole_enabled')">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Enable Auto-Role</span>
+                            </label>
+                        </div>
+                        <div class="config-input-group" style="margin-top: 15px;">
+                            <select id="config-autorole" class="config-select" onchange="saveSetting('autorole')">
+                                <option value="">-- Select Role --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav id="navBar" class="nav-bar">
+        <div class="sidebar-header">
+            <img src="../photos/bot-pfp.png" alt="Pulsar Logo">
+            <h3>Pulsar</h3>
+        </div>
+
+        <a href="../"><i class="fas fa-home"></i> Home</a>
+
+        <div class="nav-item-dropdown">
+            <a href="../commands/" class="dropdown-toggle">
+                <span><i class="fas fa-terminal"></i> Commands</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="../commands/#general"><i class="fas fa-circle" style="font-size: 8px; color: #7289da;"></i>
+                    General</a>
+                <a href="../commands/#moderation"><i class="fas fa-circle" style="font-size: 8px; color: #f04747;"></i>
+                    Moderation</a>
+                <a href="../commands/#admin"><i class="fas fa-circle" style="font-size: 8px; color: #9b59b6;"></i>
+                    Admin</a>
+                <a href="../commands/#utility"><i class="fas fa-circle" style="font-size: 8px; color: #43b581;"></i>
+                    Utility</a>
+                <a href="../commands/#fun"><i class="fas fa-circle" style="font-size: 8px; color: #faa61a;"></i>
+                    Fun</a>
+            </div>
+        </div>
+
+        <a href="../dashboard/" style="color: #7289da;"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="#"><i class="fas fa-clock"></i> Incoming</a>
+        <a href="../contact-me/"><i class="fas fa-envelope"></i> Contact-us</a>
+
+        <div id="discord-auth-container" class="discord-auth-container">
+        </div>
+    </nav>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-creator">
+                <img src="../photos/discord_pfp.png" alt="Edzar">
+                <span>Made by <strong>Edzar</strong></span>
+            </div>
+            <div class="footer-links">
+                <a href="http://discordapp.com/users/882920589269020672" target="_blank"><i class="fab fa-discord"></i>
+                    Contact</a>
+                <a href="https://discord.gg/ckWxxg5G3x" target="_blank"><i class="fas fa-server"></i> Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Pulsar &nbsp;|&nbsp; <a href="../terms/">Terms</a> &nbsp;|&nbsp; <a
+                    href="../privacy/">Privacy</a></p>
+        </div>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+
+</html>
