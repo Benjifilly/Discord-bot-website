@@ -260,22 +260,28 @@ async function loadGuildConfig(guildId) {
             fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/roles`)
         ]);
 
-        // Settings
+        let settings = null;
+
+        // Settings — parse first but apply AFTER populating selects
         if (settingsRes.ok) {
-            const settings = await settingsRes.json();
-            applySettingsToUI(settings);
+            settings = await settingsRes.json();
         }
 
-        // Channels
+        // Channels — populate selects BEFORE applying settings
         if (channelsRes.ok) {
             guildChannels = await channelsRes.json();
             populateChannelSelects(guildChannels);
         }
 
-        // Roles
+        // Roles — populate selects BEFORE applying settings
         if (rolesRes.ok) {
             guildRoles = await rolesRes.json();
             populateRoleSelects(guildRoles);
+        }
+
+        // Now apply settings so select values match existing options
+        if (settings) {
+            applySettingsToUI(settings);
         }
 
         // Overview stats
