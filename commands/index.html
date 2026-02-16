@@ -87,14 +87,17 @@
                 </select>
             </div>
         </div>
-        <div id="no-result" style="color: white; display: none; text-align: center;">
-            <h2>No command (◡︵◡)</h2>
-            <p>Command not found, <a href="">contact the owner </a><br> if you want "<span
-                    id="no-result-query"></span><span id="ellipsis"
-                    style="display: none;"><span>.</span><span>.</span><span>.</span></span>" to be added</p>
+        <div id="no-result" style="display: none;">
+            <span class="no-result-icon"><i class="fas fa-search"></i></span>
+            <h2>No command found</h2>
+            <p>We couldn't find any command matching<br>
+                <span class="no-result-query" id="no-result-query"></span>
+            </p>
+            <p style="margin-top: 14px;">Think it should exist? <a href="../contact-me/">Contact us</a> to suggest it!</p>
         </div>
-        <div id="no-result2" style="color: white; display: none; text-align: center;">
-            <h2>No command (◡︵◡)</h2>
+        <div id="no-result2" style="display: none;">
+            <span class="no-result-icon"><i class="fas fa-inbox"></i></span>
+            <h2>No commands available</h2>
         </div>
 
         <section class="command-list">

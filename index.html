@@ -291,20 +291,32 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const seeMoreButton = document.getElementById('see-more');
-            const hiddenUpdates = document.querySelectorAll('.update:nth-child(n+4)');
+            const container = document.querySelector('.updates-container');
+            const allItems = container.querySelectorAll('.update, .bad-update');
+            const hiddenItems = [];
+
+            allItems.forEach((item, index) => {
+                // nth-child(n+4) means index >= 3 among siblings (0-based)
+                // We count all update/bad-update elements
+                if (index >= 3) {
+                    hiddenItems.push(item);
+                }
+            });
 
             seeMoreButton.addEventListener('click', () => {
-                // Use GSAP to animate the appearance of hidden updates
-                gsap.to(hiddenUpdates, {
-                    duration: 1,
-                    display: 'block',
-                    opacity: 1,
-                    stagger: 0.2,
-                    ease: "power2.out"
+                hiddenItems.forEach((item, i) => {
+                    setTimeout(() => {
+                        item.classList.add('revealed');
+                    }, i * 80);
                 });
 
-                // Hide the button after clicking
-                seeMoreButton.style.display = 'none';
+                // Fade out the button
+                seeMoreButton.style.opacity = '0';
+                seeMoreButton.style.transform = 'translateY(10px)';
+                seeMoreButton.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    seeMoreButton.style.display = 'none';
+                }, 300);
             });
         });
 

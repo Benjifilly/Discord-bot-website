@@ -29,16 +29,14 @@ function searchCommands() {
     // Toggle no-result message
     const noResult = document.getElementById('no-result');
     const noResultQuery = document.getElementById('no-result-query');
-    const ellipsis = document.getElementById('ellipsis');
 
     if (totalFound) {
         if (noResult) noResult.style.display = 'none';
     } else {
         if (noResult) noResult.style.display = 'block';
-        const maxLength = 20;
+        const maxLength = 30;
         const truncatedValue = input.value.length > maxLength ? input.value.substring(0, maxLength) + '...' : input.value;
         if (noResultQuery) noResultQuery.textContent = truncatedValue;
-        if (ellipsis) ellipsis.style.display = input.value.length > maxLength ? "inline" : "none";
     }
 
     // Hide no-result2 if it exists (from old code cleanup)
@@ -467,6 +465,8 @@ function sortCommands() {
 
     const sortType = sortOptions.value;
     const categories = document.querySelectorAll('.category-block');
+    const searchInput = document.getElementById('searchBar');
+    const searchFilter = searchInput ? searchInput.value.toLowerCase() : '';
 
     let hasVisibleCommand = false; // Track if any command is visible across all categories
 
@@ -527,6 +527,12 @@ function sortCommands() {
             if (sortType === 'new' && !command.classList.contains('new-command')) visible = false;
             if (sortType === 'updated' && !command.classList.contains('updated-command')) visible = false;
             if (sortType === 'bug' && !command.classList.contains('bug-command')) visible = false;
+
+            // Re-apply search filter
+            if (visible && searchFilter) {
+                const commandText = (command.textContent || command.innerText).toLowerCase();
+                if (!commandText.includes(searchFilter)) visible = false;
+            }
 
             if (visible) {
                 command.style.display = '';
