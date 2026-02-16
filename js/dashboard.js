@@ -32,6 +32,17 @@ let guildRoles = [];
 // =====================
 document.addEventListener('DOMContentLoaded', () => {
     checkDashboardAuth();
+    
+    // Add Enter key support for prefix input
+    const prefixInput = document.getElementById('config-prefix-input');
+    if (prefixInput) {
+        prefixInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addPrefix();
+            }
+        });
+    }
 });
 
 function checkDashboardAuth() {
@@ -301,9 +312,15 @@ async function loadGuildConfig(guildId) {
 }
 
 function applySettingsToUI(settings) {
-    // General
-    const prefixInput = document.getElementById('config-prefix');
-    if (prefixInput) prefixInput.value = settings.prefix || '?';
+    // General - Multiple Prefixes
+    if (settings.prefixes && Array.isArray(settings.prefixes)) {
+        displayPrefixes(settings.prefixes);
+    } else if (settings.prefix) {
+        // Backward compatibility with single prefix
+        displayPrefixes([settings.prefix]);
+    } else {
+        displayPrefixes([]);
+    }
 
     // Moderation
     setCheckbox('config-automod', settings.automod);
@@ -423,13 +440,9 @@ async function _doSaveSetting(key) {
     let value;
 
     switch (key) {
-        case 'prefix':
-            value = document.getElementById('config-prefix').value.trim();
-            if (!value) {
-                showNotification('Prefix cannot be empty.', 'warning');
-                return;
-            }
-            break;
+        case 'prefixes':
+            // Handled separately by addPrefix/removePrefix functions
+            return;
         case 'automod':
             value = document.getElementById('config-automod').checked;
             break;
@@ -490,5 +503,125 @@ async function _doSaveSetting(key) {
     } catch (error) {
         console.error('Save error:', error);
         showNotification(`Failed to save: ${error.message}`, 'error');
+    }
+}
+
+// =====================
+// Prefix Management (Multiple Prefixes)
+// =====================
+
+let currentPrefixes = [];
+
+function displayPrefixes(prefixes) {
+    currentPrefixes = prefixes || [];
+    const container = document.getElementById('prefix-preview-list');
+    
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (currentPrefixes.length === 0) {
+        const placeholder = document.createElement('span');
+        placeholder.className = 'prefix-placeholder';
+        placeholder.textContent = 'No prefixes configured yet.';
+        container.appendChild(placeholder);
+        return;
+    }
+    
+    currentPrefixes.forEach(prefix => {
+        const badge = document.createElement('div');
+        badge.className = 'prefix-badge';
+        
+        const text = document.createElement('span');
+        text.textContent = prefix;
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'prefix-badge-remove';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.onclick = () => removePrefix(prefix);
+        removeBtn.title = 'Remove this prefix';
+        
+        badge.appendChild(text);
+        badge.appendChild(removeBtn);
+        container.appendChild(badge);
+    });
+}
+
+async function addPrefix() {
+    const input = document.getElementById('config-prefix-input');
+    const newPrefix = input ? input.value.trim() : '';
+    
+    if (!newPrefix) {
+        showNotification('Please enter a prefix.', 'warning');
+        return;
+    }
+    
+    if (newPrefix.length > 5) {
+        showNotification('Prefix cannot be longer than 5 characters.', 'warning');
+        return;
+    }
+    
+    if (currentPrefixes.includes(newPrefix)) {
+        showNotification('This prefix already exists.', 'warning');
+        return;
+    }
+    
+    // Add to local array
+    currentPrefixes.push(newPrefix);
+    
+    // Save to backend
+    await savePrefixes();
+    
+    // Update UI
+    displayPrefixes(currentPrefixes);
+    
+    // Clear input
+    if (input) input.value = '';
+}
+
+async function removePrefix(prefixToRemove) {
+    if (!prefixToRemove) return;
+    
+    // Remove from local array
+    currentPrefixes = currentPrefixes.filter(p => p !== prefixToRemove);
+    
+    // Save to backend
+    await savePrefixes();
+    
+    // Update UI
+    displayPrefixes(currentPrefixes);
+}
+
+async function savePrefixes() {
+    if (!currentGuildId) return;
+    
+    const token = localStorage.getItem('discord_access_token');
+    const tokenType = localStorage.getItem('discord_token_type');
+    
+    if (!token) {
+        showNotification('You are not authenticated.', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${DASHBOARD_API_BASE}/guild/${currentGuildId}/settings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${tokenType} ${token}`
+            },
+            body: JSON.stringify({ key: 'prefixes', value: currentPrefixes })
+        });
+        
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            throw new Error(err.error || 'Failed to save');
+        }
+        
+        showNotification('Prefixes saved successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Save prefixes error:', error);
+        showNotification(`Failed to save prefixes: ${error.message}`, 'error');
     }
 }

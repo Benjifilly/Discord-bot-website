@@ -94,12 +94,22 @@
                 <!-- Tab Content -->
                 <div class="config-tab-content active" id="tab-general">
                     <div class="config-section">
-                        <h3><i class="fas fa-terminal"></i> Bot Prefix</h3>
-                        <p class="config-description">Change the prefix used to invoke bot commands on this server.</p>
-                        <div class="config-input-group">
-                            <input type="text" id="config-prefix" class="config-input" placeholder="?" maxlength="5">
-                            <button class="config-save-btn" onclick="saveSetting('prefix')">
-                                <i class="fas fa-save"></i> Save
+                        <h3><i class="fas fa-terminal"></i> Bot Prefixes</h3>
+                        <p class="config-description">Manage prefixes used to invoke bot commands on this server. You can have multiple prefixes.</p>
+                        
+                        <!-- Current Prefixes Preview -->
+                        <div class="prefix-preview-container">
+                            <label class="config-label"><i class="fas fa-eye"></i> Current Prefixes:</label>
+                            <div id="prefix-preview-list" class="prefix-preview-list">
+                                <span class="prefix-placeholder">No prefixes configured yet.</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Add New Prefix -->
+                        <div class="config-input-group" style="margin-top: 15px;">
+                            <input type="text" id="config-prefix-input" class="config-input" placeholder="Enter a new prefix (e.g., !, ?)" maxlength="5">
+                            <button class="config-save-btn" onclick="addPrefix()">
+                                <i class="fas fa-plus"></i> Add Prefix
                             </button>
                         </div>
                     </div>
