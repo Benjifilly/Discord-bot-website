@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/ScrollTrigger.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
@@ -95,8 +96,9 @@
                 <div class="config-tab-content active" id="tab-general">
                     <div class="config-section">
                         <h3><i class="fas fa-terminal"></i> Bot Prefixes</h3>
-                        <p class="config-description">Manage prefixes used to invoke bot commands on this server. You can have multiple prefixes.</p>
-                        
+                        <p class="config-description">Manage prefixes used to invoke bot commands on this server. You
+                            can have multiple prefixes.</p>
+
                         <!-- Current Prefixes Preview -->
                         <div class="prefix-preview-container">
                             <label class="config-label"><i class="fas fa-eye"></i> Current Prefixes:</label>
@@ -104,12 +106,14 @@
                                 <span class="prefix-placeholder">No prefixes configured yet.</span>
                             </div>
                         </div>
-                        
+
                         <!-- Add New Prefix -->
                         <div class="config-input-group" style="margin-top: 15px;">
-                            <input type="text" id="config-prefix-input" class="config-input" placeholder="Enter a new prefix (e.g., !, ?)" maxlength="5">
+                            <input type="text" id="config-prefix-input" class="config-input"
+                                placeholder="Enter a new prefix (e.g., !, ?)" maxlength="5"
+                                oninput="saveSetting('prefixes')">
                             <button class="config-save-btn" onclick="addPrefix()">
-                                <i class="fas fa-plus"></i> Add Prefix
+                                <i class="fas fa-plus"></i> Add
                             </button>
                         </div>
                     </div>
@@ -139,12 +143,30 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-chart-line"></i> Activity (7 days)</h3>
+                        <div class="activity-chart-container">
+                            <canvas id="activity-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3><i class="fas fa-key"></i> Bot Permissions</h3>
+                        <p class="config-description">Permissions Pulsar has on this server. Missing permissions may
+                            limit functionality.</p>
+                        <div id="permissions-alert-container"></div>
+                        <div id="bot-permissions-grid" class="permissions-grid">
+                            <span class="prefix-placeholder">Loading permissions...</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="config-tab-content" id="tab-moderation">
                     <div class="config-section">
                         <h3><i class="fas fa-ban"></i> Auto-Moderation</h3>
-                        <p class="config-description">Automatically moderate messages containing banned words or spam.</p>
+                        <p class="config-description">Automatically moderate messages containing banned words or spam.
+                        </p>
                         <div class="config-toggle-group">
                             <label class="config-toggle">
                                 <input type="checkbox" id="config-automod" onchange="saveSetting('automod')">
@@ -156,7 +178,8 @@
 
                     <div class="config-section">
                         <h3><i class="fas fa-link"></i> Anti-Link</h3>
-                        <p class="config-description">Automatically delete messages containing links (except from users with Manage Messages permission).</p>
+                        <p class="config-description">Automatically delete messages containing links (except from users
+                            with Manage Messages permission).</p>
                         <div class="config-toggle-group">
                             <label class="config-toggle">
                                 <input type="checkbox" id="config-antilink" onchange="saveSetting('antilink')">
@@ -197,8 +220,7 @@
                         <h3><i class="fas fa-hashtag"></i> Log Channel</h3>
                         <p class="config-description">Select the channel where logs will be sent.</p>
                         <div class="config-input-group">
-                            <select id="config-log-channel" class="config-select"
-                                onchange="saveSetting('log_channel')">
+                            <select id="config-log-channel" class="config-select" onchange="saveSetting('log_channel')">
                                 <option value="">-- Select Channel --</option>
                             </select>
                         </div>
@@ -284,14 +306,49 @@
 
                     <div class="config-section">
                         <h3><i class="fas fa-pen"></i> Welcome Message Template</h3>
-                        <p class="config-description">Use <code>{user}</code> for the username and <code>{server}</code> for
+                        <p class="config-description">Use <code>{user}</code> for the username and <code>{server}</code>
+                            for
                             the server name.</p>
-                        <div class="config-input-group">
+                        <div class="config-input-group" style="flex-direction: column; align-items: stretch;">
                             <textarea id="config-welcome-message" class="config-textarea"
-                                placeholder="Welcome {user} to {server}! 🎉" rows="3"></textarea>
-                            <button class="config-save-btn" onclick="saveSetting('welcome_message')">
-                                <i class="fas fa-save"></i> Save
-                            </button>
+                                placeholder="Welcome {user} to {server}! 🎉" rows="3"
+                                oninput="saveSetting('welcome_message'); updateWelcomePreview()"></textarea>
+
+                            <!-- Live Preview -->
+                            <div class="preview-label-text">PREVIEW</div>
+                            <div id="welcome-preview" class="welcome-preview-container">
+                                <!-- Discord Message Structure -->
+                                <div class="discord-message">
+                                    <div class="discord-avatar-container">
+                                        <img src="../photos/bot-pfp.png" class="discord-avatar" alt="Bot Avatar">
+                                    </div>
+                                    <div class="discord-content">
+                                        <div class="discord-header">
+                                            <span class="discord-username">Pulsar</span>
+                                            <span class="discord-bot-tag">APP</span>
+                                            <span class="discord-timestamp" id="preview-timestamp">Today at</span>
+                                        </div>
+                                        <div class="discord-embed-wrapper">
+                                            <div class="discord-embed">
+                                                <div class="discord-embed-content">
+                                                    <div class="discord-embed-title">👋 Welcome!</div>
+                                                    <div class="discord-embed-description" id="welcome-preview-text">
+                                                        <!-- Text injected here -->
+                                                    </div>
+                                                </div>
+                                                <div class="discord-embed-thumbnail">
+                                                    <img id="preview-user-avatar" src="" alt="User Avatar"
+                                                        onerror="this.style.display='none'">
+                                                </div>
+                                            </div>
+                                            <div class="discord-embed-footer">
+                                                <span id="preview-member-count">Member # </span>&nbsp;•&nbsp;<span
+                                                    id="preview-footer-timestamp">Today at </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -316,6 +373,17 @@
             </div>
         </div>
     </main>
+
+    <!-- Save Bar (Hidden by default) -->
+    <div id="save-bar" class="save-bar">
+        <div class="save-bar-content">
+            <span class="save-bar-text">Careful — you have unsaved changes!</span>
+            <div class="save-bar-actions">
+                <button class="save-bar-btn reset-btn" onclick="resetChanges()">Reset</button>
+                <button class="save-bar-btn save-btn" onclick="saveChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
 
     <nav id="navBar" class="nav-bar">
         <div class="sidebar-header">
