@@ -842,3 +842,16 @@ function getBasePath() {
     }
     return './';
 }
+
+// Scroll to top button visibility
+document.addEventListener('DOMContentLoaded', function () {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > 200) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    });
+});

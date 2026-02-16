@@ -597,8 +597,45 @@
                     href="../privacy/">Privacy</a></p>
         </div>
     </footer>
+    <button id="scroll-to-top" class="scroll-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
     <script src="../js/scripts.js"></script>
     <script src="../js/star-animation.js"></script>
+    <script>
+        (function() {
+            var btn = document.getElementById('scroll-to-top');
+            if (!btn) return;
+            function checkScroll() {
+                var scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                if (scrollPos > 200) {
+                    btn.classList.add('visible');
+                } else {
+                    btn.classList.remove('visible');
+                }
+            }
+            window.addEventListener('scroll', checkScroll, true);
+            document.addEventListener('scroll', checkScroll, true);
+
+            btn.addEventListener('click', function() {
+                var start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                var duration = 600;
+                var startTime = null;
+                function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var progress = Math.min((timestamp - startTime) / duration, 1);
+                    var ease = easeOutCubic(progress);
+                    var pos = start * (1 - ease);
+                    window.scrollTo(0, pos);
+                    document.documentElement.scrollTop = pos;
+                    document.body.scrollTop = pos;
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        })();
+    </script>
 </body>
 
 </html>
