@@ -805,9 +805,12 @@ function parseDiscordMarkdown(text) {
     // Store code blocks/inline code to protect from further parsing
     const codeBlocks = [];
 
-    // Code blocks first (```code```)
+    // Code blocks first (```code```) — with copy button
     text = text.replace(/```([\s\S]*?)```/g, (_, code) => {
-        codeBlocks.push(`<pre class="md-codeblock">${code}</pre>`);
+        const escapedCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        codeBlocks.push(
+            `<pre class="md-codeblock"><button class="codeblock-copy-btn" onclick="copyCodeBlock(this)"><i class="fas fa-copy"></i></button>${escapedCode}</pre>`
+        );
         return `%%CODEBLOCK_${codeBlocks.length - 1}%%`;
     });
 
@@ -843,13 +846,42 @@ function parseDiscordMarkdown(text) {
     // Strikethrough (~~text~~)
     text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
 
-    // Newlines to <br>
+    // Newlines: double newline → paragraph spacing, single → line break
+    text = text.replace(/\n\n/g, '<br><div style="margin-top:8px"></div>');
     text = text.replace(/\n/g, '<br>');
 
     // Restore code blocks
     text = text.replace(/%%CODEBLOCK_(\d+)%%/g, (_, index) => codeBlocks[parseInt(index)]);
 
     return text;
+}
+
+// Copy code block content to clipboard
+async function copyCodeBlock(button) {
+    const pre = button.closest('.md-codeblock');
+    if (!pre) return;
+
+    // Get the text content of the code block, excluding the button text
+    const clone = pre.cloneNode(true);
+    const btn = clone.querySelector('.codeblock-copy-btn');
+    if (btn) btn.remove();
+    const codeText = clone.textContent.trim();
+
+    try {
+        await navigator.clipboard.writeText(codeText);
+        const icon = button.querySelector('i');
+        icon.classList.remove('fa-copy');
+        icon.classList.add('fa-check');
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check"></i>';
+
+        setTimeout(() => {
+            button.innerHTML = '<i class="fas fa-copy"></i>';
+            button.classList.remove('copied');
+        }, 1500);
+    } catch (err) {
+        console.error('Failed to copy code block:', err);
+    }
 }
 
 // =====================
@@ -1006,3 +1038,37 @@ async function removePrefix(prefixToRemove) {
     // Update UI
     displayPrefixes(currentPrefixes);
 }
+
+// =====================
+// Textarea Resilience
+// =====================
+document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.getElementById('config-welcome-message');
+    if (textarea) {
+        // Function to fix height if it's broken
+        const fixHeight = () => {
+            if (textarea.style.height && (textarea.style.height.startsWith('-') || textarea.style.height === '0px')) {
+                textarea.style.height = ''; // Clear inline style
+                textarea.style.minHeight = '80px';
+            }
+        };
+
+        // Check immediately
+        fixHeight();
+
+        // Check on interaction
+        textarea.addEventListener('input', fixHeight);
+        textarea.addEventListener('focus', fixHeight);
+
+        // Watch for attribute changes (extensions injecting styles)
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    fixHeight();
+                }
+            });
+        });
+
+        observer.observe(textarea, { attributes: true, attributeFilter: ['style'] });
+    }
+});

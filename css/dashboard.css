@@ -456,10 +456,13 @@ body.dashboard-page .legal-header {
     padding: 12px 16px;
     border-radius: 8px;
     font-size: 14px;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     font-family: 'Arial', sans-serif;
     resize: vertical;
-    min-height: 80px;
+    min-height: 80px !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.5;
 }
 
 .config-textarea:focus {
@@ -1041,6 +1044,7 @@ body.dashboard-page .legal-header {
 .save-bar {
     position: fixed;
     bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     transform: translateX(-50%) translateY(150%);
     background-color: #18191c;
@@ -1052,7 +1056,6 @@ body.dashboard-page .legal-header {
     max-width: 600px;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
-    /* Always flex, we toggle visibility with transform */
 }
 
 .save-bar.visible {
@@ -1115,25 +1118,34 @@ body.dashboard-page .legal-header {
 /* Mobile responsive */
 @media (max-width: 600px) {
     .save-bar {
-        bottom: 70px;
-        /* Above mobile nav if present */
-        width: 95%;
-        padding: 12px;
+        bottom: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        width: calc(100% - 32px);
+        max-width: 600px;
+        padding: 10px 12px;
+        border-radius: 12px;
     }
 
     .save-bar-content {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .save-bar-text {
+        font-size: 13px;
+        flex: 1;
+        min-width: 0;
     }
 
     .save-bar-actions {
-        width: 100%;
-        justify-content: center;
+        gap: 6px;
     }
 
     .save-bar-btn {
-        flex: 1;
+        padding: 8px 14px;
+        font-size: 12px;
+        border-radius: 6px;
     }
 }
 
@@ -1158,6 +1170,42 @@ body.dashboard-page .legal-header {
     margin: 4px 0;
     white-space: pre-wrap;
     border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+}
+
+.md-codeblock .codeblock-copy-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: transparent;
+    border: none;
+    color: #b9bbbe;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.md-codeblock:hover .codeblock-copy-btn {
+    opacity: 1;
+}
+
+.md-codeblock .codeblock-copy-btn:hover {
+    background: transparent;
+    color: #fff;
+}
+
+.md-codeblock .codeblock-copy-btn.copied {
+    color: #57f287;
+    border-color: rgba(87, 242, 135, 0.3);
 }
 
 .md-blockquote {
@@ -1318,10 +1366,13 @@ body.dashboard-page .legal-header {
         padding: 12px;
     }
 
-    /* Save bar: full width */
+    /* Save bar */
     .save-bar {
-        width: 95%;
+        width: calc(100% - 32px);
+        max-width: 600px;
         left: 50%;
+        bottom: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     }
 
     /* Embed preview: full width */
@@ -1376,8 +1427,11 @@ body.dashboard-page .legal-header {
 
     /* Save bar: compact */
     .save-bar {
-        width: 98%;
+        width: calc(100% - 24px);
+        max-width: 600px;
         padding: 10px 12px;
+        bottom: 15px;
+        bottom: calc(15px + env(safe-area-inset-bottom, 0px));
     }
 
     .save-bar-text {
