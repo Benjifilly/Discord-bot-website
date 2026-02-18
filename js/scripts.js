@@ -564,6 +564,7 @@ function renderCommands(commands) {
     if (!commandList) return;
 
     // Clear existing content
+    const fragment = document.createDocumentFragment();
     commandList.innerHTML = '';
 
     // Metadata for styling
@@ -595,7 +596,7 @@ function renderCommands(commands) {
             header.innerHTML = `<i class="fas ${meta.icon}"></i> ${currentCategory}`;
             block.appendChild(header);
 
-            commandList.appendChild(block);
+            fragment.appendChild(block);
         }
 
         const cmdDiv = document.createElement('div');
@@ -650,6 +651,7 @@ function renderCommands(commands) {
     });
 
     // Re-initialize any JS that depends on the DOM
+    commandList.appendChild(fragment);
     sortCommands();
     updateCommandCount();
 }
