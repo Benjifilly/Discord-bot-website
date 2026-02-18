@@ -41,46 +41,51 @@ body.dashboard-page .legal-header {
 }
 
 .auth-gate-card {
-    background: rgba(44, 47, 51, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 60px 50px;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: rgba(32, 34, 37, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 60px 40px;
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     text-align: center;
-    max-width: 450px;
+    max-width: 480px;
     width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-.auth-gate-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 25px;
-    background: linear-gradient(135deg, #f04747, #d03535);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 24px rgba(240, 71, 71, 0.3);
+.auth-gate-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
 }
 
-.auth-gate-icon i {
-    font-size: 32px;
-    color: #fff;
+.auth-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    background: -webkit-linear-gradient(45deg, #5865F2, #eb459e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 10px rgba(88, 101, 242, 0.3));
 }
 
 .auth-gate-card h2 {
     color: #fff;
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .auth-gate-card p {
-    color: #b9bbbe;
+    color: #dcddde;
     font-size: 16px;
-    margin-bottom: 30px;
-    line-height: 1.5;
+    margin-bottom: 35px;
+    line-height: 1.6;
 }
 
 .discord-login-btn-large {
@@ -95,12 +100,11 @@ body.dashboard-page .legal-header {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: background-color 0.2s;
 }
 
 .discord-login-btn-large:hover {
     background-color: #4752C4;
-    transform: translateY(-2px);
 }
 
 /* Server Picker Grid */
@@ -1461,4 +1465,111 @@ body.dashboard-page .legal-header {
         width: 50px;
         height: 50px;
     }
+}
+
+/* ===========================
+   Markdown Styles (Discord Preview)
+   =========================== */
+.md-header {
+    font-weight: 700;
+    color: #fff;
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.md-header:first-child {
+    margin-top: 0;
+}
+
+.md-h1 {
+    font-size: 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 4px;
+}
+
+.md-h2 {
+    font-size: 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 4px;
+}
+
+.md-h3 {
+    font-size: 1.1rem;
+}
+
+.md-link {
+    color: #00b0f4;
+    text-decoration: none;
+}
+
+.md-link:hover {
+    text-decoration: underline;
+}
+
+.md-spoiler {
+    background-color: #202225;
+    color: transparent;
+    border-radius: 3px;
+    padding: 0 2px;
+    cursor: pointer;
+    transition: background-color 0.1s;
+    user-select: none;
+}
+
+.md-spoiler:hover {
+    background-color: #292b2f;
+}
+
+.md-spoiler.visible {
+    color: #dcddde;
+    background-color: rgba(255, 255, 255, 0.1);
+    user-select: text;
+}
+
+.md-quote {
+    border-left: 4px solid #4f545c;
+    padding-left: 10px;
+    color: #b9bbbe;
+    margin: 4px 0;
+    display: block;
+}
+
+.md-code {
+    background: #2f3136;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.85em;
+}
+
+.md-codeblock {
+    background: #2f3136;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #202225;
+    margin: 8px 0;
+    overflow-x: auto;
+    font-family: 'Consolas', monospace;
+    font-size: 0.85em;
+    color: #dcddde;
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.md-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+    padding-left: 4px;
+}
+
+.md-list-bullet {
+    color: #b9bbbe;
+    font-size: 0.6em;
+    margin-top: 8px;
+    /* Visual alignment with line-height */
 }

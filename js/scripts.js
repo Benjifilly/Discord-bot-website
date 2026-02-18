@@ -1022,7 +1022,7 @@ function login() {
 
     const redirectUri = getRedirectUri();
     const scope = 'identify guilds';
-    const authUrl = `https://discord.com/oauth2/authorize?client_id=${CONFIG.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=${CONFIG.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}&state=${state}`;
     window.location.href = authUrl;
 }
 
@@ -1107,7 +1107,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Update hardcoded Discord invite links
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const inviteLinks = document.querySelectorAll('a[href*="discord.com/oauth2/authorize"]');
     inviteLinks.forEach(link => {
         try {

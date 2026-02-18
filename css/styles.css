@@ -160,17 +160,13 @@ body {
 
 .nav-bar a:hover {
     background: rgba(114, 137, 218, 0.1);
-    /* Subtle hover background */
     color: #fff;
     border-left-color: #7289da;
-    /* Accent color on the left */
-    padding-left: 35px;
-    /* Slight shift effect */
+    padding-left: 40px;
 }
 
 .nav-bar a i {
     min-width: 30px;
-    /* Fixed space for icons */
     font-size: 20px;
     margin-right: 15px;
     text-align: center;
@@ -194,7 +190,6 @@ body {
         background: transparent;
         position: relative;
         padding: 5px 60px;
-        /* Increased padding to make it wider */
         display: flex;
         align-items: center;
         font-size: 17px;
@@ -218,7 +213,6 @@ body {
         font-style: italic;
         color: #f0f0f0;
         padding: 5px 5px 5px 5px;
-        /* Adjusted padding to accommodate the button */
         border-radius: 5px;
         margin-bottom: -10px;
         overflow-x: auto;
@@ -304,7 +298,6 @@ header {
 
 .invite-button a:hover {
     background-color: #4e5d94;
-    transform: translateY(-2px);
 }
 
 header h1 {
@@ -451,7 +444,6 @@ footer {
 
 .footer-links a:hover {
     color: #7289da;
-    transform: translateY(-2px);
 }
 
 .footer-links a i {
@@ -1127,7 +1119,6 @@ footer a:hover {
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border-color: rgba(114, 137, 218, 0.5);
     background: rgba(44, 47, 51, 0.8);
@@ -1740,53 +1731,36 @@ body.contact-page main {
     font-weight: 600;
     font-size: 15px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: background 0.4s;
     width: 100%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 #submitBtn:hover {
     background: #5b6eae;
-    transform: translateY(-2px);
-}
-
-#submitBtn:active {
-    transform: translateY(0);
 }
 
 /* Mobile Optimizations (iPhone) */
 @media (max-width: 768px) {
     body.contact-page {
         height: 100vh;
-        /* Ensure full viewport height on mobile */
         overflow: hidden;
-        /* Prevent body scroll */
     }
 
     body.contact-page main {
         flex-direction: column;
-        /* Explicit column layout */
         align-items: center;
-        /* Horizontally center cross-axis */
         justify-content: center;
-        /* Vertically center main-axis */
         padding: 10px 15px;
-        /* Use padding for side gutters */
         width: 100%;
         box-sizing: border-box;
-        /* Ensure padding is included in width */
     }
 
     .contact-container {
         width: 100%;
-        /* Fill the available space within main padding */
         max-width: 450px;
-        /* Cap width for larger mobile/tablets */
         padding: 20px 15px;
-        /* Reduced Internal padding */
         margin: 0;
-        /* Remove auto margin, let flex center it */
-        /* Glassmorphism */
         border-radius: 20px;
         background: rgba(32, 34, 37, 0.7);
         backdrop-filter: blur(12px);
@@ -1798,17 +1772,14 @@ body.contact-page main {
     .contact-container h2 {
         font-size: 1.4rem;
         margin-bottom: 15px;
-        /* Tighter title */
     }
 
     .contact-page .legal-header h1 {
         font-size: 1.8rem;
-        /* Slightly smaller header title */
     }
 
     .contact-form {
         gap: 12px;
-        /* Tighter form gap */
     }
 
     .form-row {
@@ -1820,19 +1791,16 @@ body.contact-page main {
     .contact-form select,
     .contact-form textarea {
         padding: 10px 12px;
-        /* Smaller inputs */
         font-size: 13px;
     }
 
     .contact-form textarea {
         min-height: 60px;
-        /* Smaller text area to fit screen */
     }
 
     #submitBtn {
         padding: 12px;
         margin-top: 5px;
-        /* Tighter button margin */
         font-size: 14px;
     }
 }
@@ -1880,7 +1848,6 @@ body.contact-page main {
 
 
 .contact-form button:hover {
-    transform: translateY(-3px) scale(1.02);
     box-shadow: 0 8px 25px rgba(114, 137, 218, 0.6);
 }
 
@@ -2008,7 +1975,6 @@ body.contact-page main {
 .dropdown-content {
     max-height: 0;
     overflow: hidden;
-    /* Use cubic-bezier for a natural snappy feel */
     transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.2);
@@ -2019,9 +1985,7 @@ body.contact-page main {
 
 .nav-item-dropdown.active .dropdown-content {
     max-height: 500px;
-    /* Still needs to be enough to cover content */
     opacity: 1;
-    /* Keep same timing for consistency */
     transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
 }
 
@@ -2029,10 +1993,8 @@ body.contact-page main {
     padding-left: 60px;
     font-size: 16px;
     display: block;
-    /* Ensure full width click */
 }
 
-/* Hide command list by default to prevent flash of static content before skeleton loads */
 .command-list {
     display: none;
 }
@@ -2043,22 +2005,16 @@ body.contact-page main {
     scroll-margin-top: 100px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 3 columns on desktop */
     gap: 16px;
-    /* Gap between cards */
 }
 
-/* Header spans full width */
 .category-header {
     grid-column: 1 / -1;
     background-color: transparent;
-    /* No background */
     padding: 10px 0;
-    /* Less padding */
     border-radius: 0;
     margin-bottom: 10px;
     border-bottom: 2px solid #7289da;
-    /* Separation bar */
     display: flex;
     align-items: center;
     gap: 15px;
@@ -2100,14 +2056,11 @@ body.contact-page main {
 /* Command Styling */
 .category-block .command {
     margin-bottom: 0;
-    /* Reset margin since we use grid gap */
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(44, 47, 51, 0.3);
-    /* Subtle background */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     height: 100%;
-    /* Equal height */
     box-sizing: border-box;
     padding: 14px 16px;
     width: 100%;
@@ -2233,16 +2186,41 @@ body.contact-page main {
 
 @media screen and (max-width: 640px) {
     .controls-row {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
     }
 
+    .search-container {
+        flex: 1;
+        min-width: 0;
+    }
+
     .sort-container {
-        width: 100%;
+        width: auto;
+        flex-shrink: 0;
+    }
+
+    .sort-select-wrapper {
+        width: 44px;
     }
 
     #sortOptions {
-        flex-grow: 1;
+        width: 100%;
+        padding: 10px 0;
+        text-align: center;
+        color: transparent;
+        background-color: rgba(30, 30, 30, 0.8);
+        cursor: pointer;
+    }
+
+    #sortOptions option {
+        color: #000;
+    }
+
+    .sort-select-wrapper .sort-icon {
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 16px;
     }
 }
 
@@ -2324,7 +2302,6 @@ body.contact-page main {
     gap: 12px;
     flex-wrap: wrap;
     position: relative;
-    /* For absolute positioning of close button if needed */
 }
 
 /* Help Button & Divider */
@@ -2554,7 +2531,6 @@ body.contact-page main {
     border-bottom: 2px solid rgba(255, 255, 255, 0.06);
     position: relative;
     overflow: hidden;
-    /* Entrance animation */
     opacity: 0;
     animation: skeleton-appear 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: var(--skeleton-delay, 0s);
@@ -2863,7 +2839,7 @@ body.contact-page main {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s;
     font-weight: 600;
     text-decoration: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -2871,7 +2847,6 @@ body.contact-page main {
 
 .header-login-btn:hover {
     background-color: #5b6eae;
-    transform: translateY(-2px);
 }
 
 .header-login-btn i {

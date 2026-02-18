@@ -39,14 +39,14 @@
         <!-- Auth Gate: Shown when NOT logged in -->
         <div id="dashboard-auth-gate" class="dashboard-auth-gate">
             <div class="auth-gate-card">
-                <div class="auth-gate-icon">
-                    <i class="fas fa-lock"></i>
+                <div class="auth-gate-content">
+                    <i class="fas fa-lock auth-icon"></i>
+                    <h2>Authentication Required</h2>
+                    <p>Please log in with Discord to access the dashboard and configure your servers.</p>
+                    <button class="discord-login-btn-large" onclick="login()">
+                        <i class="fab fa-discord"></i> Login with Discord
+                    </button>
                 </div>
-                <h2>Authentication Required</h2>
-                <p>You need to connect with Discord to access the dashboard.</p>
-                <button class="discord-login-btn-large" onclick="login()">
-                    <i class="fab fa-discord"></i> Connect with Discord
-                </button>
             </div>
         </div>
 

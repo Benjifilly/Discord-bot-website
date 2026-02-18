@@ -820,13 +820,23 @@ function parseDiscordMarkdown(text) {
         return `%%CODEBLOCK_${codeBlocks.length - 1}%%`;
     });
 
-    // Headers (must be at start of line)
-    text = text.replace(/^### (.+)$/gm, '<span class="md-header md-h3">$1</span>');
-    text = text.replace(/^## (.+)$/gm, '<span class="md-header md-h2">$1</span>');
-    text = text.replace(/^# (.+)$/gm, '<span class="md-header md-h1">$1</span>');
+    // Spoilers (||text||)
+    text = text.replace(/\|\|(.+?)\|\|/g, '<span class="md-spoiler" onclick="this.classList.toggle(\'visible\')">$1</span>');
+
+    // Links ([text](url))
+    text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="md-link" target="_blank">$1</a>');
+
+    // Headers (consume optional trailing newline to avoid double spacing with global newline replacement)
+    // Using simple replacement for now, treating them as block elements via CSS
+    text = text.replace(/^### (.+?)(\n|$)/gm, '<span class="md-header md-h3">$1</span>');
+    text = text.replace(/^## (.+?)(\n|$)/gm, '<span class="md-header md-h2">$1</span>');
+    text = text.replace(/^# (.+?)(\n|$)/gm, '<span class="md-header md-h1">$1</span>');
+
+    // Lists (- item or * item)
+    text = text.replace(/^(?:[-*]) (.+?)(\n|$)/gm, '<div class="md-list-item"><span class="md-list-bullet">●</span> <span>$1</span></div>');
 
     // Blockquotes (&gt; text — because > is HTML-escaped before this runs)
-    text = text.replace(/^&gt; (.+)$/gm, '<div class="md-blockquote">$1</div>');
+    text = text.replace(/^&gt; (.+?)(\n|$)/gm, '<div class="md-quote">$1</div>');
 
     // Bold italic (***text***)
     text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
@@ -837,17 +847,15 @@ function parseDiscordMarkdown(text) {
     // Underline (__text__)
     text = text.replace(/__(.+?)__/g, '<u>$1</u>');
 
-    // Italic (*text*)
+    // Italic (*text* or _text_)
     text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-    // Italic (_text_) — simple version without lookbehind for compatibility
     text = text.replace(/(^|[^a-zA-Z0-9])_(.+?)_([^a-zA-Z0-9]|$)/g, '$1<em>$2</em>$3');
 
     // Strikethrough (~~text~~)
     text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
 
-    // Newlines: double newline → paragraph spacing, single → line break
-    text = text.replace(/\n\n/g, '<br><div style="margin-top:8px"></div>');
+    // Newlines: single -> br. Double -> already handled by block elements consuming them or just br br.
+    // We removed the "margin-top:8px" div to avoid the "huge space" issue, relying on block element CSS instead.
     text = text.replace(/\n/g, '<br>');
 
     // Restore code blocks
