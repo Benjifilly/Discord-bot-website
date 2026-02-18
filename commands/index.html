@@ -72,28 +72,48 @@
     <main>
         <h2 class="commands-title">Commands - <span id="commandCount"></span></h2>
         <div class="controls-container">
-            <div class="search-container">
-                <lord-icon id="searchIcon" src="https://cdn.lordicon.com/fkdzyfle.json" trigger="click"
-                    colors="primary:#7289da" style="width:40px;height:40px;">
-                </lord-icon>
-                <input type="text" id="searchBar" placeholder="Search commands..." onkeyup="searchCommands()">
+            <div class="controls-row">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchBar" placeholder="Search commands..." onkeyup="searchCommands()">
+                </div>
+                <div class="sort-container">
+                    <div class="sort-select-wrapper">
+                        <i class="fas fa-sliders-h sort-icon"></i>
+                        <select id="sortOptions" onchange="sortCommands()">
+                            <option value="default">Default</option>
+                            <option value="alphabetic-order">A-Z</option>
+                            <option value="alphabetic-disorder">Z-A</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="sort-container">
-                <label for="sortOptions">Sort by: </label>
-                <select id="sortOptions" onchange="sortCommands()">
-                    <option value="default">Default</option>
-                    <option value="alphabetic-order">Alphabetic (A-Z)</option>
-                    <option value="alphabetic-disorder">Alphabetic (Z-A)</option>
-                </select>
+            <div class="category-pills">
+                <button class="category-pill active" data-category="all" onclick="filterByCategory('all')">All</button>
+                <button class="category-pill" data-category="general"
+                    onclick="filterByCategory('general')">General</button>
+                <button class="category-pill" data-category="moderation"
+                    onclick="filterByCategory('moderation')">Moderation</button>
+                <button class="category-pill" data-category="admin" onclick="filterByCategory('admin')">Admin</button>
+                <button class="category-pill" data-category="utility"
+                    onclick="filterByCategory('utility')">Utility</button>
+                <button class="category-pill" data-category="fun" onclick="filterByCategory('fun')">Fun</button>
+                <div class="divider-vertical"></div>
+                <button class="category-pill help-pill" onclick="openHelpModal()" title="Syntax Help">
+                    <i class="fas fa-question"></i>
+                </button>
             </div>
         </div>
         <div id="no-result" style="display: none;">
+            <!-- ... existing content ... -->
+
             <span class="no-result-icon"><i class="fas fa-search"></i></span>
             <h2>No command found</h2>
             <p>We couldn't find any command matching<br>
                 <span class="no-result-query" id="no-result-query"></span>
             </p>
-            <p style="margin-top: 14px;">Think it should exist? <a href="../contact-me/">Contact us</a> to suggest it!</p>
+            <p style="margin-top: 14px;">Think it should exist? <a href="../contact-me/">Contact us</a> to suggest it!
+            </p>
         </div>
         <div id="no-result2" style="display: none;">
             <span class="no-result-icon"><i class="fas fa-inbox"></i></span>
@@ -549,13 +569,6 @@
                     <p><strong>Description:</strong>Get the daily astronomy picture and Description</p>
                 </div>
                 <div class="command astronomy-command normal-command">
-                    <h3>?mars_rover</h3>
-                    <p><strong>Usage:</strong> <span class="code" id="command-code">?mars_rover<button
-                                class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-                        </span></p>
-                    <p><strong>Description:</strong>Get a Mars Rover picture and Description</p>
-                </div>
-                <div class="command astronomy-command normal-command">
                     <h3>?moon</h3>
                     <p><strong>Usage:</strong> <span class="code" id="command-code">?moon [location]<button
                                 class="copy-button" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
@@ -579,6 +592,70 @@
             </div>
 
         </section>
+
+        <!-- Command Detail Modal -->
+        <div class="command-modal-overlay" id="commandModal" onclick="closeCommandModal(event)">
+            <div class="command-modal">
+                <div class="command-modal-header">
+                    <h2 id="modalCommandName"></h2>
+                    <span class="command-modal-category" id="modalCategory"></span>
+                    <button class="command-modal-close" onclick="closeCommandModal()"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <div class="command-modal-body">
+                    <div class="command-modal-section">
+                        <h4><i class="fas fa-terminal"></i> Usage</h4>
+                        <div class="command-modal-usage-wrapper">
+                            <div class="command-modal-usage" id="modalUsage"></div>
+                            <button class="modal-copy-btn" id="modalCopyBtn" onclick="copyModalUsage()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="command-modal-section">
+                        <h4><i class="fas fa-align-left"></i> Description</h4>
+                        <p id="modalDescription"></p>
+                    </div>
+                    <div class="command-modal-section" id="modalPermsSection" style="display:none;">
+                        <h4><i class="fas fa-lock"></i> Permissions Required</h4>
+                        <p id="modalPermissions"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Syntax Help Modal -->
+        <div class="command-modal-overlay" id="helpModal" onclick="closeHelpModal(event)">
+            <div class="command-modal">
+                <div class="command-modal-header">
+                    <h2><i class="fas fa-question-circle"></i> Command Syntax</h2>
+                    <button class="command-modal-close" onclick="closeHelpModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="command-modal-body">
+                    <div class="command-modal-section">
+                        <h4><i class="fas fa-info-circle"></i> How to read commands</h4>
+                        <p>Our commands use standard syntax notation:</p>
+                        <ul class="help-list">
+                            <li><code>&lt;argument&gt;</code> : This argument is <strong>required</strong>.</li>
+                            <li><code>[argument]</code> : This argument is <strong>optional</strong>.</li>
+                        </ul>
+                    </div>
+                    <div class="command-modal-section">
+                        <h4><i class="fas fa-terminal"></i> Prefixes</h4>
+                        <p>The default prefix is <code>?</code>, but it might be different on your server if an admin
+                            changed it. In that case, use <code>/prefix</code> to see the current prefixes.</p>
+                        <p class="help-note">Example: <code>?ban @User [reason]</code></p>
+                    </div>
+                    <div class="command-modal-section">
+                        <h4><i class="fas fa-terminal"></i> Slash Commands</h4>
+                        <p>Pulsar also has slash commands. You can use them by typing <code>/</code> followed by the
+                            command name.</p>
+                        <p class="help-note">Example: <code>/ban @User [reason]</code></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
     <footer>
         <div class="footer-content">
@@ -603,7 +680,7 @@
     <script src="../js/scripts.js"></script>
     <script src="../js/star-animation.js"></script>
     <script>
-        (function() {
+        (function () {
             var btn = document.getElementById('scroll-to-top');
             if (!btn) return;
             function checkScroll() {
@@ -617,7 +694,7 @@
             window.addEventListener('scroll', checkScroll, true);
             document.addEventListener('scroll', checkScroll, true);
 
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 var start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
                 var duration = 600;
                 var startTime = null;

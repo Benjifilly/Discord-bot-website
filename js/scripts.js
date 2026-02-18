@@ -400,18 +400,53 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchCommands();
 });
 
+function createSkeletonLoader() {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'skeleton-container';
+
+    // Create 3 fake category groups with varying card counts
+    const groups = [4, 4, 3];
+    let itemIndex = 0; // Global index for staggered animation delay
+
+    groups.forEach(cardCount => {
+        const category = document.createElement('div');
+        category.className = 'skeleton-category';
+
+        // Fake category header
+        const header = document.createElement('div');
+        header.className = 'skeleton-header';
+        header.style.setProperty('--skeleton-delay', `${itemIndex * 0.06}s`);
+        itemIndex++;
+        category.appendChild(header);
+
+        // Fake command cards
+        for (let i = 0; i < cardCount; i++) {
+            const card = document.createElement('div');
+            card.className = 'skeleton-card';
+            card.style.setProperty('--skeleton-delay', `${itemIndex * 0.06}s`);
+            card.innerHTML = `
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line usage"></div>
+                <div class="skeleton-line desc"></div>
+            `;
+            itemIndex++;
+            category.appendChild(card);
+        }
+
+        skeleton.appendChild(category);
+    });
+
+    return skeleton;
+}
+
 async function fetchCommands() {
     const commandList = document.querySelector('.command-list');
     if (!commandList) return;
 
-    // Create and insert loader
-    const loader = document.createElement('div');
-    loader.className = 'loader';
-    commandList.parentNode.insertBefore(loader, commandList);
-
-    // Hide static content initially to avoid "flash of old content"
-    const originalDisplay = commandList.style.display;
-    commandList.style.display = 'none';
+    // Create and insert skeleton loader
+    // (.command-list is already hidden via CSS to prevent flash of static content)
+    const skeleton = createSkeletonLoader();
+    commandList.parentNode.insertBefore(skeleton, commandList);
 
     try {
         // Replace with your bot's actual API URL. 
@@ -421,9 +456,9 @@ async function fetchCommands() {
         }
         const commands = await response.json();
 
-        // Success: Remove loader, show list (empty it first in renderCommands), render new commands
-        loader.remove();
-        commandList.style.display = originalDisplay;
+        // Success: Remove skeleton, show list, render new commands
+        skeleton.remove();
+        commandList.style.display = 'block';
         renderCommands(commands);
 
         // Re-scroll to hash if present (fix for anchor links being lost during load)
@@ -439,9 +474,9 @@ async function fetchCommands() {
 
     } catch (error) {
         console.error('Failed to fetch commands:', error);
-        // Fallback: Remove loader, Show static HTML again
-        loader.remove();
-        commandList.style.display = originalDisplay;
+        // Fallback: Remove skeleton, Show static HTML again
+        skeleton.remove();
+        commandList.style.display = 'block';
 
         sortCommands();
         updateCommandCount();
@@ -457,6 +492,73 @@ async function fetchCommands() {
             }, 100);
         }
     }
+}
+
+let _filterLocked = false;
+
+function filterByCategory(category) {
+    // Spam protection: ignore if animation is still running
+    if (_filterLocked) return;
+    _filterLocked = true;
+
+    // Update active pill
+    const pills = document.querySelectorAll('.category-pill');
+    pills.forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.category === category);
+    });
+
+    const allBlocks = document.querySelectorAll('.category-block');
+
+    // Phase 1: Fade out currently visible blocks
+    const visibleBlocks = Array.from(allBlocks).filter(b => !b.classList.contains('hidden'));
+    visibleBlocks.forEach(block => {
+        block.classList.add('fade-out');
+    });
+
+    // Phase 2: After fade-out completes, swap visibility and stagger commands in
+    setTimeout(() => {
+        // Clean up old state
+        allBlocks.forEach(block => {
+            block.classList.remove('fade-out');
+            if (category === 'all') {
+                block.classList.remove('hidden');
+            } else {
+                block.classList.toggle('hidden', block.id !== category);
+            }
+        });
+
+        // Phase 3: Staggered per-command entrance
+        const newVisible = Array.from(allBlocks).filter(b => !b.classList.contains('hidden'));
+        let cmdIndex = 0;
+
+        newVisible.forEach(block => {
+            const commands = block.querySelectorAll('.command');
+            commands.forEach(cmd => {
+                cmd.classList.remove('cmd-enter');
+                // Force reflow to restart animation
+                void cmd.offsetWidth;
+                cmd.style.setProperty('--cmd-delay', `${cmdIndex * 0.03}s`);
+                cmd.classList.add('cmd-enter');
+                cmdIndex++;
+            });
+        });
+
+        // Clean up after all animations complete
+        const totalDuration = (cmdIndex * 30) + 450;
+        setTimeout(() => {
+            newVisible.forEach(block => {
+                block.querySelectorAll('.command.cmd-enter').forEach(cmd => {
+                    cmd.classList.remove('cmd-enter');
+                    cmd.style.removeProperty('--cmd-delay');
+                });
+            });
+            _filterLocked = false;
+        }, totalDuration);
+
+        // Update command count and reapply search filter
+        updateCommandCount();
+        searchCommands();
+    }, 200);
 }
 
 function sortCommands() {
@@ -615,8 +717,10 @@ function renderCommands(commands) {
         name.textContent = `?${cmd.name}`;
         cmdDiv.appendChild(name);
 
-        // Escape HTML in usage to prevent XSS and rendering issues with <param>
-        const usageText = cmd.usage || '?' + cmd.name;
+        // Sanitize usage: strip any Python function representation (e.g. "<function get_prefix at 0x...>")
+        // and replace with the default prefix "?"
+        const rawUsage = cmd.usage || '?' + cmd.name;
+        const usageText = rawUsage.replace(/<function\s+\w+\s+at\s+0x[0-9a-fA-F]+>/g, '?');
         const escapedUsage = usageText.replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
@@ -646,6 +750,14 @@ function renderCommands(commands) {
             cmdDiv.appendChild(descP);
         }
 
+        // Make command clickable for modal
+        cmdDiv.style.cursor = 'pointer';
+        cmdDiv.addEventListener('click', function (e) {
+            // Don't open modal if clicking copy button
+            if (e.target.closest('.copy-button')) return;
+            openCommandModal(this);
+        });
+
         block.appendChild(cmdDiv);
     });
 
@@ -653,6 +765,124 @@ function renderCommands(commands) {
     sortCommands();
     updateCommandCount();
 }
+
+function openCommandModal(commandEl) {
+    const modal = document.getElementById('commandModal');
+    if (!modal) return;
+
+    // Extract command info
+    const name = commandEl.querySelector('h3')?.textContent?.trim() || '';
+    const usageEl = commandEl.querySelector('.code');
+    const usage = usageEl ? usageEl.textContent.replace(/\s+/g, ' ').trim() : name;
+    const descEl = Array.from(commandEl.querySelectorAll('p')).find(p => p.textContent.includes('Description:'));
+    const description = descEl ? descEl.textContent.replace('Description:', '').trim() : '';
+    const permsEl = commandEl.querySelector('div[style*="color"]');
+    const permissions = permsEl ? permsEl.textContent.replace('Requires:', '').trim() : '';
+
+    // Determine category from parent block id
+    const categoryBlock = commandEl.closest('.category-block');
+    const categoryId = categoryBlock ? categoryBlock.id : '';
+    const categoryNames = { general: 'General', moderation: 'Moderation', admin: 'Admin', utility: 'Utility', fun: 'Fun' };
+    const categoryName = categoryNames[categoryId] || categoryId;
+
+    // Populate modal
+    document.getElementById('modalCommandName').textContent = name;
+    document.getElementById('modalUsage').textContent = usage;
+    document.getElementById('modalDescription').textContent = description;
+
+    const catBadge = document.getElementById('modalCategory');
+    catBadge.textContent = categoryName;
+    catBadge.className = 'command-modal-category cat-' + categoryId;
+
+    const permsSection = document.getElementById('modalPermsSection');
+    if (permissions) {
+        document.getElementById('modalPermissions').textContent = permissions;
+        permsSection.style.display = '';
+    } else {
+        permsSection.style.display = 'none';
+    }
+
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCommandModal(event) {
+    // If called from overlay click, only close if clicking the overlay itself
+    if (event && event.target && !event.target.classList.contains('command-modal-overlay')) return;
+
+    const modal = document.getElementById('commandModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+async function copyModalUsage() {
+    const usageEl = document.getElementById('modalUsage');
+    const btn = document.getElementById('modalCopyBtn');
+    if (!usageEl || !btn) return;
+
+    try {
+        await navigator.clipboard.writeText(usageEl.textContent.trim());
+        const icon = btn.querySelector('i');
+        icon.classList.remove('fa-copy');
+        icon.classList.add('fa-check');
+        btn.classList.add('copied');
+        setTimeout(() => {
+            icon.classList.remove('fa-check');
+            icon.classList.add('fa-copy');
+            btn.classList.remove('copied');
+        }, 1500);
+    } catch (err) {
+        console.error('Unable to copy', err);
+    }
+}
+
+// Help Modal Logic
+function openHelpModal() {
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeHelpModal(event) {
+    // If called from overlay click, only close if clicking the overlay itself
+    if (event && event.target && !event.target.classList.contains('command-modal-overlay')) return;
+
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.classList.remove('active');
+        // Only re-enable scrolling if the main command modal isn't also open (edge case)
+        if (!document.getElementById('commandModal').classList.contains('active')) {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        closeCommandModal();
+        closeHelpModal();
+    }
+});
+
+// Initialize click handlers for static HTML commands
+function initCommandClicks() {
+    document.querySelectorAll('.command-list .command').forEach(cmd => {
+        cmd.style.cursor = 'pointer';
+        cmd.addEventListener('click', function (e) {
+            if (e.target.closest('.copy-button')) return;
+            openCommandModal(this);
+        });
+    });
+}
+
+// Run on DOM ready for static commands (fallback)
+document.addEventListener('DOMContentLoaded', initCommandClicks);
 
 async function copyToClipboard(button) {
     var codeElement = button.parentElement.innerText.trim();
