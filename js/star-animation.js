@@ -139,13 +139,6 @@ function animate() {
 
 // Initial set up
 window.addEventListener('resize', resize);
-// Wait for DOM to be ready implicitly if script loaded at end, or use DOMContentLoaded
-// We will call resize() manually or onload
-window.onload = function () {
-    resize();
-    animate();
-    // Also include existing window.onload stuff if script.js overrides this
-};
 
 // If this is loaded alongside scripts.js, we should be careful about window.onload overwrites.
 // Safer to use event listener
