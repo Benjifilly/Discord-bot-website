@@ -449,39 +449,59 @@ async function fetchCommands() {
     commandList.parentNode.insertBefore(skeleton, commandList);
 
     try {
-        // Replace with your bot's actual API URL. 
         const response = await fetch('https://discord-bot-production-2057.up.railway.app/api/commands');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const commands = await response.json();
 
-        // Success: Remove skeleton, show list, render new commands
-        skeleton.remove();
-        commandList.style.display = 'block';
-        renderCommands(commands);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        skeleton.classList.add('fade-out');
 
-        // Re-scroll to hash if present (fix for anchor links being lost during load)
-        if (window.location.hash) {
-            const hash = window.location.hash;
+        setTimeout(() => {
+            skeleton.remove();
+            commandList.style.display = 'block';
+            renderCommands(commands);
+
+            const visibleCommands = document.querySelectorAll('.command-list .command:not([style*="display: none"])');
+            let cmdIndex = 0;
+
+            visibleCommands.forEach(cmd => {
+                cmd.classList.remove('cmd-enter');
+                void cmd.offsetWidth;
+
+                cmd.style.setProperty('--cmd-delay', `${cmdIndex * 0.03}s`);
+                cmd.classList.add('cmd-enter');
+                cmdIndex++;
+            });
+
+            const totalDuration = (cmdIndex * 30) + 450;
             setTimeout(() => {
-                const element = document.querySelector(hash);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, 100); // Small delay to ensure render complete
-        }
+                visibleCommands.forEach(cmd => {
+                    cmd.classList.remove('cmd-enter');
+                    cmd.style.removeProperty('--cmd-delay');
+                });
+            }, totalDuration);
+
+            if (window.location.hash) {
+                const hash = window.location.hash;
+                setTimeout(() => {
+                    const element = document.querySelector(hash);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 100);
+            }
+        }, 400);
 
     } catch (error) {
         console.error('Failed to fetch commands:', error);
-        // Fallback: Remove skeleton, Show static HTML again
         skeleton.remove();
         commandList.style.display = 'block';
 
         sortCommands();
         updateCommandCount();
 
-        // Re-scroll to hash in fallback case too
         if (window.location.hash) {
             const hash = window.location.hash;
             setTimeout(() => {
@@ -509,15 +529,12 @@ function filterByCategory(category) {
 
     const allBlocks = document.querySelectorAll('.category-block');
 
-    // Phase 1: Fade out currently visible blocks
     const visibleBlocks = Array.from(allBlocks).filter(b => !b.classList.contains('hidden'));
     visibleBlocks.forEach(block => {
         block.classList.add('fade-out');
     });
 
-    // Phase 2: After fade-out completes, swap visibility and stagger commands in
     setTimeout(() => {
-        // Clean up old state
         allBlocks.forEach(block => {
             block.classList.remove('fade-out');
             if (category === 'all') {
@@ -527,7 +544,6 @@ function filterByCategory(category) {
             }
         });
 
-        // Phase 3: Staggered per-command entrance
         const newVisible = Array.from(allBlocks).filter(b => !b.classList.contains('hidden'));
         let cmdIndex = 0;
 
@@ -535,7 +551,6 @@ function filterByCategory(category) {
             const commands = block.querySelectorAll('.command');
             commands.forEach(cmd => {
                 cmd.classList.remove('cmd-enter');
-                // Force reflow to restart animation
                 void cmd.offsetWidth;
                 cmd.style.setProperty('--cmd-delay', `${cmdIndex * 0.03}s`);
                 cmd.classList.add('cmd-enter');
@@ -543,7 +558,6 @@ function filterByCategory(category) {
             });
         });
 
-        // Clean up after all animations complete
         const totalDuration = (cmdIndex * 30) + 450;
         setTimeout(() => {
             newVisible.forEach(block => {
@@ -570,7 +584,7 @@ function sortCommands() {
     const searchInput = document.getElementById('searchBar');
     const searchFilter = searchInput ? searchInput.value.toLowerCase() : '';
 
-    let hasVisibleCommand = false; // Track if any command is visible across all categories
+    let hasVisibleCommand = false;
 
     categories.forEach(category => {
         let grid = category.querySelector('.command-grid');
@@ -579,17 +593,14 @@ function sortCommands() {
         if (grid) {
             commands = Array.from(grid.querySelectorAll('.command'));
         } else {
-            // Fallback for static HTML which doesn't have .command-grid
             commands = Array.from(category.querySelectorAll('.command'));
-            grid = category; // Use category as the container
+            grid = category;
         }
 
         let categoryHasVisible = false;
 
-        // Reset display before sorting/filtering
         commands.forEach(cmd => cmd.style.display = '');
 
-        // 1. Sorting (Reordering within grid)
         if (sortType === 'alphabetic-order') {
             commands.sort((a, b) => {
                 const nameA = a.querySelector('h3').textContent.toLowerCase();
@@ -604,22 +615,15 @@ function sortCommands() {
             });
         }
 
-        // Apply new order
         if (sortType.includes('alphabetic')) {
-            // If using grid (dynamic), we can clear it safely.
-            // If using category (static), we must be careful not to remove the header <h2>
-
             if (grid.classList.contains('command-grid')) {
                 grid.innerHTML = '';
                 commands.forEach(cmd => grid.appendChild(cmd));
             } else {
-                // For static HTML, appendChild moves the element to the end.
-                // Since we have an <h2> at the top, appending moves commands after it, which is fine and preserves order.
                 commands.forEach(cmd => grid.appendChild(cmd));
             }
         }
 
-        // 2. Filtering (Hiding elements)
         commands.forEach(command => {
             let visible = true;
 
@@ -630,7 +634,6 @@ function sortCommands() {
             if (sortType === 'updated' && !command.classList.contains('updated-command')) visible = false;
             if (sortType === 'bug' && !command.classList.contains('bug-command')) visible = false;
 
-            // Re-apply search filter
             if (visible && searchFilter) {
                 const commandText = (command.textContent || command.innerText).toLowerCase();
                 if (!commandText.includes(searchFilter)) visible = false;
@@ -645,7 +648,6 @@ function sortCommands() {
             }
         });
 
-        // Hide entire category if empty after filtering
         if (categoryHasVisible) {
             category.style.display = '';
         } else {
@@ -653,7 +655,7 @@ function sortCommands() {
         }
     });
 
-    const noResult2 = document.getElementById('noResult2'); // Assuming this element exists for no results message
+    const noResult2 = document.getElementById('noResult2');
     if (noResult2) {
         noResult2.style.display = hasVisibleCommand ? 'none' : 'block';
     }
@@ -665,7 +667,6 @@ function renderCommands(commands) {
     const commandList = document.querySelector('.command-list');
     if (!commandList) return;
 
-    // Clear existing content
     const fragment = document.createDocumentFragment();
     commandList.innerHTML = '';
 
@@ -682,7 +683,6 @@ function renderCommands(commands) {
     let block = null;
 
     commands.forEach(cmd => {
-        // Since API returns sorted commands, we can check if category changed
         if (cmd.category !== currentCategory) {
             currentCategory = cmd.category;
 
@@ -735,10 +735,6 @@ function renderCommands(commands) {
         const descP = document.createElement('p');
         descP.innerHTML = `<strong>Description:</strong> ${cmd.description}`;
 
-        // Display permissions if they exist. 
-        // User requested: "quand il y a besoin de perms mais pas forcément admin mets juste la perm requise"
-        // And requested to remove the heuristic.
-
         if (cmd.permissions && cmd.permissions.length > 0) {
             const permsDiv = document.createElement('div');
             permsDiv.style.color = '#f04747';
@@ -747,11 +743,8 @@ function renderCommands(commands) {
             cmdDiv.appendChild(descP);
             cmdDiv.appendChild(permsDiv);
         } else {
-            // No permission fallback.
             cmdDiv.appendChild(descP);
         }
-
-        // Make command clickable for modal
         cmdDiv.style.cursor = 'pointer';
         cmdDiv.addEventListener('click', function (e) {
             // Don't open modal if clicking copy button
@@ -762,7 +755,6 @@ function renderCommands(commands) {
         block.appendChild(cmdDiv);
     });
 
-    // Re-initialize any JS that depends on the DOM
     commandList.appendChild(fragment);
     sortCommands();
     updateCommandCount();
@@ -926,19 +918,14 @@ document.addEventListener('DOMContentLoaded', () => {
    --------------------------------------------------------------
 */
 
-
 function getRedirectUri() {
-    // Always redirect to the base /Pulsar-website/ path
-    // This ensures consistency regardless of which page initiated the login
     const protocol = window.location.protocol;
     const host = window.location.host;
 
     // Normalize to base path with trailing slash
     if (host.includes('github.io')) {
-        // Production: https://benjifilly.github.io/Pulsar-website/
         return `${protocol}//${host}/Pulsar-website/`;
     } else {
-        // Local: http://127.0.0.1:5500/Pulsar-website/
         return `${protocol}//${host}/Pulsar-website/`;
     }
 }

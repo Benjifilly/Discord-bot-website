@@ -54,14 +54,21 @@ function checkDashboardAuth() {
 
     const authGate = document.getElementById('dashboard-auth-gate');
     const dashboardContent = document.getElementById('dashboard-content');
+    const skeletonLoader = document.getElementById('dashboard-skeleton-loader');
 
     if (token && tokenType) {
         // Validate token by fetching user info
+        // Show skeleton while loading
+        if (skeletonLoader) skeletonLoader.style.display = 'block';
+        if (authGate) authGate.style.display = 'none';
+        if (dashboardContent) dashboardContent.style.display = 'none';
+
         validateAndShowDashboard(token, tokenType);
     } else {
         // Show auth gate
-        authGate.style.display = 'flex';
-        dashboardContent.style.display = 'none';
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+        if (authGate) authGate.style.display = 'flex';
+        if (dashboardContent) dashboardContent.style.display = 'none';
     }
 }
 
@@ -79,9 +86,14 @@ async function validateAndShowDashboard(token, tokenType) {
         const user = await response.json();
         currentUser = user;
 
-        // Token valid → show dashboard
+        // Token valid
         authGate.style.display = 'none';
-        dashboardContent.style.display = 'block';
+        // dashboardContent.style.display = 'block'; // Moved to loadDashboardServers completion
+
+        // Ensure Sidebar Auth UI is synced (fixes potential mismatch)
+        if (typeof renderAuthUI === 'function') {
+            renderAuthUI(user);
+        }
 
         // Load servers
         loadDashboardServers(token, tokenType, user);
@@ -89,6 +101,9 @@ async function validateAndShowDashboard(token, tokenType) {
     } catch (error) {
         console.error('Dashboard auth error:', error);
         // Token invalid → show auth gate
+        const skeletonLoader = document.getElementById('dashboard-skeleton-loader');
+        if (skeletonLoader) skeletonLoader.style.display = 'none';
+
         authGate.style.display = 'flex';
         dashboardContent.style.display = 'none';
         localStorage.removeItem('discord_access_token');
@@ -131,13 +146,18 @@ async function loadDashboardServers(token, tokenType, user) {
             return !((perms & 0x20) === 0x20 || (perms & 0x8) === 0x8 || g.owner);
         });
 
-        // Remove loader
+        // Loader (legacy)
         if (loader) loader.remove();
 
         // Clear grid
         grid.innerHTML = '';
 
         if (manageableGuilds.length === 0 && viewOnlyGuilds.length === 0) {
+            // Show dashboard, Hide Skeleton (even if empty)
+            const skeleton = document.getElementById('dashboard-skeleton-loader');
+            if (skeleton) skeleton.style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+
             grid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #8e9297;">
                     <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 15px; color: #f04747;"></i>
@@ -160,9 +180,52 @@ async function loadDashboardServers(token, tokenType, user) {
             grid.appendChild(card);
         });
 
+        // Done loading: Smooth Transition
+        const skeleton = document.getElementById('dashboard-skeleton-loader');
+        const dashboard = document.getElementById('dashboard-content');
+
+        if (skeleton) {
+            skeleton.classList.add('fade-out');
+            // Wait for transition to finish before swapping
+            setTimeout(() => {
+                skeleton.style.display = 'none';
+                skeleton.classList.remove('fade-out'); // Reset for next time if needed
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                    dashboard.classList.add('fade-in');
+                }
+            }, 400);
+        } else {
+            if (dashboard) {
+                dashboard.style.display = 'block';
+                dashboard.classList.add('fade-in');
+            }
+        }
+
     } catch (error) {
         console.error('Error loading servers:', error);
         if (loader) loader.remove();
+
+        // Show dashboard (with error), Hide Skeleton Smoothly
+        const skeleton = document.getElementById('dashboard-skeleton-loader');
+        const dashboard = document.getElementById('dashboard-content');
+
+        if (skeleton) {
+            skeleton.classList.add('fade-out');
+            setTimeout(() => {
+                skeleton.style.display = 'none';
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                    dashboard.classList.add('fade-in');
+                }
+            }, 400);
+        } else {
+            if (dashboard) {
+                dashboard.style.display = 'block';
+                dashboard.classList.add('fade-in');
+            }
+        }
+
         grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #f04747;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
@@ -755,7 +818,7 @@ async function initActivityChart() {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             interaction: {
                 intersect: false,
                 mode: 'index',

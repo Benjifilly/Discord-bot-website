@@ -39,19 +39,57 @@
         <!-- Auth Gate: Shown when NOT logged in -->
         <div id="dashboard-auth-gate" class="dashboard-auth-gate">
             <div class="auth-gate-card">
-                <div class="auth-gate-content">
-                    <i class="fas fa-lock auth-icon"></i>
-                    <h2>Authentication Required</h2>
-                    <p>Please log in with Discord to access the dashboard and configure your servers.</p>
-                    <button class="discord-login-btn-large" onclick="login()">
-                        <i class="fab fa-discord"></i> Login with Discord
-                    </button>
+                <div class="auth-icon-wrapper">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <h2>Dashboard Access</h2>
+                <p>Please login to manage your server settings.</p>
+                <button class="discord-login-btn-large" onclick="login()">
+                    <i class="fab fa-discord"></i> Login with Discord
+                </button>
+            </div>
+        </div>
+
+        <!-- Skeleton Loader: Shown while checking auth -->
+        <div id="dashboard-skeleton-loader" class="dashboard-skeleton-loader" style="display: none;">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-grid">
+                <!-- Staggered delays for entrance animation -->
+                <div class="dashboard-skeleton-card" style="--skeleton-delay: 0.1s">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line badge"></div>
+                </div>
+                <div class="dashboard-skeleton-card" style="--skeleton-delay: 0.2s">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line badge"></div>
+                </div>
+                <div class="dashboard-skeleton-card" style="--skeleton-delay: 0.3s">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line badge"></div>
+                </div>
+                <div class="dashboard-skeleton-card" style="--skeleton-delay: 0.4s">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line badge"></div>
+                </div>
+                <div class="dashboard-skeleton-card" style="--skeleton-delay: 0.5s">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line badge"></div>
+                </div>
+                <div class="dashboard-skeleton-card" style="--skeleton-delay: 0.6s">
+                    <div class="skeleton-circle"></div>
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line badge"></div>
                 </div>
             </div>
         </div>
 
         <!-- Dashboard Content: Shown when logged in -->
-        <div id="dashboard-content" class="dashboard-content" style="display: none;">
+        <div id="dashboard-content" class="dashboard-main" style="display: none;">
             <!-- Server Picker -->
             <div class="dashboard-server-picker">
                 <h2>Select a Server</h2>
