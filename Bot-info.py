@@ -1,10 +1,16 @@
+import os
+import sys
 import requests
 from colorama import Fore, Style, init
 
 init(autoreset=True)
 
-bot_id = 'BOT_ID'
-bot_token = 'BOT_TOKEN'
+bot_id = os.getenv('BOT_ID')
+bot_token = os.getenv('BOT_TOKEN')
+
+if not bot_id or not bot_token:
+    print("Error: BOT_ID and BOT_TOKEN environment variables must be set.")
+    sys.exit(1)
 
 headers = {
     'Authorization': f'Bot {bot_token}'
@@ -41,11 +47,11 @@ def main():
         bot_discriminator = bot_info['discriminator']
         bot_avatar = bot_info['avatar']
         bot_pfp_url = f"https://cdn.discordapp.com/avatars/{bot_id}/{bot_avatar}.png"
-        
+
         print(f"{Fore.GREEN}Bot Information:")
         print(f"{Fore.CYAN}Bot Name: {Fore.YELLOW}{bot_name}#{bot_discriminator}")
         print(f"{Fore.CYAN}Bot Profile Picture URL: {Fore.YELLOW}{bot_pfp_url}")
-    
+
     guilds = get_guilds()
     if guilds:
         print(f"{Fore.GREEN}\nGuilds:")
@@ -74,4 +80,3 @@ if __name__ == "__main__":
     main()
 
 print(Style.RESET_ALL)
-
