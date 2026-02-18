@@ -1,9 +1,9 @@
-/*
+/* 
    Dashboard JavaScript
    Handles: auth gate, server list, config panel, API calls
 */
 
-const DASHBOARD_API_BASE = "https://discord-bot-production-2057.up.railway.app/api";
+const DASHBOARD_API_BASE = CONFIG.API_BASE;
 
 // Current state
 let currentGuildId = null;
@@ -182,23 +182,11 @@ function createServerCard(guild, hasPermission) {
     const card = document.createElement('div');
     card.className = `dashboard-server-card ${!hasPermission ? 'no-permission-card' : ''}`;
 
-    // Securely construct elements to prevent XSS
-    const img = document.createElement('img');
-    img.src = iconUrl;
-    img.alt = guild.name;
-    img.setAttribute('onerror', `this.src='${basePath}photos/bot-pfp.png'`);
-    card.appendChild(img);
-
-    const nameSpan = document.createElement('span');
-    nameSpan.className = 'server-card-name';
-    nameSpan.title = guild.name;
-    nameSpan.textContent = guild.name;
-    card.appendChild(nameSpan);
-
-    const badgeSpan = document.createElement('span');
-    badgeSpan.className = 'manage-badge';
-    badgeSpan.textContent = hasPermission ? 'Manage' : 'No Permission';
-    card.appendChild(badgeSpan);
+    card.innerHTML = `
+        <img src="${iconUrl}" alt="${guild.name}" onerror="this.src='${basePath}photos/bot-pfp.png'">
+        <span class="server-card-name" title="${guild.name}">${guild.name}</span>
+        <span class="manage-badge">${hasPermission ? 'Manage' : 'No Permission'}</span>
+    `;
 
     if (hasPermission) {
         card.onclick = () => openServerConfig(guild);
