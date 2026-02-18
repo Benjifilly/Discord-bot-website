@@ -720,8 +720,20 @@ function checkAuth() {
     const fragment = new URLSearchParams(window.location.hash.slice(1));
     const accessToken = fragment.get('access_token');
     const tokenType = fragment.get('token_type');
+    const state = fragment.get('state');
 
     if (accessToken) {
+        // Verify state to prevent CSRF
+        const savedState = localStorage.getItem('oauth_state');
+        localStorage.removeItem('oauth_state'); // Always clear state after use
+
+        if (!state || state !== savedState) {
+            console.error('OAuth state mismatch. Potential CSRF attack.');
+            showNotification('Authentication failed: security verification failed.', 'error');
+            window.history.replaceState(null, null, ' ');
+            return;
+        }
+
         // Save to localStorage
         localStorage.setItem('discord_access_token', accessToken);
         localStorage.setItem('discord_token_type', tokenType);
@@ -770,9 +782,15 @@ async function fetchUserInfo(token, type) {
 }
 
 function login() {
+    // Generate a random state for CSRF protection
+    const array = new Uint8Array(16);
+    window.crypto.getRandomValues(array);
+    const state = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    localStorage.setItem('oauth_state', state);
+
     const redirectUri = getRedirectUri();
     const scope = 'identify guilds';
-    const authUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}&state=${state}`;
     window.location.href = authUrl;
 }
 
