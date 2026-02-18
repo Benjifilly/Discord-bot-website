@@ -104,15 +104,14 @@ async function loadDashboardServers(token, tokenType, user) {
     const loader = document.getElementById('server-loader');
 
     try {
-        // Fetch user guilds & bot guilds in parallel for better performance
-        const [userGuildsRes, botGuildsRes] = await Promise.all([
-            fetchWithRetry('https://discord.com/api/users/@me/guilds', {
-                headers: { authorization: `${tokenType} ${token}` }
-            }),
-            fetch(`${DASHBOARD_API_BASE}/guilds`)
-        ]);
+        // Fetch user guilds & bot guilds (user guilds first to avoid parallel rate limit)
+        const userGuildsRes = await fetchWithRetry('https://discord.com/api/users/@me/guilds', {
+            headers: { authorization: `${tokenType} ${token}` }
+        });
 
         if (!userGuildsRes.ok) throw new Error('Failed to fetch user guilds');
+
+        const botGuildsRes = await fetch(`${DASHBOARD_API_BASE}/guilds`);
         if (!botGuildsRes.ok) throw new Error('Failed to fetch bot guilds');
 
         const userGuilds = await userGuildsRes.json();
@@ -183,11 +182,23 @@ function createServerCard(guild, hasPermission) {
     const card = document.createElement('div');
     card.className = `dashboard-server-card ${!hasPermission ? 'no-permission-card' : ''}`;
 
-    card.innerHTML = `
-        <img src="${iconUrl}" alt="${guild.name}" onerror="this.src='${basePath}photos/bot-pfp.png'">
-        <span class="server-card-name" title="${guild.name}">${guild.name}</span>
-        <span class="manage-badge">${hasPermission ? 'Manage' : 'No Permission'}</span>
-    `;
+    // Securely construct elements to prevent XSS
+    const img = document.createElement('img');
+    img.src = iconUrl;
+    img.alt = guild.name;
+    img.setAttribute('onerror', `this.src='${basePath}photos/bot-pfp.png'`);
+    card.appendChild(img);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'server-card-name';
+    nameSpan.title = guild.name;
+    nameSpan.textContent = guild.name;
+    card.appendChild(nameSpan);
+
+    const badgeSpan = document.createElement('span');
+    badgeSpan.className = 'manage-badge';
+    badgeSpan.textContent = hasPermission ? 'Manage' : 'No Permission';
+    card.appendChild(badgeSpan);
 
     if (hasPermission) {
         card.onclick = () => openServerConfig(guild);
@@ -269,37 +280,34 @@ function switchTab(tabName) {
 
 async function loadGuildConfig(guildId) {
     try {
-        // Fetch guild settings, channels, roles, and overview in parallel
-        const [settingsRes, channelsRes, rolesRes, overviewRes] = await Promise.all([
+        // Fetch guild settings, channels, and roles in parallel
+        const [settingsRes, channelsRes, rolesRes] = await Promise.all([
             fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/settings`),
             fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/channels`),
-            fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/roles`),
-            fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/overview`)
+            fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/roles`)
         ]);
 
-        // Parse responses in parallel
-        const [settingsData, channelsData, rolesData, overviewData] = await Promise.all([
-            settingsRes.ok ? settingsRes.json() : Promise.resolve(null),
-            channelsRes.ok ? channelsRes.json() : Promise.resolve([]),
-            rolesRes.ok ? rolesRes.json() : Promise.resolve([]),
-            overviewRes.ok ? overviewRes.json() : Promise.resolve(null)
-        ]);
+        let settings = null;
+
+        // Settings — parse first but apply AFTER populating selects
+        if (settingsRes.ok) {
+            settings = await settingsRes.json();
+        }
 
         // Channels — populate selects BEFORE applying settings
         if (channelsRes.ok) {
-            guildChannels = channelsData;
+            guildChannels = await channelsRes.json();
             populateChannelSelects(guildChannels);
         }
 
         // Roles — populate selects BEFORE applying settings
         if (rolesRes.ok) {
-            guildRoles = rolesData;
+            guildRoles = await rolesRes.json();
             populateRoleSelects(guildRoles);
         }
 
         // Now apply settings so select values match existing options
-        if (settingsData) {
-            const settings = settingsData;
+        if (settings) {
             // Deep copy for original settings
             originalSettings = JSON.parse(JSON.stringify(settings));
             pendingChanges = {};
@@ -308,11 +316,13 @@ async function loadGuildConfig(guildId) {
         }
 
         // Overview stats
-        if (overviewData) {
-            document.getElementById('overview-members').textContent = overviewData.member_count || '---';
-            document.getElementById('overview-channels').textContent = overviewData.channel_count || '---';
-            document.getElementById('overview-roles').textContent = overviewData.role_count || '---';
-            document.getElementById('overview-joined').textContent = overviewData.bot_joined || '---';
+        const overviewRes = await fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/overview`);
+        if (overviewRes.ok) {
+            const overview = await overviewRes.json();
+            document.getElementById('overview-members').textContent = overview.member_count || '---';
+            document.getElementById('overview-channels').textContent = overview.channel_count || '---';
+            document.getElementById('overview-roles').textContent = overview.role_count || '---';
+            document.getElementById('overview-joined').textContent = overview.bot_joined || '---';
         }
 
         // Activity chart
