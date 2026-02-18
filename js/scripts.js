@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Configure your Railway URL here (e.g., https://pulsar-bot.up.railway.app)
-const API_BASE_URL = "https://discord-bot-production-2057.up.railway.app/api/server_info";
+const API_BASE_URL = `${CONFIG.API_BASE}/server_info`;
 
 async function fetchBotStats() {
     const serverCountEl = document.getElementById('server-number');
@@ -693,7 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
    Discord Authentication Logic (Implicit Flow)
    --------------------------------------------------------------
 */
-const DISCORD_CLIENT_ID = '1242422539087642696';
+
 
 function getRedirectUri() {
     // Always redirect to the base /Pulsar-website/ path
@@ -772,7 +772,7 @@ async function fetchUserInfo(token, type) {
 function login() {
     const redirectUri = getRedirectUri();
     const scope = 'identify guilds';
-    const authUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=${CONFIG.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
     window.location.href = authUrl;
 }
 
@@ -852,6 +852,22 @@ document.addEventListener('DOMContentLoaded', function () {
             scrollBtn.classList.add('visible');
         } else {
             scrollBtn.classList.remove('visible');
+        }
+    });
+});
+
+// Update hardcoded Discord invite links
+document.addEventListener('DOMContentLoaded', function() {
+    const inviteLinks = document.querySelectorAll('a[href*="discord.com/oauth2/authorize"]');
+    inviteLinks.forEach(link => {
+        try {
+            const url = new URL(link.href);
+            if (url.searchParams.has('client_id')) {
+                url.searchParams.set('client_id', CONFIG.DISCORD_CLIENT_ID);
+                link.href = url.toString();
+            }
+        } catch (e) {
+            console.error('Failed to update invite link', e);
         }
     });
 });
