@@ -3,7 +3,7 @@
    Handles: auth gate, server list, config panel, API calls
 */
 
-const DASHBOARD_API_BASE = "https://discord-bot-production-2057.up.railway.app/api";
+const DASHBOARD_API_BASE = CONFIG.API_BASE;
 
 // Current state
 let currentGuildId = null;
