@@ -11,27 +11,39 @@ headers = {
 }
 
 def get_bot_info():
-    response = requests.get(f'https://discord.com/api/v10/users/{bot_id}', headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"{Fore.RED}Failed to get bot info: {response.status_code}, {response.json()}")
+    try:
+        response = requests.get(f'https://discord.com/api/v10/users/{bot_id}', headers=headers, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"{Fore.RED}Failed to get bot info: {response.status_code}, {response.json()}")
+            return None
+    except requests.RequestException as e:
+        print(f"{Fore.RED}Failed to get bot info: {e}")
         return None
 
 def get_guilds():
-    response = requests.get('https://discord.com/api/v10/users/@me/guilds', headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"{Fore.RED}Failed to get guilds: {response.status_code}, {response.json()}")
+    try:
+        response = requests.get('https://discord.com/api/v10/users/@me/guilds', headers=headers, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"{Fore.RED}Failed to get guilds: {response.status_code}, {response.json()}")
+            return None
+    except requests.RequestException as e:
+        print(f"{Fore.RED}Failed to get guilds: {e}")
         return None
 
 def get_application_info():
-    response = requests.get('https://discord.com/api/v10/oauth2/applications/@me', headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"{Fore.RED}Failed to get application info: {response.status_code}, {response.json()}")
+    try:
+        response = requests.get('https://discord.com/api/v10/oauth2/applications/@me', headers=headers, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"{Fore.RED}Failed to get application info: {response.status_code}, {response.json()}")
+            return None
+    except requests.RequestException as e:
+        print(f"{Fore.RED}Failed to get application info: {e}")
         return None
 
 def main():
@@ -41,11 +53,11 @@ def main():
         bot_discriminator = bot_info['discriminator']
         bot_avatar = bot_info['avatar']
         bot_pfp_url = f"https://cdn.discordapp.com/avatars/{bot_id}/{bot_avatar}.png"
-        
+
         print(f"{Fore.GREEN}Bot Information:")
         print(f"{Fore.CYAN}Bot Name: {Fore.YELLOW}{bot_name}#{bot_discriminator}")
         print(f"{Fore.CYAN}Bot Profile Picture URL: {Fore.YELLOW}{bot_pfp_url}")
-    
+
     guilds = get_guilds()
     if guilds:
         print(f"{Fore.GREEN}\nGuilds:")
@@ -74,4 +86,3 @@ if __name__ == "__main__":
     main()
 
 print(Style.RESET_ALL)
-
