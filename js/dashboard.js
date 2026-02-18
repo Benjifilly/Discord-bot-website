@@ -1,4 +1,4 @@
-/* 
+/*
    Dashboard JavaScript
    Handles: auth gate, server list, config panel, API calls
 */
@@ -104,14 +104,15 @@ async function loadDashboardServers(token, tokenType, user) {
     const loader = document.getElementById('server-loader');
 
     try {
-        // Fetch user guilds & bot guilds (user guilds first to avoid parallel rate limit)
-        const userGuildsRes = await fetchWithRetry('https://discord.com/api/users/@me/guilds', {
-            headers: { authorization: `${tokenType} ${token}` }
-        });
+        // Fetch user guilds & bot guilds in parallel for better performance
+        const [userGuildsRes, botGuildsRes] = await Promise.all([
+            fetchWithRetry('https://discord.com/api/users/@me/guilds', {
+                headers: { authorization: `${tokenType} ${token}` }
+            }),
+            fetch(`${DASHBOARD_API_BASE}/guilds`)
+        ]);
 
         if (!userGuildsRes.ok) throw new Error('Failed to fetch user guilds');
-
-        const botGuildsRes = await fetch(`${DASHBOARD_API_BASE}/guilds`);
         if (!botGuildsRes.ok) throw new Error('Failed to fetch bot guilds');
 
         const userGuilds = await userGuildsRes.json();
@@ -268,34 +269,37 @@ function switchTab(tabName) {
 
 async function loadGuildConfig(guildId) {
     try {
-        // Fetch guild settings, channels, and roles in parallel
-        const [settingsRes, channelsRes, rolesRes] = await Promise.all([
+        // Fetch guild settings, channels, roles, and overview in parallel
+        const [settingsRes, channelsRes, rolesRes, overviewRes] = await Promise.all([
             fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/settings`),
             fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/channels`),
-            fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/roles`)
+            fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/roles`),
+            fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/overview`)
         ]);
 
-        let settings = null;
-
-        // Settings — parse first but apply AFTER populating selects
-        if (settingsRes.ok) {
-            settings = await settingsRes.json();
-        }
+        // Parse responses in parallel
+        const [settingsData, channelsData, rolesData, overviewData] = await Promise.all([
+            settingsRes.ok ? settingsRes.json() : Promise.resolve(null),
+            channelsRes.ok ? channelsRes.json() : Promise.resolve([]),
+            rolesRes.ok ? rolesRes.json() : Promise.resolve([]),
+            overviewRes.ok ? overviewRes.json() : Promise.resolve(null)
+        ]);
 
         // Channels — populate selects BEFORE applying settings
         if (channelsRes.ok) {
-            guildChannels = await channelsRes.json();
+            guildChannels = channelsData;
             populateChannelSelects(guildChannels);
         }
 
         // Roles — populate selects BEFORE applying settings
         if (rolesRes.ok) {
-            guildRoles = await rolesRes.json();
+            guildRoles = rolesData;
             populateRoleSelects(guildRoles);
         }
 
         // Now apply settings so select values match existing options
-        if (settings) {
+        if (settingsData) {
+            const settings = settingsData;
             // Deep copy for original settings
             originalSettings = JSON.parse(JSON.stringify(settings));
             pendingChanges = {};
@@ -304,13 +308,11 @@ async function loadGuildConfig(guildId) {
         }
 
         // Overview stats
-        const overviewRes = await fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/overview`);
-        if (overviewRes.ok) {
-            const overview = await overviewRes.json();
-            document.getElementById('overview-members').textContent = overview.member_count || '---';
-            document.getElementById('overview-channels').textContent = overview.channel_count || '---';
-            document.getElementById('overview-roles').textContent = overview.role_count || '---';
-            document.getElementById('overview-joined').textContent = overview.bot_joined || '---';
+        if (overviewData) {
+            document.getElementById('overview-members').textContent = overviewData.member_count || '---';
+            document.getElementById('overview-channels').textContent = overviewData.channel_count || '---';
+            document.getElementById('overview-roles').textContent = overviewData.role_count || '---';
+            document.getElementById('overview-joined').textContent = overviewData.bot_joined || '---';
         }
 
         // Activity chart
