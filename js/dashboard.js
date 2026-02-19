@@ -168,15 +168,17 @@ async function loadDashboardServers(token, tokenType, user) {
             return;
         }
 
+        const basePath = getBasePath();
+
         // Render manageable guilds
         manageableGuilds.forEach(guild => {
-            const card = createServerCard(guild, true);
+            const card = createServerCard(guild, true, basePath);
             grid.appendChild(card);
         });
 
         // Render view-only guilds
         viewOnlyGuilds.forEach(guild => {
-            const card = createServerCard(guild, false);
+            const card = createServerCard(guild, false, basePath);
             grid.appendChild(card);
         });
 
@@ -236,8 +238,7 @@ async function loadDashboardServers(token, tokenType, user) {
     }
 }
 
-function createServerCard(guild, hasPermission) {
-    const basePath = getBasePath();
+function createServerCard(guild, hasPermission, basePath) {
     const iconUrl = guild.icon
         ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`
         : `${basePath}photos/bot-pfp.png`;
@@ -252,7 +253,7 @@ function createServerCard(guild, hasPermission) {
     `;
 
     if (hasPermission) {
-        card.onclick = () => openServerConfig(guild);
+        card.onclick = () => openServerConfig(guild, basePath);
     }
 
     return card;
@@ -280,14 +281,13 @@ function hideLoadingOverlay() {
 // =====================
 // Server Config Panel
 // =====================
-async function openServerConfig(guild) {
+async function openServerConfig(guild, basePath) {
     currentGuildId = guild.id;
     currentGuildData = guild;
 
     // Show loading overlay
     showLoadingOverlay('Loading ' + guild.name + '...');
 
-    const basePath = getBasePath();
     const iconUrl = guild.icon
         ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`
         : `${basePath}photos/bot-pfp.png`;
