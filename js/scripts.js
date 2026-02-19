@@ -3,47 +3,67 @@ function searchCommands() {
     const filter = input.value.toLowerCase();
     const categories = document.querySelectorAll('.category-block');
     let totalFound = false;
+    let visibleCommandCount = 0;
+
+    // Phase 1: Read & Compute (Batch reads)
+    const updates = [];
 
     categories.forEach(category => {
         const commands = category.querySelectorAll('.command');
         let categoryHasMatch = false;
 
         commands.forEach(command => {
-            const commandText = command.textContent || command.innerText;
-            if (commandText.toLowerCase().includes(filter)) {
-                command.style.display = "";
+            // Optimization: Lazy cache search text
+            let commandText = command.dataset.searchText;
+            if (!commandText) {
+                commandText = (command.textContent || command.innerText).toLowerCase();
+                command.dataset.searchText = commandText;
+            }
+
+            if (commandText.includes(filter)) {
+                updates.push({ el: command, display: "" });
                 categoryHasMatch = true;
                 totalFound = true;
+                visibleCommandCount++;
             } else {
-                command.style.display = "none";
+                updates.push({ el: command, display: "none" });
             }
         });
 
         if (categoryHasMatch) {
-            category.style.display = "";
+            updates.push({ el: category, display: "" });
         } else {
-            category.style.display = "none";
+            updates.push({ el: category, display: "none" });
         }
     });
 
-    // Toggle no-result message
-    const noResult = document.getElementById('no-result');
-    const noResultQuery = document.getElementById('no-result-query');
+    // Phase 2: Write (Batch writes via rAF)
+    requestAnimationFrame(() => {
+        updates.forEach(update => {
+            if (update.el.style.display !== update.display) {
+                update.el.style.display = update.display;
+            }
+        });
 
-    if (totalFound) {
-        if (noResult) noResult.style.display = 'none';
-    } else {
-        if (noResult) noResult.style.display = 'block';
-        const maxLength = 30;
-        const truncatedValue = input.value.length > maxLength ? input.value.substring(0, maxLength) + '...' : input.value;
-        if (noResultQuery) noResultQuery.textContent = truncatedValue;
-    }
+        // Toggle no-result message
+        const noResult = document.getElementById('no-result');
+        const noResultQuery = document.getElementById('no-result-query');
 
-    // Hide no-result2 if it exists (from old code cleanup)
-    const noResult2 = document.getElementById('no-result2');
-    if (noResult2) noResult2.style.display = 'none';
+        if (totalFound) {
+            if (noResult) noResult.style.display = 'none';
+        } else {
+            if (noResult) noResult.style.display = 'block';
+            const maxLength = 30;
+            const truncatedValue = input.value.length > maxLength ? input.value.substring(0, maxLength) + '...' : input.value;
+            if (noResultQuery) noResultQuery.textContent = truncatedValue;
+        }
 
-    updateCommandCount();
+        // Hide no-result2 if it exists (from old code cleanup)
+        const noResult2 = document.getElementById('no-result2');
+        if (noResult2) noResult2.style.display = 'none';
+
+        updateCommandCount(visibleCommandCount);
+    });
 }
 
 
@@ -388,12 +408,16 @@ const customGroups = {
     Normal: ['?code', '?forecast', '?help', '?invite', '?joke', '?ping', '?remind', '?roleinfo', '?say', '?server', '?show-profile', '?uptime', '?weather', '?webhook']
 };
 
-function updateCommandCount() {
+function updateCommandCount(count) {
     const commandCountEl = document.getElementById('commandCount');
     if (!commandCountEl) return; // Exit if element doesn't exist (e.g., on index.html)
 
-    const commands = document.querySelectorAll('.command:not([style*="display: none"])');
-    commandCountEl.textContent = commands.length;
+    if (count !== undefined) {
+        commandCountEl.textContent = count;
+    } else {
+        const commands = document.querySelectorAll('.command:not([style*="display: none"])');
+        commandCountEl.textContent = commands.length;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -912,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* 
+/*
    --------------------------------------------------------------
    Discord Authentication Logic (Implicit Flow)
    --------------------------------------------------------------
@@ -957,7 +981,7 @@ function checkAuth() {
         localStorage.setItem('discord_access_token', accessToken);
         localStorage.setItem('discord_token_type', tokenType);
 
-        // Clear Hash from URL 
+        // Clear Hash from URL
         window.history.replaceState(null, null, ' ');
 
         // Notify User
