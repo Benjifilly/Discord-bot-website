@@ -1,0 +1,16 @@
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /commands/ HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /css/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /photos/bot-pfp.png HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /photos/discord_pfp.png HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /js/config.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /js/scripts.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:24] "GET /js/star-animation.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:25] "GET /photos/wave.svg HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /commands/ HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /css/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /photos/bot-pfp.png HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /photos/discord_pfp.png HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /js/config.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /js/scripts.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /js/star-animation.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 07:18:50] "GET /photos/wave.svg HTTP/1.1" 200 -
