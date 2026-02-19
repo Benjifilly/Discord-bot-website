@@ -1,4 +1,4 @@
-/* 
+/*
    Dashboard JavaScript
    Handles: auth gate, server list, config panel, API calls
 */
@@ -610,28 +610,17 @@ async function saveChanges() {
     }
 
     try {
-        // Send all pending changes
-        // We can either send one by one or batch if the API supports it.
-        // Assuming the API expects one-by-one or we iterate.
-        // Similar to original implementation, we send per key.
-
-        const promises = Object.entries(pendingChanges).map(async ([key, value]) => {
-            return fetch(`${DASHBOARD_API_BASE}/guild/${currentGuildId}/settings`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `${tokenType} ${token}`
-                },
-                body: JSON.stringify({ key, value })
-            });
+        // Send all pending changes as a batch
+        const response = await fetch(`${DASHBOARD_API_BASE}/guild/${currentGuildId}/settings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${tokenType} ${token}`
+            },
+            body: JSON.stringify(pendingChanges)
         });
 
-        const responses = await Promise.all(promises);
-
-        // Check for errors
-        for (const res of responses) {
-            if (!res.ok) throw new Error('Failed to save some settings');
-        }
+        if (!response.ok) throw new Error('Failed to save settings');
 
         // Success
         showNotification('All changes saved successfully!', 'success');
