@@ -449,7 +449,7 @@ async function fetchCommands() {
     commandList.parentNode.insertBefore(skeleton, commandList);
 
     try {
-        const response = await fetch('https://discord-bot-production-2057.up.railway.app/api/commands');
+        const response = await fetch(`${CONFIG.API_BASE}/commands`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -912,7 +912,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* 
+/*
    --------------------------------------------------------------
    Discord Authentication Logic (Implicit Flow)
    --------------------------------------------------------------
@@ -957,7 +957,7 @@ function checkAuth() {
         localStorage.setItem('discord_access_token', accessToken);
         localStorage.setItem('discord_token_type', tokenType);
 
-        // Clear Hash from URL 
+        // Clear Hash from URL
         window.history.replaceState(null, null, ' ');
 
         // Notify User
