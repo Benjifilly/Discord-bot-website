@@ -1,4 +1,4 @@
-/*
+/* 
    Dashboard JavaScript
    Handles: auth gate, server list, config panel, API calls
 */
@@ -168,15 +168,17 @@ async function loadDashboardServers(token, tokenType, user) {
             return;
         }
 
+        const basePath = getBasePath();
+
         // Render manageable guilds
         manageableGuilds.forEach(guild => {
-            const card = createServerCard(guild, true);
+            const card = createServerCard(guild, true, basePath);
             grid.appendChild(card);
         });
 
         // Render view-only guilds
         viewOnlyGuilds.forEach(guild => {
-            const card = createServerCard(guild, false);
+            const card = createServerCard(guild, false, basePath);
             grid.appendChild(card);
         });
 
@@ -236,8 +238,7 @@ async function loadDashboardServers(token, tokenType, user) {
     }
 }
 
-function createServerCard(guild, hasPermission) {
-    const basePath = getBasePath();
+function createServerCard(guild, hasPermission, basePath) {
     const iconUrl = guild.icon
         ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`
         : `${basePath}photos/bot-pfp.png`;
@@ -252,7 +253,7 @@ function createServerCard(guild, hasPermission) {
     `;
 
     if (hasPermission) {
-        card.onclick = () => openServerConfig(guild);
+        card.onclick = () => openServerConfig(guild, basePath);
     }
 
     return card;
@@ -280,14 +281,13 @@ function hideLoadingOverlay() {
 // =====================
 // Server Config Panel
 // =====================
-async function openServerConfig(guild) {
+async function openServerConfig(guild, basePath) {
     currentGuildId = guild.id;
     currentGuildData = guild;
 
     // Show loading overlay
     showLoadingOverlay('Loading ' + guild.name + '...');
 
-    const basePath = getBasePath();
     const iconUrl = guild.icon
         ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`
         : `${basePath}photos/bot-pfp.png`;
@@ -610,17 +610,28 @@ async function saveChanges() {
     }
 
     try {
-        // Send all pending changes as a batch
-        const response = await fetch(`${DASHBOARD_API_BASE}/guild/${currentGuildId}/settings`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${tokenType} ${token}`
-            },
-            body: JSON.stringify(pendingChanges)
+        // Send all pending changes
+        // We can either send one by one or batch if the API supports it.
+        // Assuming the API expects one-by-one or we iterate.
+        // Similar to original implementation, we send per key.
+
+        const promises = Object.entries(pendingChanges).map(async ([key, value]) => {
+            return fetch(`${DASHBOARD_API_BASE}/guild/${currentGuildId}/settings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${tokenType} ${token}`
+                },
+                body: JSON.stringify({ key, value })
+            });
         });
 
-        if (!response.ok) throw new Error('Failed to save settings');
+        const responses = await Promise.all(promises);
+
+        // Check for errors
+        for (const res of responses) {
+            if (!res.ok) throw new Error('Failed to save some settings');
+        }
 
         // Success
         showNotification('All changes saved successfully!', 'success');
