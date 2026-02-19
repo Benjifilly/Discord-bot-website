@@ -449,7 +449,7 @@ async function fetchCommands() {
     commandList.parentNode.insertBefore(skeleton, commandList);
 
     try {
-        const response = await fetch('https://discord-bot-production-2057.up.railway.app/api/commands');
+        const response = await fetch(`${CONFIG.API_BASE}/commands`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
