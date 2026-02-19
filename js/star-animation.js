@@ -67,7 +67,7 @@ class ShootingStar {
         this.y += this.speed * Math.sin(this.angle); // Moving down
 
         // Or actually provided image shows diagonal top-right to bottom-left or top-left to bottom-right?
-        // Let's go top-right to bottom-left based on "shooting stars" usually being diagonal. 
+        // Let's go top-right to bottom-left based on "shooting stars" usually being diagonal.
         // Modified to go top-right to bottom-left:
         // x decreases, y increases
 
@@ -83,7 +83,7 @@ class ShootingStar {
         const endX = this.x + this.length * Math.cos(this.angle); // If moving left, endX is to the right
         const endY = this.y - this.length * Math.sin(this.angle); // endY is above
 
-        // Actually better to draw line from (x, y) backwards 
+        // Actually better to draw line from (x, y) backwards
         // We are moving x--, y++
         // So tail is at x++, y--
 
@@ -126,12 +126,10 @@ function animate() {
         shootingStars.push(new ShootingStar());
     }
 
-    shootingStars.forEach((star, index) => {
+    shootingStars = shootingStars.filter(star => {
         star.update();
         star.draw();
-        if (!star.active) {
-            shootingStars.splice(index, 1);
-        }
+        return star.active;
     });
 
     requestAnimationFrame(animate);
