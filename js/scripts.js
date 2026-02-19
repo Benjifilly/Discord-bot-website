@@ -297,11 +297,26 @@ function showNotification(message, type = 'info') {
     if (type === 'error') icon = 'exclamation-circle';
     if (type === 'warning') icon = 'exclamation-triangle';
 
-    toast.innerHTML = `
-        <div class="notification-icon"><i class="fas fa-${icon}"></i></div>
-        <div class="notification-content">${message}</div>
-        <div class="notification-close" onclick="dismissNotification(this.parentElement)">&times;</div>
-    `;
+    // Icon
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'notification-icon';
+    const iconI = document.createElement('i');
+    iconI.className = `fas fa-${icon}`;
+    iconDiv.appendChild(iconI);
+    toast.appendChild(iconDiv);
+
+    // Content (Safe)
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'notification-content';
+    contentDiv.textContent = message;
+    toast.appendChild(contentDiv);
+
+    // Close Button
+    const closeDiv = document.createElement('div');
+    closeDiv.className = 'notification-close';
+    closeDiv.innerHTML = '&times;';
+    closeDiv.onclick = () => dismissNotification(toast);
+    toast.appendChild(closeDiv);
 
     container.appendChild(toast);
 
@@ -912,7 +927,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* 
+/*
    --------------------------------------------------------------
    Discord Authentication Logic (Implicit Flow)
    --------------------------------------------------------------
@@ -957,7 +972,7 @@ function checkAuth() {
         localStorage.setItem('discord_access_token', accessToken);
         localStorage.setItem('discord_token_type', tokenType);
 
-        // Clear Hash from URL 
+        // Clear Hash from URL
         window.history.replaceState(null, null, ' ');
 
         // Notify User
