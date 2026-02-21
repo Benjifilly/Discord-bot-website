@@ -1032,9 +1032,15 @@ function renderAuthUI(user) {
     if (container) {
         if (user) {
             // User Logged In
+            let defaultAvatarIndex;
+            if (user.discriminator && user.discriminator !== "0") {
+                defaultAvatarIndex = parseInt(user.discriminator) % 5;
+            } else {
+                defaultAvatarIndex = Number(BigInt(user.id) >> 22n) % 6;
+            }
             const avatarUrl = user.avatar
                 ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                : `${basePath}photos/bot-pfp.png`; // Fallback icon
+                : `https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`;
 
             container.innerHTML = `
                 <div class="discord-user-profile">

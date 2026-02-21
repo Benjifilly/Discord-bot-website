@@ -238,6 +238,85 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="config-section" id="webhook-section-container">
+                        <div class="config-accordion-header" id="webhook-accordion-header"
+                            onclick="toggleWebhookAccordion()">
+                            <h3><i class="fas fa-satellite-dish"></i> Webhooks Management</h3>
+                            <i class="fas fa-chevron-down config-accordion-icon"></i>
+                        </div>
+
+                        <div class="config-accordion-content" id="webhook-accordion-content">
+                            <p class="config-description" style="margin-top: 15px;">Manage user-created webhooks
+                                settings and limits.</p>
+
+                            <div class="webhook-settings-grid" id="webhook-settings-grid">
+                                <div class="webhook-setting-card">
+                                    <h4 class="card-title"><i class="fas fa-power-off"></i> Global Status</h4>
+                                    <p class="config-description">Allow members to create private webhook channels.</p>
+                                    <label class="config-toggle" style="margin-top: auto;">
+                                        <input type="checkbox" id="config-webhook-enabled"
+                                            onchange="saveSetting('webhook_enabled')">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Enable Feature</span>
+                                    </label>
+                                </div>
+
+                                <div class="webhook-setting-card">
+                                    <h4 class="card-title"><i class="fas fa-hashtag"></i> Creation Limit</h4>
+                                    <p class="config-description">Maximum number of concurrent webhooks permitted per
+                                        user.
+                                    </p>
+                                    <input type="number" id="config-webhook-limit" class="config-input" min="1" max="10"
+                                        placeholder="e.g. 3" onchange="saveSetting('webhook_limit')">
+                                </div>
+
+                                <div class="webhook-setting-card">
+                                    <h4 class="card-title"><i class="fas fa-folder-open"></i> Webhook Category</h4>
+                                    <p class="config-description">The server category where webhooks channels operate.
+                                    </p>
+                                    <select id="config-webhook-category" class="config-select"
+                                        onchange="saveSetting('webhook_category')">
+                                        <option value="">-- Select Category --</option>
+                                    </select>
+                                </div>
+
+                                <div class="webhook-setting-card webhook-roles-container">
+                                    <div style="flex: 1; min-width: 250px;">
+                                        <h4 class="card-title"><i class="fas fa-user-shield"></i> Allowed Roles</h4>
+                                        <p class="config-description">Only members holding one of these roles will be
+                                            authorized to create a webhook channel. <br><br><b>Leave completely empty to
+                                                allow everyone.</b></p>
+                                    </div>
+                                    <div style="flex: 2; min-width: 250px; display: flex; flex-direction: column;">
+                                        <select id="config-webhook-allowed-roles" class="config-select" multiple
+                                            onchange="saveSetting('webhook_allowed_roles')"
+                                            style="height: auto; min-height: 120px;">
+                                            <!-- Roles will be populated here -->
+                                        </select>
+                                        <p class="config-description"
+                                            style="font-size: 0.8em; margin-top: 8px; text-align: right;"><i
+                                                class="fas fa-info-circle"></i> Hold Ctrl (or Cmd on Mac) to select
+                                            multiple
+                                            roles.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="active-webhooks-section"
+                                style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 25px;">
+                                <h4 style="margin-bottom: 5px; font-size: 1.25em;"><i class="fas fa-list"></i> Active
+                                    Webhooks</h4>
+                                <p class="config-description" style="margin-bottom: 20px;">List of all user webhooks
+                                    currently open on the server widget. You can manually delete any of them from here
+                                    and
+                                    it will accurately synchronized.</p>
+                                <div id="active-webhooks-container" class="active-webhooks-list">
+                                    <span class="prefix-placeholder">Loading webhooks...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="config-tab-content" id="tab-logging">
@@ -315,100 +394,102 @@
                             </label>
                         </div>
                     </div>
+
+                </div>
+            </div>
+
+            <div class="config-tab-content" id="tab-welcome">
+                <div class="config-section">
+                    <h3><i class="fas fa-door-open"></i> Welcome Message</h3>
+                    <p class="config-description">Send a message when a new member joins the server.</p>
+                    <div class="config-toggle-group">
+                        <label class="config-toggle">
+                            <input type="checkbox" id="config-welcome-enabled"
+                                onchange="saveSetting('welcome_enabled')">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">Enable Welcome Messages</span>
+                        </label>
+                    </div>
                 </div>
 
-                <div class="config-tab-content" id="tab-welcome">
-                    <div class="config-section">
-                        <h3><i class="fas fa-door-open"></i> Welcome Message</h3>
-                        <p class="config-description">Send a message when a new member joins the server.</p>
-                        <div class="config-toggle-group">
-                            <label class="config-toggle">
-                                <input type="checkbox" id="config-welcome-enabled"
-                                    onchange="saveSetting('welcome_enabled')">
-                                <span class="toggle-slider"></span>
-                                <span class="toggle-label">Enable Welcome Messages</span>
-                            </label>
-                        </div>
+                <div class="config-section">
+                    <h3><i class="fas fa-hashtag"></i> Welcome Channel</h3>
+                    <p class="config-description">Select the channel for welcome messages.</p>
+                    <div class="config-input-group">
+                        <select id="config-welcome-channel" class="config-select"
+                            onchange="saveSetting('welcome_channel')">
+                            <option value="">-- Select Channel --</option>
+                        </select>
                     </div>
+                </div>
 
-                    <div class="config-section">
-                        <h3><i class="fas fa-hashtag"></i> Welcome Channel</h3>
-                        <p class="config-description">Select the channel for welcome messages.</p>
-                        <div class="config-input-group">
-                            <select id="config-welcome-channel" class="config-select"
-                                onchange="saveSetting('welcome_channel')">
-                                <option value="">-- Select Channel --</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="config-section">
+                    <h3><i class="fas fa-pen"></i> Welcome Message Template</h3>
+                    <p class="config-description">Use <code>{user}</code> for the username and <code>{server}</code>
+                        for
+                        the server name.</p>
+                    <div class="config-input-group" style="flex-direction: column; align-items: stretch;">
+                        <textarea id="config-welcome-message" class="config-textarea"
+                            placeholder="Welcome {user} to {server}! 🎉" rows="3"
+                            oninput="saveSetting('welcome_message'); updateWelcomePreview()"></textarea>
 
-                    <div class="config-section">
-                        <h3><i class="fas fa-pen"></i> Welcome Message Template</h3>
-                        <p class="config-description">Use <code>{user}</code> for the username and <code>{server}</code>
-                            for
-                            the server name.</p>
-                        <div class="config-input-group" style="flex-direction: column; align-items: stretch;">
-                            <textarea id="config-welcome-message" class="config-textarea"
-                                placeholder="Welcome {user} to {server}! 🎉" rows="3"
-                                oninput="saveSetting('welcome_message'); updateWelcomePreview()"></textarea>
-
-                            <!-- Live Preview -->
-                            <div class="preview-label-text">PREVIEW</div>
-                            <div id="welcome-preview" class="welcome-preview-container">
-                                <!-- Discord Message Structure -->
-                                <div class="discord-message">
-                                    <div class="discord-avatar-container">
-                                        <img src="../photos/bot-pfp.png" class="discord-avatar" alt="Bot Avatar">
+                        <!-- Live Preview -->
+                        <div class="preview-label-text">PREVIEW</div>
+                        <div id="welcome-preview" class="welcome-preview-container">
+                            <!-- Discord Message Structure -->
+                            <div class="discord-message">
+                                <div class="discord-avatar-container">
+                                    <img src="../photos/bot-pfp.png" class="discord-avatar" alt="Bot Avatar">
+                                </div>
+                                <div class="discord-content">
+                                    <div class="discord-header">
+                                        <span class="discord-username">Pulsar</span>
+                                        <span class="discord-bot-tag">APP</span>
+                                        <span class="discord-timestamp" id="preview-timestamp">Today at</span>
                                     </div>
-                                    <div class="discord-content">
-                                        <div class="discord-header">
-                                            <span class="discord-username">Pulsar</span>
-                                            <span class="discord-bot-tag">APP</span>
-                                            <span class="discord-timestamp" id="preview-timestamp">Today at</span>
+                                    <div class="discord-embed-wrapper">
+                                        <div class="discord-embed">
+                                            <div class="discord-embed-content">
+                                                <div class="discord-embed-title">👋 Welcome!</div>
+                                                <div class="discord-embed-description" id="welcome-preview-text">
+                                                    <!-- Text injected here -->
+                                                </div>
+                                            </div>
+                                            <div class="discord-embed-thumbnail">
+                                                <img id="preview-user-avatar" src="" alt="User Avatar"
+                                                    onerror="this.style.display='none'">
+                                            </div>
                                         </div>
-                                        <div class="discord-embed-wrapper">
-                                            <div class="discord-embed">
-                                                <div class="discord-embed-content">
-                                                    <div class="discord-embed-title">👋 Welcome!</div>
-                                                    <div class="discord-embed-description" id="welcome-preview-text">
-                                                        <!-- Text injected here -->
-                                                    </div>
-                                                </div>
-                                                <div class="discord-embed-thumbnail">
-                                                    <img id="preview-user-avatar" src="" alt="User Avatar"
-                                                        onerror="this.style.display='none'">
-                                                </div>
-                                            </div>
-                                            <div class="discord-embed-footer">
-                                                <span id="preview-member-count">Member # </span>&nbsp;•&nbsp;<span
-                                                    id="preview-footer-timestamp">Today at </span>
-                                            </div>
+                                        <div class="discord-embed-footer">
+                                            <span id="preview-member-count">Member # </span>&nbsp;•&nbsp;<span
+                                                id="preview-footer-timestamp">Today at </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="config-section">
-                        <h3><i class="fas fa-user-tag"></i> Auto-Role</h3>
-                        <p class="config-description">Automatically assign a role to new members when they join.</p>
-                        <div class="config-toggle-group">
-                            <label class="config-toggle">
-                                <input type="checkbox" id="config-autorole-enabled"
-                                    onchange="saveSetting('autorole_enabled')">
-                                <span class="toggle-slider"></span>
-                                <span class="toggle-label">Enable Auto-Role</span>
-                            </label>
-                        </div>
-                        <div class="config-input-group" style="margin-top: 15px;">
-                            <select id="config-autorole" class="config-select" onchange="saveSetting('autorole')">
-                                <option value="">-- Select Role --</option>
-                            </select>
-                        </div>
+                <div class="config-section">
+                    <h3><i class="fas fa-user-tag"></i> Auto-Role</h3>
+                    <p class="config-description">Automatically assign a role to new members when they join.</p>
+                    <div class="config-toggle-group">
+                        <label class="config-toggle">
+                            <input type="checkbox" id="config-autorole-enabled"
+                                onchange="saveSetting('autorole_enabled')">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">Enable Auto-Role</span>
+                        </label>
+                    </div>
+                    <div class="config-input-group" style="margin-top: 15px;">
+                        <select id="config-autorole" class="config-select" onchange="saveSetting('autorole')">
+                            <option value="">-- Select Role --</option>
+                        </select>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </main>
 
@@ -475,6 +556,24 @@
                     href="../privacy/">Privacy</a></p>
         </div>
     </footer>
+
+    <!-- Webhook Deletion Modal -->
+    <div class="modal-overlay" id="webhook-delete-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Delete Webhook</h3>
+                <button class="modal-close" onclick="closeWebhookModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the webhook channel <strong id="modal-webhook-name"></strong>? This
+                action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closeWebhookModal()">Cancel</button>
+                <button class="modal-btn modal-btn-danger" id="modal-confirm-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/config.js"></script>
     <script src="../js/scripts.js"></script>

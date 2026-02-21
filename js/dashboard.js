@@ -382,6 +382,9 @@ async function loadGuildConfig(guildId) {
         // Bot permissions
         loadBotPermissions(guildId);
 
+        // Active webhooks
+        loadActiveWebhooks(guildId);
+
     } catch (error) {
         console.error('Error loading guild config:', error);
         showNotification('Failed to load server configuration.', 'error');
@@ -441,6 +444,30 @@ function applySettingsToUI(settings) {
     if (autoroleSelect && settings.autorole) {
         autoroleSelect.value = settings.autorole;
     }
+
+    // Webhook Settings
+    setCheckbox('config-webhook-enabled', settings.webhook_enabled !== false); // default true if not set
+
+    const webhookLimitInput = document.getElementById('config-webhook-limit');
+    if (webhookLimitInput) {
+        webhookLimitInput.value = settings.webhook_limit || 3;
+    }
+
+    const webhookCategorySelect = document.getElementById('config-webhook-category');
+    if (webhookCategorySelect && settings.webhook_category) {
+        webhookCategorySelect.value = settings.webhook_category;
+    }
+
+    // Role multi-select will be updated after roles are populated
+    const webhookRolesSelect = document.getElementById('config-webhook-allowed-roles');
+    if (webhookRolesSelect && settings.webhook_allowed_roles && Array.isArray(settings.webhook_allowed_roles)) {
+        Array.from(webhookRolesSelect.options).forEach(opt => {
+            opt.selected = settings.webhook_allowed_roles.includes(opt.value);
+        });
+    }
+
+    // Toggle Webhook settings state initially
+    toggleWebhookSettingsState(settings.webhook_enabled !== false);
 }
 
 function setCheckbox(id, value) {
@@ -450,6 +477,7 @@ function setCheckbox(id, value) {
 
 function populateChannelSelects(channels) {
     const textChannels = channels.filter(c => c.type === 'text');
+    const categoryChannels = channels.filter(c => c.type === 'category');
 
     const selects = [
         document.getElementById('config-log-channel'),
@@ -468,6 +496,19 @@ function populateChannelSelects(channels) {
         });
         if (currentValue) select.value = currentValue;
     });
+
+    const categorySelect = document.getElementById('config-webhook-category');
+    if (categorySelect) {
+        const currentValue = categorySelect.value;
+        categorySelect.innerHTML = '<option value="">-- Select Category --</option>';
+        categoryChannels.forEach(ch => {
+            const option = document.createElement('option');
+            option.value = ch.id;
+            option.textContent = `📂 ${ch.name}`;
+            categorySelect.appendChild(option);
+        });
+        if (currentValue) categorySelect.value = currentValue;
+    }
 }
 
 function populateRoleSelects(roles) {
@@ -488,6 +529,27 @@ function populateRoleSelects(roles) {
             autoroleSelect.appendChild(option);
         });
         if (currentValue) autoroleSelect.value = currentValue;
+    }
+
+    const webhookRolesSelect = document.getElementById('config-webhook-allowed-roles');
+    if (webhookRolesSelect) {
+        // Save current selections before clearing
+        const currentSelections = Array.from(webhookRolesSelect.selectedOptions).map(opt => opt.value);
+        webhookRolesSelect.innerHTML = '';
+        filteredRoles.forEach(role => {
+            const option = document.createElement('option');
+            option.value = role.id;
+            // Provide a visual distinct aspect for roles
+            option.textContent = role.name;
+            option.style.color = role.color || '#fff';
+            // Option selected state
+            if (originalSettings && originalSettings.webhook_allowed_roles && Array.isArray(originalSettings.webhook_allowed_roles)) {
+                option.selected = originalSettings.webhook_allowed_roles.includes(role.id);
+            } else {
+                option.selected = currentSelections.includes(role.id);
+            }
+            webhookRolesSelect.appendChild(option);
+        });
     }
 }
 
@@ -541,6 +603,21 @@ function saveSetting(key) {
             break;
         case 'autorole':
             value = document.getElementById('config-autorole').value;
+            break;
+        case 'webhook_enabled':
+            value = document.getElementById('config-webhook-enabled').checked;
+            toggleWebhookSettingsState(value);
+            break;
+        case 'webhook_limit':
+            value = parseInt(document.getElementById('config-webhook-limit').value, 10);
+            if (isNaN(value) || value < 1) value = 3;
+            break;
+        case 'webhook_allowed_roles':
+            const selectRoles = document.getElementById('config-webhook-allowed-roles');
+            value = Array.from(selectRoles.selectedOptions).map(opt => opt.value);
+            break;
+        case 'webhook_category':
+            value = document.getElementById('config-webhook-category').value;
             break;
         default:
             return;
@@ -732,6 +809,162 @@ async function loadBotPermissions(guildId) {
         grid.innerHTML = '<span class="prefix-placeholder">Could not load permissions.</span>';
     }
 }
+
+// =====================
+// Active Webhooks
+// =====================
+
+async function loadActiveWebhooks(guildId) {
+    const container = document.getElementById('active-webhooks-container');
+    if (!container) return;
+
+    container.innerHTML = '<span class="prefix-placeholder">Loading webhooks...</span>';
+
+    const token = localStorage.getItem('discord_access_token');
+    const tokenType = localStorage.getItem('discord_token_type');
+
+    try {
+        const res = await fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/webhooks`, {
+            headers: { 'Authorization': `${tokenType} ${token}` }
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch webhooks');
+        const webhooks = await res.json();
+
+        container.innerHTML = '';
+        if (webhooks.length === 0) {
+            container.innerHTML = '<span class="prefix-placeholder">No active webhooks on this server.</span>';
+            return;
+        }
+
+        webhooks.forEach(wh => {
+            const div = document.createElement('div');
+            div.className = 'webhook-card';
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'webhook-info';
+            infoDiv.innerHTML = `
+                <div class="webhook-channel"><i class="fas fa-hashtag"></i> ${wh.channel_name}</div>
+                <div class="webhook-author"><i class="fas fa-user"></i> By ${wh.user_name || 'Unknown'}</div>
+            `;
+
+            const btn = document.createElement('button');
+            btn.className = 'webhook-delete-btn';
+            btn.title = 'Delete Webhook';
+            btn.innerHTML = '<i class="fas fa-trash"></i>';
+            btn.onclick = () => {
+                openWebhookModal(wh.channel_id, wh.channel_name);
+            };
+
+            div.appendChild(infoDiv);
+            div.appendChild(btn);
+            container.appendChild(div);
+        });
+    } catch (e) {
+        console.error(e);
+        container.innerHTML = '<span class="prefix-placeholder" style="color: #ff4a4a;">Failed to load webhooks</span>';
+    }
+}
+
+async function deleteWebhook(guildId, channelId) {
+    const token = localStorage.getItem('discord_access_token');
+    const tokenType = localStorage.getItem('discord_token_type');
+
+    try {
+        const res = await fetch(`${DASHBOARD_API_BASE}/guild/${guildId}/webhooks/${channelId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `${tokenType} ${token}` }
+        });
+        if (!res.ok) throw new Error('Deletion failed');
+
+        showNotification('Webhook channel deleted', 'success');
+        // Refresh list
+        loadActiveWebhooks(guildId);
+    } catch (e) {
+        console.error(e);
+        showNotification('Failed to delete webhook channel', 'error');
+        // Refresh list just in case
+        loadActiveWebhooks(guildId);
+    }
+}
+
+// =====================
+// Webhooks UI Helpers
+// =====================
+
+function toggleWebhookSettingsState(enabled) {
+    const grid = document.getElementById('webhook-settings-grid');
+    const activeSection = document.getElementById('active-webhooks-section');
+    if (grid) {
+        if (enabled) {
+            grid.classList.remove('disabled');
+            if (activeSection) activeSection.classList.remove('disabled');
+        } else {
+            grid.classList.add('disabled');
+            if (activeSection) activeSection.classList.add('disabled');
+        }
+    }
+}
+
+function toggleWebhookAccordion() {
+    const header = document.getElementById('webhook-accordion-header');
+    const content = document.getElementById('webhook-accordion-content');
+
+    if (header && content) {
+        header.classList.toggle('open');
+        content.classList.toggle('open');
+    }
+}
+
+let currentWebhookToDelete = null;
+
+function openWebhookModal(channelId, channelName) {
+    const modal = document.getElementById('webhook-delete-modal');
+    const nameSpan = document.getElementById('modal-webhook-name');
+
+    if (modal && nameSpan) {
+        nameSpan.textContent = `#${channelName}`;
+        currentWebhookToDelete = channelId;
+        modal.classList.add('open');
+    }
+}
+
+function closeWebhookModal() {
+    const modal = document.getElementById('webhook-delete-modal');
+    if (modal) {
+        modal.classList.remove('open');
+        currentWebhookToDelete = null;
+    }
+}
+
+// Attach event listener for the confirmation button inside the modal
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('webhook-delete-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeWebhookModal();
+            }
+        });
+    }
+
+    const confirmBtn = document.getElementById('modal-confirm-delete-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async () => {
+            if (currentWebhookToDelete && currentGuildId) {
+                const originalText = confirmBtn.innerHTML;
+                confirmBtn.disabled = true;
+                confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                await deleteWebhook(currentGuildId, currentWebhookToDelete);
+
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = originalText;
+                closeWebhookModal();
+            }
+        });
+    }
+});
 
 // =====================
 // Activity Chart
@@ -1005,8 +1238,15 @@ function updateWelcomePreview() {
             previewUserAvatar.src = avatarUrl;
             previewUserAvatar.style.display = 'block';
         } else {
-            // Default discord avatar (faded blue)
-            previewUserAvatar.src = "https://cdn.discordapp.com/embed/avatars/0.png";
+            let defaultAvatarIndex;
+            if (currentUser && currentUser.discriminator && currentUser.discriminator !== "0") {
+                defaultAvatarIndex = parseInt(currentUser.discriminator) % 5;
+            } else if (currentUser && currentUser.id) {
+                defaultAvatarIndex = Number(BigInt(currentUser.id) >> 22n) % 6;
+            } else {
+                defaultAvatarIndex = 0;
+            }
+            previewUserAvatar.src = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`;
             previewUserAvatar.style.display = 'block';
         }
     }
