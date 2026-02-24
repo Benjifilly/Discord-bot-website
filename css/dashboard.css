@@ -301,6 +301,7 @@ body.dashboard-page .legal-header {
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 
 .back-btn {
@@ -315,6 +316,7 @@ body.dashboard-page .legal-header {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .back-btn:hover {
@@ -328,12 +330,21 @@ body.dashboard-page .legal-header {
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #7289da;
+    flex-shrink: 0;
+}
+
+.config-server-info {
+    min-width: 0;
+    flex: 1;
 }
 
 .config-server-info h2 {
     color: #fff;
     font-size: 22px;
     margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .config-server-id {
@@ -735,15 +746,12 @@ body.dashboard-page .legal-header {
     display: flex;
     max-width: 520px;
     border-left: 4px solid #f1c40f;
-    /* Default yellow for welcome */
     background: #2f3136;
-    /* Embed background */
     border-radius: 4px;
-    padding: 8px 16px 16px 12px;
+    padding: 8px 16px 8px 12px;
     margin-top: 4px;
     position: relative;
     flex-direction: column;
-    /* Allow footer to be at bottom */
 }
 
 .discord-embed {
@@ -770,7 +778,10 @@ body.dashboard-page .legal-header {
     color: #dcddde;
     white-space: pre-wrap;
     line-height: 1.5;
-    /* slightly more breathing room for text */
+}
+
+.discord-embed-description:empty {
+    display: none;
 }
 
 .discord-embed-thumbnail {
@@ -780,9 +791,8 @@ body.dashboard-page .legal-header {
 }
 
 .discord-embed-thumbnail img {
-    width: 80px;
-    /* Thumbnail size */
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 4px;
     object-fit: cover;
 }
@@ -1001,9 +1011,17 @@ body.dashboard-page .legal-header {
     }
 
     .config-server-header {
-        flex-wrap: wrap;
         padding: 15px;
         gap: 12px;
+    }
+
+    .config-server-img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .config-server-info h2 {
+        font-size: 18px;
     }
 
     .config-tabs {
@@ -1024,6 +1042,10 @@ body.dashboard-page .legal-header {
         flex-direction: column;
     }
 
+    .config-input-group.prefix-input-group {
+        flex-direction: row;
+    }
+
     .config-save-btn {
         width: auto;
         justify-content: center;
@@ -1035,6 +1057,19 @@ body.dashboard-page .legal-header {
 
     .server-overview-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .overview-item {
+        padding: 14px 10px;
+    }
+
+    .overview-value {
+        font-size: 18px;
+    }
+
+    .overview-item i {
+        font-size: 20px;
     }
 
     .auth-gate-card {
@@ -1410,9 +1445,25 @@ body.dashboard-page .legal-header {
         padding: 15px 8px 25px;
     }
 
-    /* Overview grid: 1 column */
     .server-overview-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+
+    .overview-item {
+        padding: 10px 8px;
+    }
+
+    .overview-value {
+        font-size: 16px;
+    }
+
+    .overview-label {
+        font-size: 10px;
+    }
+
+    .overview-item i {
+        font-size: 16px;
     }
 
     /* Server card grid: 1 column */
@@ -1833,6 +1884,95 @@ body.dashboard-page .legal-header {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ===========================
+   Webhook Management Styles
+   =========================== */
+
+.webhook-settings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.webhook-setting-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(114, 137, 218, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.webhook-setting-card:hover {
+    border-color: rgba(114, 137, 218, 0.2);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.webhook-setting-card .card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.webhook-setting-card .card-title i {
+    color: #7289da;
+    font-size: 14px;
+}
+
+.webhook-setting-card .config-description {
+    font-size: 13px;
+    margin: 0;
+    color: #8e9297;
+    line-height: 1.5;
+}
+
+.webhook-setting-card .config-input,
+.webhook-setting-card .config-select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto;
+}
+
+.webhook-setting-card .config-toggle {
+    margin-top: auto;
+}
+
+.webhook-roles-container {
+    grid-column: 1 / -1;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px !important;
+}
+
+.active-webhooks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (max-width: 900px) {
+    .webhook-settings-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .webhook-settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .webhook-roles-container {
+        flex-direction: column !important;
     }
 }
 

@@ -2967,12 +2967,6 @@ body.contact-page main {
     width: 100%;
 }
 
-.webhook-setting-card input[type="number"] {
-    margin-top: auto;
-    width: 100%;
-    max-width: 120px;
-    /* Limit the width of the number input */
-}
 
 /* Polished Multi-Select for Roles */
 .webhook-roles-container {
