@@ -519,28 +519,7 @@ function renderBannedWordsTags(words) {
     });
 }
 
-async function saveSettingDirect(key, value) {
-    if (!currentGuildId) return;
-    const token = localStorage.getItem('discord_access_token');
-    const tokenType = localStorage.getItem('discord_token_type');
-    if (!token) return;
-    try {
-        const res = await fetch(`${DASHBOARD_API_BASE}/guild/${currentGuildId}/settings`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${tokenType} ${token}`
-            },
-            body: JSON.stringify({ key, value })
-        });
-        if (!res.ok) throw new Error('Failed');
-        originalSettings[key] = JSON.parse(JSON.stringify(value));
-    } catch (e) {
-        showNotification('Failed to save — please try again.', 'error');
-    }
-}
-
-async function addBannedWord() {
+function addBannedWord() {
     const input = document.getElementById('banned-word-input');
     if (!input) return;
     const word = input.value.trim().toLowerCase();
@@ -552,13 +531,13 @@ async function addBannedWord() {
     currentBannedWords.push(word);
     input.value = '';
     renderBannedWordsTags(currentBannedWords);
-    await saveSettingDirect('automod_banned_words', currentBannedWords);
+    saveSetting('automod_banned_words');
 }
 
-async function removeBannedWord(word) {
+function removeBannedWord(word) {
     currentBannedWords = currentBannedWords.filter(w => w !== word);
     renderBannedWordsTags(currentBannedWords);
-    await saveSettingDirect('automod_banned_words', currentBannedWords);
+    saveSetting('automod_banned_words');
 }
 
 function renderWhitelistTags(domains) {
@@ -578,7 +557,7 @@ function renderWhitelistTags(domains) {
     });
 }
 
-async function addWhitelistDomain() {
+function addWhitelistDomain() {
     const input = document.getElementById('antilink-whitelist-input');
     if (!input) return;
     let domain = input.value.trim().toLowerCase().replace(/^https?:\/\//, '').split('/')[0];
@@ -590,13 +569,13 @@ async function addWhitelistDomain() {
     currentWhitelist.push(domain);
     input.value = '';
     renderWhitelistTags(currentWhitelist);
-    await saveSettingDirect('antilink_whitelist', currentWhitelist);
+    saveSetting('antilink_whitelist');
 }
 
-async function removeWhitelistDomain(domain) {
+function removeWhitelistDomain(domain) {
     currentWhitelist = currentWhitelist.filter(d => d !== domain);
     renderWhitelistTags(currentWhitelist);
-    await saveSettingDirect('antilink_whitelist', currentWhitelist);
+    saveSetting('antilink_whitelist');
 }
 
 function populateImmuneRoles(selectedRoles) {
