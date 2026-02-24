@@ -227,7 +227,8 @@
                             <div class="tag-container" id="banned-words-tags"></div>
                             <div class="config-input-group" style="margin-top:8px;">
                                 <input type="text" id="banned-word-input" class="config-input"
-                                    placeholder="Add a banned word..." maxlength="50">
+                                    placeholder="Add a banned word..." maxlength="50"
+                                    onkeypress="if(event.key==='Enter'){event.preventDefault();addBannedWord()}">
                                 <button class="config-save-btn" onclick="addBannedWord()"><i class="fas fa-plus"></i>
                                     Add</button>
                             </div>
@@ -258,7 +259,8 @@
                             <div class="tag-container" id="antilink-whitelist-tags"></div>
                             <div class="config-input-group" style="margin-top:8px;">
                                 <input type="text" id="antilink-whitelist-input" class="config-input"
-                                    placeholder="Add domain (e.g. youtube.com)..." maxlength="100">
+                                    placeholder="Add domain (e.g. youtube.com)..." maxlength="100"
+                                    onkeypress="if(event.key==='Enter'){event.preventDefault();addWhitelistDomain()}">
                                 <button class="config-save-btn" onclick="addWhitelistDomain()"><i
                                         class="fas fa-plus"></i> Add</button>
                             </div>

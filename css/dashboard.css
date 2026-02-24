@@ -1841,19 +1841,66 @@ body.dashboard-page .legal-header {
    =========================== */
 
 .automod-detail-panel {
-    margin-top: 16px;
-    padding: 16px;
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
+    margin-top: 18px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(114, 137, 218, 0.08);
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.automod-detail-panel:hover {
+    border-color: rgba(114, 137, 218, 0.15);
+}
+
+.automod-detail-panel .config-label {
+    color: #b9bbbe;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 10px;
+}
+
+.automod-detail-panel .config-label i {
+    color: #7289da;
+    font-size: 12px;
+}
+
+.automod-detail-panel .config-select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.automod-detail-panel .config-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.automod-detail-panel .config-input-group .config-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.automod-detail-panel .config-input-group .config-save-btn {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    font-size: 13px;
+    border-radius: 8px;
+    white-space: nowrap;
 }
 
 .tag-container {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    min-height: 36px;
+    min-height: 40px;
     align-items: center;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
 }
 
 .automod-tag {
@@ -1861,67 +1908,152 @@ body.dashboard-page .legal-header {
     align-items: center;
     gap: 8px;
     background: rgba(114, 137, 218, 0.12);
-    border: 1px solid rgba(114, 137, 218, 0.3);
+    border: 1px solid rgba(114, 137, 218, 0.25);
     color: #dee0fc;
-    padding: 5px 12px;
-    border-radius: 4px;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 13px;
     font-weight: 500;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: all 0.2s ease;
+    animation: tagAppear 0.2s ease;
+}
+
+@keyframes tagAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .automod-tag:hover {
     background: rgba(114, 137, 218, 0.22);
     border-color: rgba(114, 137, 218, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(114, 137, 218, 0.15);
 }
 
 .automod-tag i {
     cursor: pointer;
-    color: #a0a0a0;
-    font-size: 11px;
-    transition: color 0.2s ease;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 10px;
+    transition: all 0.2s ease;
+    padding: 2px;
+    border-radius: 50%;
 }
 
 .automod-tag i:hover {
     color: #f04747;
+    background: rgba(240, 71, 71, 0.15);
 }
 
 .tag-placeholder {
-    color: #72767d;
+    color: #555960;
     font-style: italic;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .antispam-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 14px;
 }
 
 .antispam-field {
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
 .antispam-field .config-label {
-    margin-bottom: 6px;
-    font-size: 13px;
+    margin-bottom: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
 .antispam-field .config-input {
     flex: unset;
     width: 100%;
     box-sizing: border-box;
-}
-
-@media (max-width: 600px) {
-    .antispam-grid {
-        grid-template-columns: 1fr;
-    }
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 .config-select[multiple] {
     background-image: none;
     padding-right: 16px;
     min-height: 80px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(114, 137, 218, 0.3) transparent;
+}
+
+.config-select[multiple]::-webkit-scrollbar {
+    width: 6px;
+}
+
+.config-select[multiple]::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.config-select[multiple]::-webkit-scrollbar-thumb {
+    background: rgba(114, 137, 218, 0.3);
+    border-radius: 3px;
+}
+
+/* ===========================
+   Auto-Moderation Mobile
+   =========================== */
+
+@media (max-width: 600px) {
+    .antispam-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .antispam-field:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .automod-detail-panel {
+        padding: 14px;
+    }
+
+    .automod-detail-panel .config-input-group {
+        flex-direction: column;
+    }
+
+    .automod-detail-panel .config-input-group .config-save-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .tag-container {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .automod-tag {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .config-select[multiple] {
+        min-height: 100px;
+    }
+}
+
+@media (max-width: 400px) {
+    .antispam-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .antispam-field:last-child {
+        grid-column: auto;
+    }
 }
