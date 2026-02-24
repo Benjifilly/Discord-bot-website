@@ -31,7 +31,6 @@
             <img src="photos/bot-pfp.png" alt="Bot Profile Picture" class="bot-pfp">
             <div class="bot-details">
                 <h1><span id="bot-name">Pulsar</span></h1>
-                <!-- Header Auth Button (Injected by JS) -->
                 <div id="header-auth-container" class="header-auth-container"></div>
             </div>
         </div>
@@ -264,11 +263,9 @@
         </div>
 
         <a href="dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="#"><i class="fas fa-clock"></i> Incoming</a>
         <a href="contact-me/"><i class="fas fa-envelope"></i> Contact-us</a>
 
         <div id="discord-auth-container" class="discord-auth-container">
-            <!-- Content injected by JS -->
         </div>
     </nav>
     <footer>
@@ -301,8 +298,6 @@
             const hiddenItems = [];
 
             allItems.forEach((item, index) => {
-                // nth-child(n+4) means index >= 3 among siblings (0-based)
-                // We count all update/bad-update elements
                 if (index >= 3) {
                     hiddenItems.push(item);
                 }
