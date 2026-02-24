@@ -1835,3 +1835,93 @@ body.dashboard-page .legal-header {
         transform: translateY(0);
     }
 }
+
+/* ===========================
+   Auto-Moderation Styles
+   =========================== */
+
+.automod-detail-panel {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 36px;
+    align-items: center;
+}
+
+.automod-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(114, 137, 218, 0.12);
+    border: 1px solid rgba(114, 137, 218, 0.3);
+    color: #dee0fc;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.automod-tag:hover {
+    background: rgba(114, 137, 218, 0.22);
+    border-color: rgba(114, 137, 218, 0.5);
+}
+
+.automod-tag i {
+    cursor: pointer;
+    color: #a0a0a0;
+    font-size: 11px;
+    transition: color 0.2s ease;
+}
+
+.automod-tag i:hover {
+    color: #f04747;
+}
+
+.tag-placeholder {
+    color: #72767d;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.antispam-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.antispam-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.antispam-field .config-label {
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.antispam-field .config-input {
+    flex: unset;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .antispam-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.config-select[multiple] {
+    background-image: none;
+    padding-right: 16px;
+    min-height: 80px;
+}

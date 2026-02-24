@@ -407,6 +407,20 @@ function applySettingsToUI(settings) {
     setCheckbox('config-antilink', settings.antilink);
     setCheckbox('config-antispam', settings.antispam);
 
+    // Automod details
+    setSelectValue('config-automod-action', settings.automod_action || 'delete');
+    renderBannedWordsTags(settings.automod_banned_words || []);
+    populateImmuneRoles(settings.automod_immune_roles || []);
+
+    // Anti-link details
+    renderWhitelistTags(settings.antilink_whitelist || []);
+
+    // Anti-spam details
+    setInputValue('config-antispam-threshold', settings.antispam_threshold || 5);
+    setInputValue('config-antispam-interval', settings.antispam_interval || 5);
+    setInputValue('config-antispam-mute-duration', settings.antispam_mute_duration || 300);
+    setSelectValue('config-antispam-action', settings.antispam_action || 'mute');
+
     // Logging
     setCheckbox('config-logging-enabled', settings.logging_enabled);
 
@@ -473,6 +487,111 @@ function applySettingsToUI(settings) {
 function setCheckbox(id, value) {
     const el = document.getElementById(id);
     if (el) el.checked = !!value;
+}
+
+function setSelectValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+}
+
+function setInputValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+}
+
+let currentBannedWords = [];
+let currentWhitelist = [];
+
+function renderBannedWordsTags(words) {
+    currentBannedWords = Array.isArray(words) ? [...words] : [];
+    const container = document.getElementById('banned-words-tags');
+    if (!container) return;
+    container.innerHTML = '';
+    if (currentBannedWords.length === 0) {
+        container.innerHTML = '<span class="tag-placeholder">No banned words yet.</span>';
+        return;
+    }
+    currentBannedWords.forEach(word => {
+        const tag = document.createElement('span');
+        tag.className = 'automod-tag';
+        tag.innerHTML = `${word} <i class="fas fa-times" onclick="removeBannedWord('${word.replace(/'/g, "\\'")}')"></i>`;
+        container.appendChild(tag);
+    });
+}
+
+function addBannedWord() {
+    const input = document.getElementById('banned-word-input');
+    if (!input) return;
+    const word = input.value.trim().toLowerCase();
+    if (!word) return;
+    if (currentBannedWords.includes(word)) {
+        showNotification('This word is already in the list.', 'warning');
+        return;
+    }
+    currentBannedWords.push(word);
+    input.value = '';
+    renderBannedWordsTags(currentBannedWords);
+    saveSetting('automod_banned_words');
+}
+
+function removeBannedWord(word) {
+    currentBannedWords = currentBannedWords.filter(w => w !== word);
+    renderBannedWordsTags(currentBannedWords);
+    saveSetting('automod_banned_words');
+}
+
+function renderWhitelistTags(domains) {
+    currentWhitelist = Array.isArray(domains) ? [...domains] : [];
+    const container = document.getElementById('antilink-whitelist-tags');
+    if (!container) return;
+    container.innerHTML = '';
+    if (currentWhitelist.length === 0) {
+        container.innerHTML = '<span class="tag-placeholder">No whitelisted domains yet.</span>';
+        return;
+    }
+    currentWhitelist.forEach(domain => {
+        const tag = document.createElement('span');
+        tag.className = 'automod-tag';
+        tag.innerHTML = `${domain} <i class="fas fa-times" onclick="removeWhitelistDomain('${domain.replace(/'/g, "\\'")}')"></i>`;
+        container.appendChild(tag);
+    });
+}
+
+function addWhitelistDomain() {
+    const input = document.getElementById('antilink-whitelist-input');
+    if (!input) return;
+    let domain = input.value.trim().toLowerCase().replace(/^https?:\/\//, '').split('/')[0];
+    if (!domain) return;
+    if (currentWhitelist.includes(domain)) {
+        showNotification('This domain is already whitelisted.', 'warning');
+        return;
+    }
+    currentWhitelist.push(domain);
+    input.value = '';
+    renderWhitelistTags(currentWhitelist);
+    saveSetting('antilink_whitelist');
+}
+
+function removeWhitelistDomain(domain) {
+    currentWhitelist = currentWhitelist.filter(d => d !== domain);
+    renderWhitelistTags(currentWhitelist);
+    saveSetting('antilink_whitelist');
+}
+
+function populateImmuneRoles(selectedRoles) {
+    const select = document.getElementById('config-automod-immune-roles');
+    if (!select || !guildRoles || guildRoles.length === 0) return;
+    select.innerHTML = '';
+    guildRoles
+        .filter(r => !r.is_everyone && !r.is_bot_role)
+        .sort((a, b) => b.position - a.position)
+        .forEach(role => {
+            const opt = document.createElement('option');
+            opt.value = role.id;
+            opt.textContent = role.name;
+            if (selectedRoles.includes(role.id)) opt.selected = true;
+            select.appendChild(opt);
+        });
 }
 
 function populateChannelSelects(channels) {
@@ -618,6 +737,34 @@ function saveSetting(key) {
             break;
         case 'webhook_category':
             value = document.getElementById('config-webhook-category').value;
+            break;
+        case 'automod_banned_words':
+            value = currentBannedWords;
+            break;
+        case 'automod_action':
+            value = document.getElementById('config-automod-action').value;
+            break;
+        case 'automod_immune_roles':
+            const immuneSelect = document.getElementById('config-automod-immune-roles');
+            value = Array.from(immuneSelect.selectedOptions).map(opt => opt.value);
+            break;
+        case 'antilink_whitelist':
+            value = currentWhitelist;
+            break;
+        case 'antispam_threshold':
+            value = parseInt(document.getElementById('config-antispam-threshold').value, 10);
+            if (isNaN(value) || value < 2) value = 5;
+            break;
+        case 'antispam_interval':
+            value = parseInt(document.getElementById('config-antispam-interval').value, 10);
+            if (isNaN(value) || value < 2) value = 5;
+            break;
+        case 'antispam_action':
+            value = document.getElementById('config-antispam-action').value;
+            break;
+        case 'antispam_mute_duration':
+            value = parseInt(document.getElementById('config-antispam-mute-duration').value, 10);
+            if (isNaN(value) || value < 10) value = 300;
             break;
         default:
             return;

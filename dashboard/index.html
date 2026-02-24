@@ -201,23 +201,50 @@
                 </div>
 
                 <div class="config-tab-content" id="tab-moderation">
+                    <!-- Auto-Moderation (Banned Words) -->
                     <div class="config-section">
-                        <h3><i class="fas fa-ban"></i> Auto-Moderation</h3>
-                        <p class="config-description">Automatically moderate messages containing banned words or spam.
-                        </p>
+                        <h3><i class="fas fa-ban"></i> Banned Words Filter</h3>
+                        <p class="config-description">Automatically moderate messages containing banned words.</p>
                         <div class="config-toggle-group">
                             <label class="config-toggle">
                                 <input type="checkbox" id="config-automod" onchange="saveSetting('automod')">
                                 <span class="toggle-slider"></span>
-                                <span class="toggle-label">Enable Auto-Moderation</span>
+                                <span class="toggle-label">Enable Banned Words Filter</span>
                             </label>
+                        </div>
+
+                        <div class="automod-detail-panel" id="automod-detail-panel">
+                            <label class="config-label"><i class="fas fa-gavel"></i> Action on violation</label>
+                            <select id="config-automod-action" class="config-select"
+                                onchange="saveSetting('automod_action')">
+                                <option value="delete">Delete message</option>
+                                <option value="warn">Delete + Warn</option>
+                                <option value="mute">Delete + Mute (5 min)</option>
+                            </select>
+
+                            <label class="config-label" style="margin-top:12px;"><i class="fas fa-list"></i> Banned
+                                Words</label>
+                            <div class="tag-container" id="banned-words-tags"></div>
+                            <div class="config-input-group" style="margin-top:8px;">
+                                <input type="text" id="banned-word-input" class="config-input"
+                                    placeholder="Add a banned word..." maxlength="50">
+                                <button class="config-save-btn" onclick="addBannedWord()"><i class="fas fa-plus"></i>
+                                    Add</button>
+                            </div>
+
+                            <label class="config-label" style="margin-top:12px;"><i class="fas fa-shield-alt"></i>
+                                Immune Roles</label>
+                            <select id="config-automod-immune-roles" class="config-select" multiple
+                                onchange="saveSetting('automod_immune_roles')">
+                            </select>
                         </div>
                     </div>
 
+                    <!-- Anti-Link -->
                     <div class="config-section">
                         <h3><i class="fas fa-link"></i> Anti-Link</h3>
                         <p class="config-description">Automatically delete messages containing links (except from users
-                            with Manage Messages permission).</p>
+                            with Manage Messages or immune roles).</p>
                         <div class="config-toggle-group">
                             <label class="config-toggle">
                                 <input type="checkbox" id="config-antilink" onchange="saveSetting('antilink')">
@@ -225,8 +252,20 @@
                                 <span class="toggle-label">Enable Anti-Link</span>
                             </label>
                         </div>
+
+                        <div class="automod-detail-panel" id="antilink-detail-panel">
+                            <label class="config-label"><i class="fas fa-check-circle"></i> Whitelisted Domains</label>
+                            <div class="tag-container" id="antilink-whitelist-tags"></div>
+                            <div class="config-input-group" style="margin-top:8px;">
+                                <input type="text" id="antilink-whitelist-input" class="config-input"
+                                    placeholder="Add domain (e.g. youtube.com)..." maxlength="100">
+                                <button class="config-save-btn" onclick="addWhitelistDomain()"><i
+                                        class="fas fa-plus"></i> Add</button>
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Anti-Spam -->
                     <div class="config-section">
                         <h3><i class="fas fa-exclamation-triangle"></i> Anti-Spam</h3>
                         <p class="config-description">Prevent users from sending too many messages in a short time.</p>
@@ -236,6 +275,35 @@
                                 <span class="toggle-slider"></span>
                                 <span class="toggle-label">Enable Anti-Spam</span>
                             </label>
+                        </div>
+
+                        <div class="automod-detail-panel" id="antispam-detail-panel">
+                            <div class="antispam-grid">
+                                <div class="antispam-field">
+                                    <label class="config-label">Max messages</label>
+                                    <input type="number" id="config-antispam-threshold" class="config-input" min="2"
+                                        max="20" value="5" onchange="saveSetting('antispam_threshold')">
+                                </div>
+                                <div class="antispam-field">
+                                    <label class="config-label">In seconds</label>
+                                    <input type="number" id="config-antispam-interval" class="config-input" min="2"
+                                        max="30" value="5" onchange="saveSetting('antispam_interval')">
+                                </div>
+                                <div class="antispam-field">
+                                    <label class="config-label">Mute duration (sec)</label>
+                                    <input type="number" id="config-antispam-mute-duration" class="config-input"
+                                        min="10" max="86400" value="300"
+                                        onchange="saveSetting('antispam_mute_duration')">
+                                </div>
+                            </div>
+                            <label class="config-label" style="margin-top:12px;"><i class="fas fa-gavel"></i>
+                                Action</label>
+                            <select id="config-antispam-action" class="config-select"
+                                onchange="saveSetting('antispam_action')">
+                                <option value="mute">Mute user</option>
+                                <option value="warn">Warn user</option>
+                                <option value="delete">Delete messages only</option>
+                            </select>
                         </div>
                     </div>
 
